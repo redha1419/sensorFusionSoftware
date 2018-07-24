@@ -129,15 +129,11 @@
 	"FrameID": "",
 	"shape": "",
 	"confidence": "",
-	"Coordinate1": {
-		"x": "",
-		"y": "",
-		"z": ""
-	},
-	"Coordinate2": {
-		"x": "",
-		"y": "",
-		"z": ""
+	"BB1": {
+		"x1": "",
+		"y1": "",
+		"x2": "",
+		"y2": "",
 	},
 }
 //Response
