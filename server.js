@@ -187,7 +187,7 @@ app.post('/addBoundingBox', function(req,res){
 					return theFrame.frameID === req.body.frameID
 				});
 			var myObj = {};
-			myObj["sensors."+mySensor+".sensorFrame"+myFrame+".boundingBox"] = boundingBox;
+			myObj["sensors."+mySensor+".sensorFrame."+myFrame+".boundingBox"] = boundingBox;
 			var newValues = {$push: myObj};
 			var myQuery = {'projectID' : project.projectID};
 			dbo.collection(coll).updateOne(myQuery, newValues, function(err, result) {
@@ -333,6 +333,45 @@ app.get('/boundingBoxes?', function(req,res){
 		})
 	})
 })
+
+
+/************************************************
+Put Commands
+*************************************************
+*/
+app.put('/boundingBox', function(req,res){
+	var coll = "projects";
+	console.log("Editing boundinBoxID: " + req.body.boundingBoxID );
+	MongoClient.connect(url, function(err,db){
+		if (err) throw err;
+		var dbo = db.db("mydb");
+		dbo.collection(coll).findOne({'projectID': req.body.projectID}, function(err, result){
+			if (err) throw err;
+			var response = 0;
+			var sensorIndex = result.sensors.findIndex(
+				function(sense){
+					return sense.sensorID === sensorID
+				})
+			var frameIndex = result.sensors[sensorIndex].sensorFrame.findIndex(
+				function(frameElement){
+					return frameElement.frameID === frameID
+				})
+			console.log(result.sensors[sensorIndex].sensorFrame[frameIndex]);
+			/*
+			for (var i = 0; i < result.sensors.length; i++) {
+				if (result.sensors[i].sensorID == sensorID) {
+					response = result.sensors[i]
+				}
+			}
+			console.log(result);
+		*/	res.send(result.sensors[sensorIndex].sensorFrame[frameIndex].boundingBox);
+			console.log("Bounding Boxes sent");
+			db.close			
+		})
+	})
+})
+
+
 
 // This responds with "Hello World" on the homepage
 app.get('/', function (req, res) {
