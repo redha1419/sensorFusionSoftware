@@ -165,7 +165,7 @@ app.post('/addBoundingBox', function(req,res){
 		var dbo = db.db("mydb");
 		var boundingBox = {
 			"boundingBoxID": uuidv4(),
-			"shape": req.body.shape,
+			"shapeID": req.body.BB1.shapeID,
 			"confidence": req.body.confidence,
 			"x1": req.body.BB1.x1,
 			"y1": req.body.BB1.y1,
@@ -193,8 +193,8 @@ app.post('/addBoundingBox', function(req,res){
 			dbo.collection(coll).updateOne(myQuery, newValues, function(err, result) {
 				if (err) throw err;
 				console.log("Bounding Box Saved");
-				console.log(project.sensors[mySensor].sensorFrame[myFrame]);
-				res.send(project.sensors[mySensor].sensorFrame[myFrame]);
+				console.log(boundingBox);
+				res.send(boundingBox);
 				db.close				
 			})
 		})
