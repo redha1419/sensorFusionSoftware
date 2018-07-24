@@ -169,8 +169,8 @@ app.post('/addBoundingBox', function(req,res){
 			"confidence": req.body.confidence,
 			"x1": req.body.BB1.x1,
 			"y1": req.body.BB1.y1,
-			"x1": req.body.BB1.x2,
-			"y1": req.body.BB1.y2,
+			"x2": req.body.BB1.x2,
+			"y2": req.body.BB1.y2,
 			
 		};
 		dbo.collection(coll).findOne({'projectID': req.body.projectID}, function(err, result) {
