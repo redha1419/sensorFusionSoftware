@@ -165,7 +165,7 @@ app.post('/addBoundingBox', function(req,res){
 		var dbo = db.db("mydb");
 		var boundingBox = {
 			"boundingBoxID": uuidv4(),
-			"shapeID": req.body.BB1.shapeID,
+			"shape": req.body.BB1.shape,
 			"confidence": req.body.confidence,
 			"x1": req.body.BB1.x1,
 			"y1": req.body.BB1.y1,
