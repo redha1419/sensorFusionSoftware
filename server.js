@@ -326,8 +326,8 @@ app.get('/boundingBoxes?', function(req,res){
 					response = result.sensors[i]
 				}
 			}
-		*/	console.log(result);
-			res.send(result.sensors[sensorIndex].sensorFrame[frameIndex].boundingBox);
+			console.log(result);
+		*/	res.send(result.sensors[sensorIndex].sensorFrame[frameIndex].boundingBox);
 			console.log("Bounding Boxes sent");
 			db.close			
 		})
