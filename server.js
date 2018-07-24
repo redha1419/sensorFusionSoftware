@@ -167,16 +167,11 @@ app.post('/addBoundingBox', function(req,res){
 			"boundingBoxID": uuidv4(),
 			"shape": req.body.shape,
 			"confidence": req.body.confidence,
-			"Coordinate1": {
-				"x": req.body.coordinate1.x,
-				"y": req.body.coordinate1.y,
-				"z": req.body.coordinate1.z
-			},
-			"Coordinate2": {
-				"x": req.body.coordinate2.x,
-				"y": req.body.coordinate2.y,
-				"z": req.body.coordinate2.z
-			}
+			"x1": req.body.BB1.x1,
+			"y1": req.body.BB1.y1,
+			"x1": req.body.BB1.x2,
+			"y1": req.body.BB1.y2,
+			
 		};
 		dbo.collection(coll).findOne({'projectID': req.body.projectID}, function(err, result) {
 			if (err) throw err;
