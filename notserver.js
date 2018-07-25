@@ -335,6 +335,46 @@ app.get('/boundingBoxes?', function(req,res){
 })
 
 
+app.get('/removeBoundingBoxes?', function(req,res){
+	var coll = "projects";
+	var projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
+	var sensorID = req.query.sensorID ? req.query.sensorID : 'No sensor ID';
+	var frameID = req.query.frameID ? req.query.frameID : 'No Frame ID';
+	console.log("Software details requested");
+	console.log(projectID);
+	MongoClient.connect(url, function(err,db){
+		if (err) throw err;
+		var dbo = db.db("mydb");
+		dbo.collection(coll).findOne({'projectID': projectID}, function(err, result){
+			if (err) throw err;
+			var response = 0;
+			var sensorIndex = result.sensors.findIndex(
+				function(sense){
+					return sense.sensorID === sensorID
+				})
+			var frameIndex = result.sensors[sensorIndex].sensorFrame.findIndex(
+				function(frameElement){
+					return frameElement.frameID === frameID
+				})
+			var myQuery = {}
+			dbo.collection(coll).remove(myQuery, function(err,obj){
+				if (err) throw err;
+			});
+			console.log(result.sensors[sensorIndex].sensorFrame[frameIndex]);
+			/*
+			for (var i = 0; i < result.sensors.length; i++) {
+				if (result.sensors[i].sensorID == sensorID) {
+					response = result.sensors[i]
+				}
+			}
+			console.log(result);
+		*/	res.send(result.sensors[sensorIndex].sensorFrame[frameIndex].boundingBox);
+			console.log("Bounding Boxes sent");
+			db.close			
+		})
+	})
+})
+
 /************************************************
 Put Commands
 *************************************************
