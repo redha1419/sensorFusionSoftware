@@ -6,7 +6,43 @@ const uuidv4 = require('uuid/v4');
 module.exports = (app, MongoClient, mongoDBurl) => {
 	return {
 		"configureRoutes": () => {
-
+			app.get('/boundingBox', function(req, res){
+				var coll = "projects";
+				var projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
+				var sensorID = req.query.sensorID ? req.query.sensorID : 'No Project ID';
+				var frameID = req.query.frameID ? req.query.frameID : 'No Project ID';
+				var boundingBoxID = req.query.boundingBoxID ? req.query.boundingBoxID : 'No Project ID';
+				console.log("Project details requested");
+				console.log(projectID);
+				MongoClient.connect(mongoDBurl, function(err,db){
+					if (err) throw err;
+					var dbo = db.db("mydb");
+					dbo.collection(coll).findOne({'projectID': projectID}, function(err, result){
+						if (err) throw err;
+						var sensorIndex = result.sensors.findIndex(
+							function(sense){
+								return sense.sensorID === sensorID
+							}
+						)
+						var frameIndex = result.sensors[sensorIndex].sensorFrame.frameIndex(
+							function(frameElement){
+								return frameElement.frameID === frameID
+							}
+						)
+						var boundingBoxIndex = result.sensors[sensorIndex].sensorFrame.frameIndex[frameID].boundingBox(
+							function(boundingBoxElement){
+								return boundingBoxElement.boundingBoxID === boundingBoxID
+							}
+						)
+						console.log(result.sensors[sensorIndex].sensorFrame.frameIndex[frameID].boundingBox[boundingBoxID]);
+						res.send(result.sensors[sensorIndex].sensorFrame.frameIndex[frameID].boundingBox[boundingBoxID]);
+						console.log("Project details sent");
+						db.close			
+					})
+				})			
+			})
+			
+			
 			app.post('/addBoundingBox', function(req,res){
 				var coll = "projects";
 				var reply;
@@ -33,17 +69,17 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 						if (err) throw err;
 						project = result;
 						var myquery = {'projectID' : project.projectID};
-						var mySensor = project.sensors.findIndex(
+						var sensorIndex = project.sensors.findIndex(
 							function(sense){
 								return sense.sensorID === req.body.sensorID
 							});
-						console.log(project.sensors[mySensor].sensorFrame);
-						var myFrame = project.sensors[mySensor].sensorFrame.findIndex(
+						console.log(project.sensors[sensorIndex].sensorFrame);
+						var myFrame = project.sensors[sensorIndex].sensorFrame.findIndex(
 							function(theFrame){
 								return theFrame.frameID === req.body.frameID
 							});
 						var myObj = {};
-						myObj["sensors."+mySensor+".sensorFrame."+myFrame+".boundingBox"] = boundingBox;
+						myObj["sensors."+sensorIndex+".sensorFrame."+myFrame+".boundingBox"] = boundingBox;
 						var newValues = {$push: myObj};
 						var myQuery = {'projectID' : project.projectID};
 						dbo.collection(coll).updateOne(myQuery, newValues, function(err, result) {

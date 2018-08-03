@@ -12,7 +12,45 @@ app.get('/', function (req, res) {
    res.send('Hello GET');
 })		
 		
-		
+/*
+---------------------------POST------------------------------------------------
+*/		
+			app.post('/sensor', function(req, res){
+				var coll = "projects";
+				var reply;
+				var project;
+			   console.log("adding sensor to"+req.body.projectID);
+			   MongoClient.connect(mongoDBurl, function(err, db) {
+					var dbo = db.db("mydb");
+					if (err) throw err;
+					dbo.collection(coll).findOne({'projectID': req.body.projectID }, function( err, result) {
+						if (err) throw err;
+						project = result;
+						var myquery = {'projectID' : project.projectID};
+						var sensor = {
+							'sensorID': uuidv4(),
+							'sensorReference': req.body.sensorReference,
+							'sensorName': req.body.sensorName,
+							'sensorFrame': []
+						};
+						var newvalues = {$push: {'sensors': sensor}};
+						dbo.collection(coll).updateOne(myquery, newvalues, function(err, result) {
+						if (err) throw err;
+						console.log("Sensor Saved\tID: " + sensor.sensorID + "\t\tName: " + sensor.sensorName );
+						reply = {
+						   "insertedCount": result.nModified,
+						   "collection": coll,
+						   "projectName": project.projectName,
+						   "projectID": project.projectID,
+						   "sensorName": sensor.sensorName,
+						   "sensorID": sensor.sensorID
+						};
+						res.send(reply);
+						db.close
+						})
+					});
+			   })
+			})
 			app.post('/addSensor', function(req, res){
 				var coll = "projects";
 				var reply;
@@ -49,7 +87,10 @@ app.get('/', function (req, res) {
 					});
 			   })
 			})
-			
+
+/*
+------------------------------------GET------------------------------------------
+*/			
 			app.get('/listSensors?', function(req,res){
 				var coll = "projects";
 				var projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
@@ -63,12 +104,13 @@ app.get('/', function (req, res) {
 						var reply = [{}];
 						for (var i = 0; i < result.sensors.length; i++) {
 							reply[i] = {
-								'projectName': result.sensors[i],
-								'projectID': result.sensors[i]
+								'sensorName': result.sensors[i].sensorName,
+								'sensorID': result.sensors[i].sensorID,
+								'sensorReference': result.sensors[i].sensorReference
 							}
 						}
-						console.log(result.sensors);
-						res.send(result.sensors);
+						console.log(reply);
+						res.send(reply);
 						console.log("Project details sent");
 						db.close			
 					})
@@ -79,7 +121,7 @@ app.get('/', function (req, res) {
 				var coll = "projects";
 				var projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
 				var sensorID = req.query.sensorID ? req.query.sensorID : 'No Sensor ID';
-				console.log("Software details requested");
+				console.log("Sensor details requested");
 				console.log(projectID);
 				MongoClient.connect(mongoDBurl, function(err,db){
 					if (err) throw err;
@@ -87,11 +129,13 @@ app.get('/', function (req, res) {
 					dbo.collection(coll).findOne({'projectID': projectID}, function(err, result){
 						if (err) throw err;
 						var response = 0;
-						for (var i = 0; i < result.sensors.length; i++) {
-							if (result.sensors[i].sensorID == sensorID) {
-								response = result.sensors[i]
+						var sensorIndex = result.sensors.findIndex(
+							function(sense) {
+								return sense.sensorID === sensorID
 							}
-						}
+						)
+						response = result.sensors[sensorIndex]
+
 						console.log(result);
 						res.send(result);
 						console.log("Project details sent");
@@ -99,7 +143,39 @@ app.get('/', function (req, res) {
 					})
 				})
 			})
-			
+/*
+-------------------------------PUT--------------------------------
+*/			
+
+			app.put('/sensor',function(req,res){
+				var coll = "projects";
+				console.log('Updating Sensor: ' + req.body.sensorID);
+				MongoClient.connect(mongoDBurl, function(err,db){
+					if (err) throw err;
+					var dbo = db.db("mydb");
+					var sensorIndex = result.sensors.findIndex(
+						function(sense) {
+							return sense.sensorID === sensorID
+						}
+					)
+					var myObj = {};
+					myObj["sensors."+sensorIndex] = {
+						'sensorReference': req.body.sensorReference,
+						'sensorName': req.body.sensorName,
+					};
+					var myQuery = {
+						"projectID": req.body.projectID
+					}
+					var newValues = {$set: myObj}
+					dbo.collection(coll).update(myQuery,newValues, function(err, result) {
+						if (err) throw err;
+						console.log(result);
+						res.send(result);
+						db.close();
+					})
+
+				})
+			})
 		
 		}
 	}
