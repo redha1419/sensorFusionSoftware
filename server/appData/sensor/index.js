@@ -31,7 +31,7 @@ app.get('/', function (req, res) {
 							'sensorID': uuidv4(),
 							'sensorReference': req.body.sensorReference,
 							'sensorName': req.body.sensorName,
-							'sensorFrame': []
+							'sensorFrames': []
 						};
 						var newvalues = {$push: {'sensors': sensor}};
 						dbo.collection(coll).updateOne(myquery, newvalues, function(err, result) {
@@ -67,7 +67,7 @@ app.get('/', function (req, res) {
 							'sensorID': uuidv4(),
 							'sensorReference': req.body.sensorReference,
 							'sensorName': req.body.sensorName,
-							'sensorFrame': []
+							'sensorFrames': []
 						};
 						var newvalues = {$push: {'sensors': sensor}};
 						dbo.collection(coll).updateOne(myquery, newvalues, function(err, result) {
@@ -136,10 +136,10 @@ app.get('/', function (req, res) {
 						)
 						response = result.sensors[sensorIndex]
 
-						console.log(result);
-						res.send(result);
+						console.log(response);
+						res.send(response);
 						console.log("Project details sent");
-						db.close			
+						db.close		
 					})
 				})
 			})
@@ -153,29 +153,76 @@ app.get('/', function (req, res) {
 				MongoClient.connect(mongoDBurl, function(err,db){
 					if (err) throw err;
 					var dbo = db.db("mydb");
-					var sensorIndex = result.sensors.findIndex(
-						function(sense) {
-							return sense.sensorID === sensorID
+					dbo.collection(coll).findOne({'projectID': req.body.projectID}, function(err, result){
+						var sensorIndex = result.sensors.findIndex(
+							function(sense) {
+								return sense.sensorID === req.body.sensorID
+							}
+						)
+						var myObj = {};
+						myObj["sensors."+sensorIndex] = {
+							'sensorID': req.body.sensorID,
+							'sensorReference': req.body.sensorReference,
+							'sensorName': req.body.sensorName,
+						};
+						var myQuery = {
+							"projectID": req.body.projectID
 						}
-					)
-					var myObj = {};
-					myObj["sensors."+sensorIndex] = {
-						'sensorReference': req.body.sensorReference,
-						'sensorName': req.body.sensorName,
-					};
-					var myQuery = {
-						"projectID": req.body.projectID
-					}
-					var newValues = {$set: myObj}
-					dbo.collection(coll).update(myQuery,newValues, function(err, result) {
-						if (err) throw err;
-						console.log(result);
-						res.send(result);
-						db.close();
+						var newValues = {$set: myObj}
+						dbo.collection(coll).update(myQuery,newValues, function(err, result) {
+							if (err) throw err;
+							console.log(result);
+							res.send(result);
+							db.close();
+						})
+	
 					})
 
 				})
 			})
+/*
+-------------------------------DELETE--------------------------------
+*/
+
+			app.delete('/sensor',function(req, res){
+				var coll = "projects";
+				var projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
+				var sensorID = req.query.sensorID ? req.query.sensorID : 'No Sensor ID';
+				console.log("Delete Sensor requested");
+				console.log(projectID);
+				MongoClient.connect(mongoDBurl, function(err,db){
+					if (err) throw err;
+					var dbo = db.db("mydb");
+					dbo.collection(coll).findOne({'projectID': projectID}, function(err, result){
+						if (err) throw err;
+						//console.log(result);
+						var sensors = result.sensors;
+						var removeSensorIndex = result.sensors.findIndex(
+							function(sense) {
+								return sense.sensorID === sensorID
+							}
+						);
+						sensors.splice(removeSensorIndex,1);
+						console.log(sensors);
+						console.log('----------');
+						//res.send(sensors);
+						var myobj = {};
+						myobj["sensors"] = sensors;
+						console.log(myobj);
+						var newValues = {$set: myobj};
+						var myQuery = {"projectID" : projectID};
+						dbo.collection(coll).updateOne(myQuery, newValues, function(err, result){
+							if (err) throw err;
+							console.log("Sensor deleted");
+							db.close	
+						})
+									
+					})
+				})	
+				
+			})
+
+
 		
 		}
 	}

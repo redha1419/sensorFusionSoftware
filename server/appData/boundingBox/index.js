@@ -24,18 +24,18 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 								return sense.sensorID === sensorID
 							}
 						)
-						var frameIndex = result.sensors[sensorIndex].sensorFrame.frameIndex(
+						var frameIndex = result.sensors[sensorIndex].sensorFrames.frameIndex(
 							function(frameElement){
 								return frameElement.frameID === frameID
 							}
 						)
-						var boundingBoxIndex = result.sensors[sensorIndex].sensorFrame.frameIndex[frameID].boundingBox(
+						var boundingBoxIndex = result.sensors[sensorIndex].sensorFrames.frameIndex[frameID].boundingBox(
 							function(boundingBoxElement){
 								return boundingBoxElement.boundingBoxID === boundingBoxID
 							}
 						)
-						console.log(result.sensors[sensorIndex].sensorFrame.frameIndex[frameID].boundingBox[boundingBoxID]);
-						res.send(result.sensors[sensorIndex].sensorFrame.frameIndex[frameID].boundingBox[boundingBoxID]);
+						console.log(result.sensors[sensorIndex].sensorFrames.frameIndex[frameID].boundingBox[boundingBoxID]);
+						res.send(result.sensors[sensorIndex].sensorFrames.frameIndex[frameID].boundingBox[boundingBoxID]);
 						console.log("Project details sent");
 						db.close			
 					})
@@ -47,7 +47,7 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 				var coll = "projects";
 				var reply;
 				var project;
-				var sensorFrame;
+				var sensorFrames;
 				console.log("adding frame to" + 
 							req.body.projectID + 
 							" >> "+ req.body.sensorID + 
@@ -73,13 +73,13 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 							function(sense){
 								return sense.sensorID === req.body.sensorID
 							});
-						console.log(project.sensors[sensorIndex].sensorFrame);
-						var myFrame = project.sensors[sensorIndex].sensorFrame.findIndex(
+						console.log(project.sensors[sensorIndex].sensorFrames);
+						var myFrame = project.sensors[sensorIndex].sensorFrames.findIndex(
 							function(theFrame){
 								return theFrame.frameID === req.body.frameID
 							});
 						var myObj = {};
-						myObj["sensors."+sensorIndex+".sensorFrame."+myFrame+".boundingBox"] = boundingBox;
+						myObj["sensors."+sensorIndex+".sensorFrames."+myFrame+".boundingBox"] = boundingBox;
 						var newValues = {$push: myObj};
 						var myQuery = {'projectID' : project.projectID};
 						dbo.collection(coll).updateOne(myQuery, newValues, function(err, result) {
@@ -109,11 +109,11 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 							function(sense){
 								return sense.sensorID === sensorID
 							})
-						var frameIndex = result.sensors[sensorIndex].sensorFrame.findIndex(
+						var frameIndex = result.sensors[sensorIndex].sensorFrames.findIndex(
 							function(frameElement){
 								return frameElement.frameID === frameID
 							})
-						console.log(result.sensors[sensorIndex].sensorFrame[frameIndex]);
+						console.log(result.sensors[sensorIndex].sensorFrames[frameIndex]);
 						/*
 						for (var i = 0; i < result.sensors.length; i++) {
 							if (result.sensors[i].sensorID == sensorID) {
@@ -121,7 +121,7 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 							}
 						}
 						console.log(result);
-					*/	res.send(result.sensors[sensorIndex].sensorFrame[frameIndex].boundingBox);
+					*/	res.send(result.sensors[sensorIndex].sensorFrames[frameIndex].boundingBox);
 						console.log("Bounding Boxes sent");
 						db.close			
 					})
