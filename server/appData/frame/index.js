@@ -94,7 +94,7 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 								"gama": "",
 								"time": ""
 							},
-							'boundingBox': []
+							'boundingBoxes': []
 						};
 						var mySensor = project.sensors.findIndex(
 							function(sense){
