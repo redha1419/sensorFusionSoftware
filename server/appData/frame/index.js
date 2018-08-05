@@ -214,11 +214,13 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 								return sense.sensorID === req.body.sensorID
 							}
 						)
+						console.log(result.sensors[sensorIndex]);
 						var frameIndex = result.sensors[sensorIndex].sensorFrames.findIndex(
 							function(sensFrame) {
-								return sensFrame.sensorID === req.body.sensorID
+								return sensFrame.frameID === req.body.frameID
 							}
 						)
+
 						var myObj = {};
 						myObj["sensors."+sensorIndex+".sensorFrames."+frameIndex] = {
 							'frameID': req.body.frameID,
@@ -243,9 +245,8 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 							res.send(result);
 							db.close();
 						})
-	
 					})
-
+				
 				})
 			})
 		}
