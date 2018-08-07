@@ -226,7 +226,7 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 
 						var myObj = {};
 						var boundingBox = {
-							"boundingBoxID": uuidv4(),
+							"boundingBoxID": req.body.boundingBoxID,
 							"shape": req.body.shape,
 							"confidence": req.body.confidence,
 							"points": []
