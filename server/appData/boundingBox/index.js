@@ -3,7 +3,7 @@
 //libs
 const uuidv4 = require('uuid/v4');
 
-module.exports = (app, MongoClient, mongoDBurl) => {
+module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 	return {
 		"configureRoutes": () => {
 			
@@ -21,9 +21,9 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 							req.body.projectID + 
 							" >> "+ req.body.sensorID + 
 							" >> "+ req.body.frameID);
-				MongoClient.connect(mongoDBurl, function(err, db) {
-					if (err) throw err;
-					var dbo = db.db("mydb");
+		//		MongoClient.connect(mongoDBurl, function(err, db) {
+		//			if (err) throw err;
+		//			var dbo = db.db("mydb");
 					var boundingBox = {
 						"boundingBoxID": uuidv4(),
 						"shape": req.body.shape,
@@ -39,7 +39,8 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 						}
 						boundingBox.points[req.body.points[i].index] = point;
 					}
-					dbo.collection(coll).findOne({'projectID': req.body.projectID}, function(err, result) {
+		//			dbo.collection(coll).findOne({'projectID': req.body.projectID}, function(err, result) {
+					mongodb.collection(coll).findOne({'projectID': req.body.projectID}, function(err, result) {
 						if (err) throw err;
 						project = result;
 						var myquery = {'projectID' : project.projectID};
@@ -56,15 +57,16 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 						myObj["sensors."+sensorIndex+".sensorFrames."+myFrame+".boundingBoxes"] = boundingBox;
 						var newValues = {$push: myObj};
 						var myQuery = {'projectID' : project.projectID};
-						dbo.collection(coll).updateOne(myQuery, newValues, function(err, result) {
+		//				dbo.collection(coll).updateOne(myQuery, newValues, function(err, result) {
+						mongodb.collection(coll).updateOne(myQuery, newValues, function(err, result) {
 							if (err) throw err;
 							console.log("Bounding Box Saved");
-							console.log(boundingBox);
+		//					console.log(boundingBox);
 							res.send(boundingBox);
-							db.close				
+		//					db.close				
 						})
 					})
-				})
+		//		})
 			})
 			app.post('/addBoundingBox', function(req,res){
 				var coll = "projects";
@@ -75,9 +77,9 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 							req.body.projectID + 
 							" >> "+ req.body.sensorID + 
 							" >> "+ req.body.frameID);
-				MongoClient.connect(mongoDBurl, function(err, db) {
-					if (err) throw err;
-					var dbo = db.db("mydb");
+		//		MongoClient.connect(mongoDBurl, function(err, db) {
+		//			if (err) throw err;
+		//			var dbo = db.db("mydb");
 					var boundingBox = {
 						"boundingBoxID": uuidv4(),
 						"shape": req.body.BB1.shape,
@@ -88,7 +90,8 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 						"y2": req.body.BB1.y2,
 						
 					};
-					dbo.collection(coll).findOne({'projectID': req.body.projectID}, function(err, result) {
+		//			dbo.collection(coll).findOne({'projectID': req.body.projectID}, function(err, result) {
+					mongodb.collection(coll).findOne({'projectID': req.body.projectID}, function(err, result) {
 						if (err) throw err;
 						project = result;
 						var myquery = {'projectID' : project.projectID};
@@ -105,15 +108,16 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 						myObj["sensors."+sensorIndex+".sensorFrames."+myFrame+".boundingBoxes"] = boundingBox;
 						var newValues = {$push: myObj};
 						var myQuery = {'projectID' : project.projectID};
-						dbo.collection(coll).updateOne(myQuery, newValues, function(err, result) {
+		//				dbo.collection(coll).updateOne(myQuery, newValues, function(err, result) {
+						mongodb.collection(coll).updateOne(myQuery, newValues, function(err, result) {
 							if (err) throw err;
 							console.log("Bounding Box Saved");
-							console.log(boundingBox);
+		//					console.log(boundingBox);
 							res.send(boundingBox);
-							db.close				
+		//					db.close				
 						})
 					})
-				})
+		//		})
 			})
 
 
@@ -163,11 +167,12 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 				var sensorID = req.query.sensorID ? req.query.sensorID : 'No sensor ID';
 				var frameID = req.query.frameID ? req.query.frameID : 'No Frame ID';
 				console.log("Software details requested");
-				console.log(projectID);
-				MongoClient.connect(mongoDBurl, function(err,db){
-					if (err) throw err;
-					var dbo = db.db("mydb");
-					dbo.collection(coll).findOne({'projectID': projectID}, function(err, result){
+		//		console.log(projectID);
+		//		MongoClient.connect(mongoDBurl, function(err,db){
+		//			if (err) throw err;
+		//			var dbo = db.db("mydb");
+		//			dbo.collection(coll).findOne({'projectID': projectID}, function(err, result){
+					mongodb.collection(coll).findOne({'projectID': projectID}, function(err, result){
 						if (err) throw err;
 						var response = 0;
 						var sensorIndex = result.sensors.findIndex(
@@ -178,7 +183,7 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 							function(frameElement){
 								return frameElement.frameID === frameID
 							})
-						console.log(result.sensors[sensorIndex].sensorFrames[frameIndex]);
+		//				console.log(result.sensors[sensorIndex].sensorFrames[frameIndex]);
 						/*
 						for (var i = 0; i < result.sensors.length; i++) {
 							if (result.sensors[i].sensorID == sensorID) {
@@ -188,9 +193,9 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 						console.log(result);
 					*/	res.send(result.sensors[sensorIndex].sensorFrames[frameIndex].boundingBox);
 						console.log("Bounding Boxes sent");
-						db.close			
+		//				db.close			
 					})
-				})
+		//		})
 			})
 /*
 ------------------------------PUT-----------------------------
@@ -200,10 +205,11 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 			app.put('/boundingBox',function(req,res){
 				var coll = "projects";
 				console.log('Updating frame: ' + req.body.frameID);
-				MongoClient.connect(mongoDBurl, function(err,db){
-					if (err) throw err;
-					var dbo = db.db("mydb");
-					dbo.collection(coll).findOne({'projectID': req.body.projectID}, function(err, result){
+		//		MongoClient.connect(mongoDBurl, function(err,db){
+		//			if (err) throw err;
+		//			var dbo = db.db("mydb");
+		//			dbo.collection(coll).findOne({'projectID': req.body.projectID}, function(err, result){
+					mongodb.collection(coll).findOne({'projectID': req.body.projectID}, function(err, result){
 						var sensorIndex = result.sensors.findIndex(
 							function(sense) {
 								return sense.sensorID === req.body.sensorID
@@ -245,15 +251,16 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 							"projectID": req.body.projectID
 						}
 						var newValues = {$set: myObj}
-						dbo.collection(coll).update(myQuery,newValues, function(err, result) {
+		//				dbo.collection(coll).update(myQuery,newValues, function(err, result) {
+						mongodb.collection(coll).update(myQuery,newValues, function(err, result) {
 							if (err) throw err;
-							console.log(result);
+		//					console.log(result);
 							res.send(result);
-							db.close();
+		//					db.close();
 						})
 					})
 				
-				})
+		//		})
 			})
 		
 		}

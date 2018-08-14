@@ -3,7 +3,7 @@
 //libs
 const uuidv4 = require('uuid/v4');
 
-module.exports = (app, MongoClient, mongoDBurl) => {
+module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 	return {
 		"configureRoutes": () => {
 
@@ -16,12 +16,13 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 				var reply;
 				var project;
 				var sensorFrame;
-			   console.log("adding frame to"+req.body.projectID+">>"+req.body.sensorID);
-			   console.log(req.body);
-			   MongoClient.connect(mongoDBurl, function(err, db) {
-					var dbo = db.db("mydb");
-					if (err) throw err;
-					dbo.collection(coll).findOne({'projectID': req.body.projectID }, function( err, result) {
+				console.log("adding frame to"+req.body.projectID+">>"+req.body.sensorID);
+				console.log(req.body);
+		//		MongoClient.connect(mongoDBurl, function(err, db) {
+		//			var dbo = db.db("mydb");
+		//			if (err) throw err;
+		//			dbo.collection(coll).findOne({'projectID': req.body.projectID }, function( err, result) {
+					mongodb.collection(coll).findOne({'projectID': req.body.projectID }, function( err, result) {
 						if (err) throw err;
 						project = result;
 						var myquery = {'projectID' : project.projectID};
@@ -46,26 +47,27 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 						var myObj = {};
 						myObj["sensors."+mySensor+".sensorFrames"] = sensorFrame;
 						var newvalues = {$push: myObj};
-						dbo.collection(coll).updateOne(myquery, newvalues, function(err, result) {
-						if (err) throw err;
-						console.log("Frame Saved");
-						var dotNotationName = "sensors." + mySensor + ".sensorName";
-						reply = {
-						   "insertedCount": result.nModified,
-						   "collection": coll,
-						   "projectName": project.projectName,
-						   "projectID": project.projectID,
-						   "sensorName": dotNotationName,
-						   "sensorID": req.body.sensorID,
-						   "frameName": sensorFrame.frameName,
-						   "frameID": sensorFrame.frameID 
-						};
-					//	console.log(reply);
-						res.send(reply);
-						db.close
+		//				dbo.collection(coll).updateOne(myquery, newvalues, function(err, result) {
+						mongodb.collection(coll).updateOne(myquery, newvalues, function(err, result) {
+							if (err) throw err;
+							console.log("Frame Saved");
+							var dotNotationName = "sensors." + mySensor + ".sensorName";
+							reply = {
+							   "insertedCount": result.nModified,
+							   "collection": coll,
+							   "projectName": project.projectName,
+							   "projectID": project.projectID,
+							   "sensorName": dotNotationName,
+							   "sensorID": req.body.sensorID,
+							   "frameName": sensorFrame.frameName,
+							   "frameID": sensorFrame.frameID 
+							};
+						//	console.log(reply);
+							res.send(reply);
+		//					db.close
 						})
 					});
-			   })
+		//		})
 			})		
 
 			app.post('/frame', function(req, res){
@@ -73,12 +75,13 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 				var reply;
 				var project;
 				var sensorFrame;
-			   console.log("adding frame to"+req.body.projectID+">>"+req.body.sensorID);
-			   console.log(req.body);
-			   MongoClient.connect(mongoDBurl, function(err, db) {
-					var dbo = db.db("mydb");
-					if (err) throw err;
-					dbo.collection(coll).findOne({'projectID': req.body.projectID }, function( err, result) {
+				console.log("adding frame to"+req.body.projectID+">>"+req.body.sensorID);
+				console.log(req.body);
+		//		MongoClient.connect(mongoDBurl, function(err, db) {
+		//			var dbo = db.db("mydb");
+		//			if (err) throw err;
+		//			dbo.collection(coll).findOne({'projectID': req.body.projectID }, function( err, result) {
+					mongodb.collection(coll).findOne({'projectID': req.body.projectID }, function( err, result) {
 						if (err) throw err;
 						project = result;
 						var myquery = {'projectID' : project.projectID};
@@ -103,7 +106,8 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 						var myObj = {};
 						myObj["sensors."+mySensor+".sensorFrames"] = sensorFrame;
 						var newvalues = {$push: myObj};
-						dbo.collection(coll).updateOne(myquery, newvalues, function(err, result) {
+		//				dbo.collection(coll).updateOne(myquery, newvalues, function(err, result) {
+						mongodb.collection(coll).updateOne(myquery, newvalues, function(err, result) {
 						if (err) throw err;
 						console.log("Frame Saved");
 						var dotNotationName = "sensors." + mySensor + ".sensorName";
@@ -119,10 +123,10 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 						};
 					//	console.log(reply);
 						res.send(reply);
-						db.close
+		//				db.close
 						})
 					});
-			   })
+		//		})
 			})
 
 /*
@@ -135,10 +139,11 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 				var sensorID = req.query.sensorID ? req.query.sensorID : 'No Sensor ID';
 				console.log("Sensor details requested");
 				console.log(projectID);
-				MongoClient.connect(mongoDBurl, function(err,db){
-					if (err) throw err;
-					var dbo = db.db("mydb");
-					dbo.collection(coll).findOne({'projectID': projectID}, function(err, result){
+		//		MongoClient.connect(mongoDBurl, function(err,db){
+		//			if (err) throw err;
+		//			var dbo = db.db("mydb");
+		//			dbo.collection(coll).findOne({'projectID': projectID}, function(err, result){
+					mongodb.collection(coll).findOne({'projectID': projectID}, function(err, result){
 						if (err) throw err;
 						var response = [];
 						var sensorIndex = result.sensors.findIndex(
@@ -158,9 +163,9 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 						console.log(response);
 						res.send(response);
 						console.log("Frame details sent");
-						db.close		
+		//				db.close		
 					})
-				})
+		//		})
 			})
 			
 			
@@ -171,10 +176,11 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 				var frameID = req.query.frameID ? req.query.frameID : 'No frame ID';
 				console.log("Sensor details requested");
 				console.log(projectID);
-				MongoClient.connect(mongoDBurl, function(err,db){
-					if (err) throw err;
-					var dbo = db.db("mydb");
-					dbo.collection(coll).findOne({'projectID': projectID}, function(err, result){
+		//		MongoClient.connect(mongoDBurl, function(err,db){
+		//			if (err) throw err;
+		//			var dbo = db.db("mydb");
+		//			dbo.collection(coll).findOne({'projectID': projectID}, function(err, result){
+					mongodb.collection(coll).findOne({'projectID': projectID}, function(err, result){
 						if (err) throw err;
 						var response = 0;
 						var sensorIndex = result.sensors.findIndex(
@@ -192,9 +198,9 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 						console.log(response);
 						res.send(response);
 						console.log("Project details sent");
-						db.close		
+		//				db.close		
 					})
-				})
+		//		})
 			})
 
 
@@ -205,10 +211,11 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 			app.put('/frame',function(req,res){
 				var coll = "projects";
 				console.log('Updating frame: ' + req.body.frameID);
-				MongoClient.connect(mongoDBurl, function(err,db){
-					if (err) throw err;
-					var dbo = db.db("mydb");
-					dbo.collection(coll).findOne({'projectID': req.body.projectID}, function(err, result){
+		//		MongoClient.connect(mongoDBurl, function(err,db){
+		//			if (err) throw err;
+		//			var dbo = db.db("mydb");
+		//			dbo.collection(coll).findOne({'projectID': req.body.projectID}, function(err, result){
+					mongodb.collection(coll).findOne({'projectID': req.body.projectID}, function(err, result){
 						var sensorIndex = result.sensors.findIndex(
 							function(sense) {
 								return sense.sensorID === req.body.sensorID
@@ -239,15 +246,15 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 							"projectID": req.body.projectID
 						}
 						var newValues = {$set: myObj}
-						dbo.collection(coll).update(myQuery,newValues, function(err, result) {
+						mongodb.collection(coll).update(myQuery,newValues, function(err, result) {
 							if (err) throw err;
 							console.log(result);
 							res.send(result);
-							db.close();
+		// 					db.close();
 						})
 					})
 				
-				})
+		//		})
 			})
 		}
 	}

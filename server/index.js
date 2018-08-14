@@ -4,17 +4,27 @@ var express = require('express');
 var MongoClient = require('mongodb').MongoClient;
 const bodyParser = require("body-parser");
 
-//MongoDB
-var mongoDBurl = "mongodb://localhost:27017/";
+
 
 //server config
 var app = express();
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-var appDataResource = require('./appData');
+//MongoDB
+var mongodb;
+var mongoDBurl = "mongodb://localhost:27017/";
+MongoClient.connect(mongoDBurl, {poolsize: 10}, function(err,db){
+//	assert.equal(null,err);
+	mongodb=db.db("mydb");
 
-appDataResource(app, MongoClient, mongoDBurl).configureRoutes();
+	
+	var appDataResource = require('./appData');
+
+	appDataResource(app, MongoClient, mongoDBurl, mongodb).configureRoutes();
+	
+})
+
 
 var server = app.listen(8081, function () {
 
