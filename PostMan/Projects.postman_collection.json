@@ -1,0 +1,553 @@
+{
+	"info": {
+		"_postman_id": "7123bd48-8a66-4933-b532-ead7acc833c2",
+		"name": "Projects",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Project",
+			"item": [
+				{
+					"name": "http://127.0.0.1:8081/addProject",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"projectName\": \"Project2\",\r\n\t\"Users\": [{\"UserID\": \"0000\", \"Pemission\": \"000\"}],\r\n\t\"sensors\": [],\r\n\t\"operations\": [],\r\n\t\"superframe\": {}\r\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8081/addProject",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8081",
+							"path": [
+								"addProject"
+							]
+						},
+						"description": "add a new project"
+					},
+					"response": []
+				},
+				{
+					"name": "http://127.0.0.1:8081/listProjects",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://127.0.0.1:8081/listProjects",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8081",
+							"path": [
+								"listProjects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://127.0.0.1:8081/project/",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://127.0.0.1:8081/project/?projectID=d7c4f0d4-bc91-4728-957c-b44e069738de",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8081",
+							"path": [
+								"project",
+								""
+							],
+							"query": [
+								{
+									"key": "projectID",
+									"value": "d7c4f0d4-bc91-4728-957c-b44e069738de"
+								},
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://127.0.0.1:8081/project/",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://127.0.0.1:8081/project/?projectID=3e1199a7-ef0f-47ae-9c25-b784a0cfc39f",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8081",
+							"path": [
+								"project",
+								""
+							],
+							"query": [
+								{
+									"key": "projectID",
+									"value": "3e1199a7-ef0f-47ae-9c25-b784a0cfc39f"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://127.0.0.1:8081/project",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8081/project",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8081",
+							"path": [
+								"project"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "sensor",
+			"item": [
+				{
+					"name": "http://127.0.0.1:8081/sensor",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"projectID\": \"f5746036-906c-49c5-8257-f41a763fd0e2\",\n\t\"sensorID\": \"bdff2479-269c-47b8-b8dd-19f91d6a0b0f\",\n\t\"sensorName\":\"NEWSensor2\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8081/sensor?projectID=f5746036-906c-49c5-8257-f41a763fd0e2&sensorID=068a8e5a-e65a-4405-906f-953570b71f82",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8081",
+							"path": [
+								"sensor"
+							],
+							"query": [
+								{
+									"key": "projectID",
+									"value": "f5746036-906c-49c5-8257-f41a763fd0e2"
+								},
+								{
+									"key": "sensorID",
+									"value": "068a8e5a-e65a-4405-906f-953570b71f82"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://127.0.0.1:8081/addSensor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"projectID\": \"a1fcc3a1-324a-44ba-b540-b3f9f3b07d74\",\r\n\t\"sensorReference\": \"1234\",\r\n\t\"sensorName\": \"Sensor1\"\r\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8081/addSensor",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8081",
+							"path": [
+								"addSensor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://127.0.0.1:8081/listSensors",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"projectID\": \"a1fcc3a1-324a-44ba-b540-b3f9f3b07d74\",\r\n\t\"sensorReference\": \"1234\",\r\n\t\"sensorName\": \"Sensor2\"\r\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8081/listSensors?projectID=3e1199a7-ef0f-47ae-9c25-b784a0cfc39f",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8081",
+							"path": [
+								"listSensors"
+							],
+							"query": [
+								{
+									"key": "projectID",
+									"value": "3e1199a7-ef0f-47ae-9c25-b784a0cfc39f"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://127.0.0.1:8081/sensor",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"projectID\": \"f5746036-906c-49c5-8257-f41a763fd0e2\",\n\t\"sensorID\": \"bdff2479-269c-47b8-b8dd-19f91d6a0b0f\",\n\t\"sensorName\":\"NEWSensor2\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8081/sensor?",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8081",
+							"path": [
+								"sensor"
+							],
+							"query": [
+								{
+									"key": "projectID",
+									"value": "f5746036-906c-49c5-8257-f41a763fd0e2",
+									"disabled": true
+								},
+								{
+									"key": "sensorID",
+									"value": "068a8e5a-e65a-4405-906f-953570b71f82",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://127.0.0.1:8081/sensor",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"projectID\": \"a1fcc3a1-324a-44ba-b540-b3f9f3b07d74\",\n\t\"sensorID\": \"a7c06883-823f-47c2-ae73-abf77eb8bba0\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8081/sensor",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8081",
+							"path": [
+								"sensor"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "frame",
+			"item": [
+				{
+					"name": "http://127.0.0.1:8081/frame",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"frameName\":\"frame3\",\n\t\"projectID\" : \"f5746036-906c-49c5-8257-f41a763fd0e2\",\n\t\"sensorID\" : \"86442012-5576-4bda-9a8f-f2761a5e2c6c\"\n\t\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8081/frame",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8081",
+							"path": [
+								"frame"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://127.0.0.1:8081/frame/",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"projectID\": \"f5746036-906c-49c5-8257-f41a763fd0e2\",\r\n\t\"sensorID\": \"86442012-5576-4bda-9a8f-f2761a5e2c6c\",\r\n\t\"frameID\": \"c890452d-6326-4c21-bbd0-a6998edcdad0\",\r\n\t\"frameName\": \"NEWframe2\",\r\n\t\"translation\": {\r\n\t\t\"x\":     \"1\",\r\n\t\t\"y\":     \"1\",\r\n\t\t\"z\":     \"1\",\r\n\t\t\"alpha\": \"\",\r\n\t\t\"beta\":  \"\",\r\n\t\t\"gama\":  \"\",\r\n\t\t\"time\":  \"\"\r\n\t}\r\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8081/frame/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8081",
+							"path": [
+								"frame",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://127.0.0.1:8081/frame?projectID=f5746036-906c-49c5-8257-f41a763fd0e2&sensorID=86442012-5576-4bda-9a8f-f2761a5e2c6c&frameID=171eefaa-d85d-4908-bc07-5ffe28dc76f8",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://127.0.0.1:8081/frame?projectID=f5746036-906c-49c5-8257-f41a763fd0e2&sensorID=86442012-5576-4bda-9a8f-f2761a5e2c6c&frameID=171eefaa-d85d-4908-bc07-5ffe28dc76f8",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8081",
+							"path": [
+								"frame"
+							],
+							"query": [
+								{
+									"key": "projectID",
+									"value": "f5746036-906c-49c5-8257-f41a763fd0e2"
+								},
+								{
+									"key": "sensorID",
+									"value": "86442012-5576-4bda-9a8f-f2761a5e2c6c"
+								},
+								{
+									"key": "frameID",
+									"value": "171eefaa-d85d-4908-bc07-5ffe28dc76f8"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://127.0.0.1:8081/listFrames?projectID=f5746036-906c-49c5-8257-f41a763fd0e2&sensorID=86442012-5576-4bda-9a8f-f2761a5e2c6c",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://127.0.0.1:8081/listFrames?projectID=f5746036-906c-49c5-8257-f41a763fd0e2&sensorID=86442012-5576-4bda-9a8f-f2761a5e2c6c",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8081",
+							"path": [
+								"listFrames"
+							],
+							"query": [
+								{
+									"key": "projectID",
+									"value": "f5746036-906c-49c5-8257-f41a763fd0e2"
+								},
+								{
+									"key": "sensorID",
+									"value": "86442012-5576-4bda-9a8f-f2761a5e2c6c"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "boundingBox",
+			"item": [
+				{
+					"name": "http://127.0.0.1:8081/boundingBox",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"projectName\": \"Project3\",\n    \"projectID\": \"f5746036-906c-49c5-8257-f41a763fd0e2\",\n    \"sensorName\": \"sensors.3.sensorName\",\n    \"sensorID\": \"86442012-5576-4bda-9a8f-f2761a5e2c6c\",\n    \"frameName\": \"frame6\",\n    \"frameID\": \"58352a15-8ce5-454a-92c9-54c297c75dea\",\t\n\t\n\t\n\t\"shape\": \"0\",\n\t\"points\": [\n\t\t{\n\t\t\t\"index\":\"0\",\n\t\t\t\"x\":\"0\",\n\t\t\t\"y\":\"0\"\n\t\t},\n\t\t{\n\t\t\t\"index\":\"1\",\n\t\t\t\"x\":\"1\",\n\t\t\t\"y\":\"3\"\n\t\t},\n\t\t{\n\t\t\t\"index\":\"2\",\n\t\t\t\"x\":\"0\",\n\t\t\t\"y\":\"4\"\n\t\t},\n\t\t{\n\t\t\t\"index\":\"3\",\n\t\t\t\"x\":\"0.2\",\n\t\t\t\"y\":\"1\"\n\t\t}\n\t]\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8081/boundingBox",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8081",
+							"path": [
+								"boundingBox"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://127.0.0.1:8081/boundingBox",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"projectName\": \"Project3\",\n    \"projectID\": \"f5746036-906c-49c5-8257-f41a763fd0e2\",\n    \"sensorName\": \"sensors.3.sensorName\",\n    \"sensorID\": \"86442012-5576-4bda-9a8f-f2761a5e2c6c\",\n    \"frameName\": \"frame6\",\n    \"frameID\": \"58352a15-8ce5-454a-92c9-54c297c75dea\",\t\n\t\n\t\n\t\"shape\": 2,\n\t\"points\": [\n\t\t{\n\t\t\t\"index\":\"0\",\n\t\t\t\"x\":\"0\",\n\t\t\t\"y\":\"0\"\n\t\t},\n\t\t{\n\t\t\t\"index\":\"1\",\n\t\t\t\"x\":\"1\",\n\t\t\t\"y\":\"1\"\n\t\t},\n\t\t{\n\t\t\t\"index\":\"2\",\n\t\t\t\"x\":\"2\",\n\t\t\t\"y\":\"0\"\n\t\t},\n\t\t{\n\t\t\t\"index\":\"3\",\n\t\t\t\"x\":\"1\",\n\t\t\t\"y\":\"0.2\"\n\t\t}\n\t],\n\t\"parameters\": {\n\t\t\"x1\": \"1\",\n\t\t\"y1\": \"1\",\n\t\t\"x2\": \"2\",\n\t\t\"y2\": \"2\",\n\t\t\"theta\": \"0\",\n\t\t\"x\": \"1\",\n\t\t\"y\": \"y\",\n\t\t\"a\": \"3\",\n\t\t\"b\": \"2\"\n\t\n\t}\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8081/boundingBox",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8081",
+							"path": [
+								"boundingBox"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
