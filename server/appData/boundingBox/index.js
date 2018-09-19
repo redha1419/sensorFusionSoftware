@@ -181,7 +181,22 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 				var projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
 				var sensorID = req.query.sensorID ? req.query.sensorID : 'No sensor ID';
 				var frameID = req.query.frameID ? req.query.frameID : 'No Frame ID';
-				
+				console.log("Bounding Boxes details requested");
+				mongodb.collection(coll).findOne({'projectID': projectID}, function(err, result){
+					if (err) throw err;
+					var response = 0;
+					var sensorIndex = result.sensors.findIndex(
+						function(sense){
+							return sense.sensorID === sensorID
+						})
+					var frameIndex = result.sensors[sensorIndex].sensorFrames.findIndex(
+						function(frameElement){
+							return frameElement.frameID === frameID
+						})
+			//		res.send({'test':'this'});
+					res.send(result.sensors[sensorIndex].sensorFrames[frameIndex].boundingBoxes);
+						
+				})
 			})
 			
 			app.get('/boundingBox?', function(req,res){
@@ -202,7 +217,11 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 						function(frameElement){
 							return frameElement.frameID === frameID
 						})
-					res.send(result.sensors[sensorIndex].sensorFrames[frameIndex].boundingBox);
+					var boundingBoxIndex = result.sensors[sensorIndex].sensorFrames[frameIndex].boundingBoxes.findIndex(
+						function(boundingBoxElement){
+							return boundingBoxElement.boundingBoxID === boundingBoxID
+						})
+					res.send(result.sensors[sensorIndex].sensorFrames[frameIndex].boundingBoxes[boundingBoxIndex]);
 					console.log("Bounding Boxes sent");
 				})
 			})
