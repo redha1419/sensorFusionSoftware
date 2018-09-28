@@ -1,9 +1,9 @@
 "use strict";
 
-module.exports = (app, MongoClient, mongoDBurl) => {
+module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 	return {
 		"configureRoutes": () => {
-			app.put('/point?', function(req,res){
+			app.put('/point',function(req,res){
 				var coll = "projects";
 				console.log('Updating frame: ' + req.body.frameID);
 				mongodb.collection(coll).findOne({'projectID': req.body.projectID}, function(err, result){
@@ -26,53 +26,25 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 						}
 					)
 					console.log(boundingBoxIndex);
-
-					var myObj = {};
-					var boundingBox = {
-						"boundingBoxID": req.body.boundingBoxID,
-						"shape": req.body.shape,
-						"confidence": req.body.confidence,
-						"points": [],
-						"parameters": {}
-					};
-					if (req.body.shape == 1) {						//polygon
-						console.log("polygon");
-						for (var i=0; i<req.body.points.length; i++){
-							var point = {
-								"index": req.body.points[i].index,
-								"x": req.body.points[i].x,
-								"y": req.body.points[i].y
+					if (result.sensors[sensorIndex].sensorFrames[frameIndex].boundingBoxes[boundingBoxIndex].shape == 0) {
+						var pointIndex = result.sensors[sensorIndex].sensorFrames[frameIndex].boundingBoxes[boundingBoxIndex].points.findIndex(
+							function(point) {
+								return point.index === req.body.index
 							}
-							boundingBox.points[req.body.points[i].index] = point;
-						}					
-					}
-					else if (req.body.shape == 2) {					//Rectangle/Square
-						console.log("rectangle");
-						var parameters = {
-							"x1": req.body.parameters.x1,						//coordinate 1
-							"y1": req.body.parameters.y1,
-							"x2": req.body.parameters.x2,						//coordinate 2
-							"y2": req.body.parameters.y2,
-							"theta": req.body.parameters.theta
-						}
-						boundingBox.paramaeters = parameters;
-					}
-					else if (req.body.shape == 3) {					//Ellipse/circle
-						console.log("ellipse");
-						var parameters = {
-							"x": req.body.parameters.x,						//center 
-							"y": req.body.parameters.y,
-							"a": req.body.parameters.a,						//major Radius
-							"b": req.body.parameters.b,						//minor radius
-							"theta": req.body.parameters.theta
-						}
-						boundingBox.paramaeters = parameters;
+						)
+						console.log(pointIndex);
 					}
 					else {
-						console.log("bounding box shape not found");
-						return 0;
-					}
-					myObj["sensors."+sensorIndex+".sensorFrames."+frameIndex+".boundingBoxes."+boundingBoxIndex] = boundingBox;
+						console.log("not a polygon");
+					}		
+
+					var myObj = {};
+					var point = {
+						"index": req.body.index,
+						"x": req.body.x,
+						"y": req.body.y
+					};
+					myObj["sensors."+sensorIndex+".sensorFrames."+frameIndex+".boundingBoxes."+boundingBoxIndex+".points."+pointIndex] = point;
 					var myQuery = {
 						"projectID": req.body.projectID
 					}
@@ -82,6 +54,7 @@ module.exports = (app, MongoClient, mongoDBurl) => {
 						res.send(result);
 					})
 				})
+				
 			})
 		
 		}

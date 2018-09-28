@@ -282,3 +282,19 @@
 	"BoundingBoxID":"",
 	"SensorName":""
 }
+
+
+//-----http://127.0.0.1:8081/point------------
+//PUT Polygon
+{
+    "projectID": "",
+    "sensorID": "",
+    "frameID": "",	
+    "boundingBoxID": "",
+	"index": "",
+	"x": "",
+	"y": "", 
+	"shape": ""
+}
+
+

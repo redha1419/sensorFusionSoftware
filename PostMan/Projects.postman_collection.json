@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "b65b9ebb-7405-4227-bc23-8e70677f1dba",
+		"_postman_id": "b5c92619-6d87-48ba-8592-8683d0ed5aff",
 		"name": "Projects",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -567,7 +567,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://127.0.0.1:8081/listBoundingBoxes?projectID=1c218245-303e-4a96-af26-1109aa8e7bdd&sensorID=131b0930-414e-473f-921d-0ebb4798693b&frameID=26882c87-e4e0-4217-8441-5012eb9b9833",
 							"protocol": "http",
@@ -604,7 +607,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://127.0.0.1:8081/boundingBox?projectID=1c218245-303e-4a96-af26-1109aa8e7bdd&sensorID=131b0930-414e-473f-921d-0ebb4798693b&frameID=26882c87-e4e0-4217-8441-5012eb9b9833",
 							"protocol": "http",
@@ -631,6 +637,42 @@
 									"key": "frameID",
 									"value": "26882c87-e4e0-4217-8441-5012eb9b9833"
 								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Point",
+			"item": [
+				{
+					"name": "http://127.0.0.1:8081/boundingBox",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"projectName\": \"Project3\",\n    \"projectID\": \"f5746036-906c-49c5-8257-f41a763fd0e2\",\n    \"sensorName\": \"sensors.3.sensorName\",\n    \"sensorID\": \"86442012-5576-4bda-9a8f-f2761a5e2c6c\",\n    \"frameName\": \"frame6\",\n    \"frameID\": \"58352a15-8ce5-454a-92c9-54c297c75dea\",\t\n    \"boundingBoxID\": \"7ac1cc1f-a038-4bc6-815b-d59b22c2c64f\",\n\t\"index\": \"0\",\n\t\"x\": \"0\",\n\t\"y\": \"0\", \n\t\"shape\": \"0\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8081/point",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8081",
+							"path": [
+								"point"
 							]
 						}
 					},
