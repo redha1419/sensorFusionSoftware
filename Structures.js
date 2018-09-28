@@ -285,6 +285,16 @@
 
 
 //-----http://127.0.0.1:8081/point------------
+//POST Polygon
+{
+    "projectID": "",
+    "sensorID": "",
+    "frameID": "",	
+    "boundingBoxID": "",
+	"x": "",
+	"y": "", 
+	"shape": ""
+}
 //PUT Polygon
 {
     "projectID": "",
