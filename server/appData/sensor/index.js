@@ -23,7 +23,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					var myquery = {'projectID' : project.projectID};
 					var sensor = {
 						'sensorID': uuidv4(),
-						'sensorReference': req.body.sensorReference,
+						'sensorType': req.body.sensorReference,
 						'sensorName': req.body.sensorName,
 						'sensorFrames': []
 					};
@@ -55,7 +55,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					var myquery = {'projectID' : project.projectID};
 					var sensor = {
 						'sensorID': uuidv4(),
-						'sensorReference': req.body.sensorReference,
+						'sensorType': req.body.sensorReference,
 						'sensorName': req.body.sensorName,
 						'sensorFrames': []
 					};
@@ -92,7 +92,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 						reply[i] = {
 							'sensorName': result.sensors[i].sensorName,
 							'sensorID': result.sensors[i].sensorID,
-							'sensorReference': result.sensors[i].sensorReference
+							'sensorType': result.sensors[i].sensorReference
 						}
 					}
 					res.send(reply);
@@ -137,7 +137,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					var myObj = {};
 					myObj["sensors."+sensorIndex] = {
 						'sensorID': req.body.sensorID,
-						'sensorReference': req.body.sensorReference,
+						'sensorType': req.body.sensorReference,
 						'sensorName': req.body.sensorName,
 					};
 					var myQuery = {
