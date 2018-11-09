@@ -29,7 +29,8 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 						var myquery = {'projectID' : project.projectID};
 						sensorFrame = {
 							'frameID': uuidv4(),
-							'frameName': req.body.frameName,
+                            'frameName': req.body.frameName,
+                            'description': req.body.description,
 							'translation': {
 								"x": "",
 								"y": "",
@@ -60,7 +61,8 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 							   "projectID": project.projectID,
 							   "sensorName": dotNotationName,
 							   "sensorID": req.body.sensorID,
-							   "frameName": sensorFrame.frameName,
+                                "frameName": sensorFrame.frameName,
+                                "description": req.body.description,
 							   "frameID": sensorFrame.frameID 
                             };
                             projectHelper.updateProjectDate(req.body.projectID);
@@ -89,7 +91,8 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 						var myquery = {'projectID' : project.projectID};
 						sensorFrame = {
 							'frameID': uuidv4(),
-							'frameName': req.body.frameName,
+                            'frameName': req.body.frameName,
+                            'description': req.body.description,
 							'translation': {
 								"x": "",
 								"y": "",
@@ -120,7 +123,8 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 						   "projectID": project.projectID,
 						   "sensorName": dotNotationName,
 						   "sensorID": req.body.sensorID,
-						   "frameName": sensorFrame.frameName,
+                            "frameName": sensorFrame.frameName,
+                            "description": req.body.description,
 						   "frameID": sensorFrame.frameID 
 						};
                         projectHelper.updateProjectDate(req.body.projectID);
@@ -234,7 +238,8 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 						var myObj = {};
 						myObj["sensors."+sensorIndex+".sensorFrames."+frameIndex] = {
 							'frameID': req.body.frameID,
-							'frameName': req.body.frameName,
+                            'frameName': req.body.frameName,
+                            'description': req.body.description,
 							'translation': {
 								"x":     req.body.translation.x,
 								"y":     req.body.translation.y,

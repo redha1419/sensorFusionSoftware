@@ -25,7 +25,8 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 				var boundingBox = {
 					"boundingBoxID": uuidv4(),
 					"shape": req.body.shape,
-					"confidence": req.body.confidence,
+                    "confidence": req.body.confidence,
+                    "description": req.body.description,
 					"points": [],
 					"parameters": {}
 				};
@@ -105,7 +106,8 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 				var boundingBox = {
 					"boundingBoxID": uuidv4(),
 					"shape": req.body.BB1.shape,
-					"confidence": req.body.confidence,
+                    "confidence": req.body.confidence,
+                    "description": req.body.description,
 					"x1": req.body.BB1.x1,
 					"y1": req.body.BB1.y1,
 					"x2": req.body.BB1.x2,
@@ -260,7 +262,8 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					var boundingBox = {
 						"boundingBoxID": req.body.boundingBoxID,
 						"shape": req.body.shape,
-						"confidence": req.body.confidence,
+                        "confidence": req.body.confidence,
+                        "description": req.body.description,
 						"points": [],
 						"parameters": {}
 					};
