@@ -4,7 +4,8 @@
 const uuidv4 = require('uuid/v4');
 
 module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
-	return {
+    const projectHelper = require('../libs/helperFunctions.js')(mongodb);
+    return {
 		"configureRoutes": () => {
 
 /*
@@ -61,7 +62,8 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 							   "sensorID": req.body.sensorID,
 							   "frameName": sensorFrame.frameName,
 							   "frameID": sensorFrame.frameID 
-							};
+                            };
+                            projectHelper.updateProjectDate(req.body.projectID);
 						//	console.log(reply);
 							res.send(reply);
 		//					db.close
@@ -121,6 +123,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 						   "frameName": sensorFrame.frameName,
 						   "frameID": sensorFrame.frameID 
 						};
+                        projectHelper.updateProjectDate(req.body.projectID);
 					//	console.log(reply);
 						res.send(reply);
 		//				db.close
@@ -248,7 +251,8 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 						var newValues = {$set: myObj}
 						mongodb.collection(coll).update(myQuery,newValues, function(err, result) {
 							if (err) throw err;
-							console.log(result);
+                            console.log(result);
+                            projectHelper.updateProjectDate(req.body.projectID);
 							res.send(result);
 		// 					db.close();
 						})

@@ -4,6 +4,7 @@
 const uuidv4 = require('uuid/v4');
 
 module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
+	const projectHelper = require('../libs/helperFunctions.js')(mongodb);
 	return {
 		"configureRoutes": () => {
 
@@ -16,6 +17,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 			app.post('/project', function (req, res){
 				console.log("creating new project:"+req.body.projectName);
 				var coll = "projects";
+				var date_stamp = new Date();
 				var reply;
 				var myobj = {
 					"projectID": uuidv4(),
@@ -23,11 +25,13 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					"Users": [],
 					"sensors": [],
 					"operations": [],
-					"superframe": {}		  
+					"superframe": {},
+					"dateCreated": date_stamp.toString() ,
+					"dateModified": date_stamp.toString(),
+					"description": req.body.description
 				};
 				mongodb.createCollection(coll, function(err, res) {			//create projects Collection if non exists
 					if (err) throw err;
-					db.close();
 				});
 				mongodb.collection(coll).insertOne(myobj, function(err, result) {	//Create Project Document
 					if (err) throw err;
@@ -37,7 +41,9 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 						"collection": coll,
 						"projectName": result.ops[0].projectName,
 						"projectID": result.ops[0].projectID,
-						"_ID": result.ops[0]._id
+						"_ID": result.ops[0]._id,
+						"dateCreated": result.ops[0].dateCreated,
+						"dateModified": result.ops[0].dateModified
 					};
 					res.send(reply);
 				});
@@ -91,6 +97,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					if (err) throw err;
 					console.log(result);
 					res.send(result);
+					projectHelper.updateProjectDate(req.body.projectID);
 				})
 			})
 
@@ -110,6 +117,11 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					console.log("Project details sent");
 				})
 			})
+			app.get('/date?', function(req,res){
+				var date_stamp = new Date();
+				console.log(date_stamp.toString());
+				res.send(date_stamp.toString());
+			})
 		
 		
 			//get list of porjects and IDs
@@ -124,7 +136,10 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					for (var i = 0; i < result.length; i++) {
 						reply[i] = {
 							'projectName': result[i].projectName,
-							'projectID': result[i].projectID
+							'projectID': result[i].projectID,
+							'description': result[i].description,
+							'dateCreated': result[i].dateCreated,
+							'dateModified': result[i].dateModified
 						}
 					}
 					console.log(reply);

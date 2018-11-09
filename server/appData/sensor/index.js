@@ -4,13 +4,10 @@
 const uuidv4 = require('uuid/v4');
 
 module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
+    const projectHelper = require('../libs/helperFunctions.js')(mongodb);
 	return {
 		"configureRoutes": () => {
 
-app.get('/', function (req, res) {
-   console.log("Got a GET request for the homepage");
-   res.send('Hello GET');
-})		
 		
 /*
 ---------------------------POST------------------------------------------------
@@ -19,7 +16,7 @@ app.get('/', function (req, res) {
 				var coll = "projects";
 				var reply;
 				var project;
-			   console.log("adding sensor to"+req.body.projectID);
+			    console.log("adding sensor to"+req.body.projectID);
 				mongodb.collection(coll).findOne({'projectID': req.body.projectID }, function( err, result) {
 					if (err) throw err;
 					project = result;
@@ -41,7 +38,8 @@ app.get('/', function (req, res) {
 					   "projectID": project.projectID,
 					   "sensorName": sensor.sensorName,
 					   "sensorID": sensor.sensorID
-					};
+                        };
+                    projectHelper.updateProjectDate(req.body.projectID);
 					res.send(reply);
 					})
 				});
@@ -72,7 +70,8 @@ app.get('/', function (req, res) {
 					   "projectID": project.projectID,
 					   "sensorName": sensor.sensorName,
 					   "sensorID": sensor.sensorID
-					};
+                        };
+                    projectHelper.updateProjectDate(req.body.projectID);
 					res.send(reply);
 					})
 				});
@@ -147,7 +146,8 @@ app.get('/', function (req, res) {
 					var newValues = {$set: myObj}
 					mongodb.collection(coll).update(myQuery,newValues, function(err, result) {
 						if (err) throw err;
-						console.log(result);
+                        console.log(result);
+                        projectHelper.updateProjectDate(req.body.projectID);
 						res.send(result);
 					})
 				})
@@ -179,7 +179,8 @@ app.get('/', function (req, res) {
 					var newValues = {$set: myobj};
 					var myQuery = {"projectID" : projectID};
 					mongodb.collection(coll).updateOne(myQuery, newValues, function(err, result){
-						if (err) throw err;
+                        if (err) throw err;
+                        projectHelper.updateProjectDate(req.body.projectID);
 						console.log("Sensor deleted");
 					})
 				})

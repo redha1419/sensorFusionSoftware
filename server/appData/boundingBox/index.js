@@ -4,7 +4,8 @@
 const uuidv4 = require('uuid/v4');
 
 module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
-	return {
+    const projectHelper = require('../libs/helperFunctions.js')(mongodb);
+    return {
 		"configureRoutes": () => {
 			
 			
@@ -87,7 +88,8 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					mongodb.collection(coll).updateOne(myQuery, newValues, function(err, result) {
 						if (err) throw err;
 						console.log("Bounding Box Saved");
-						res.send(boundingBox);
+                        projectHelper.updateProjectDate(req.body.projectID);
+                        res.send(boundingBox);
 					})
 				})
 			})
@@ -130,7 +132,8 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					mongodb.collection(coll).updateOne(myQuery, newValues, function(err, result) {
 						if (err) throw err;
 						console.log("Bounding Box Saved");
-						res.send(boundingBox);
+                        projectHelper.updateProjectDate(req.body.projectID);
+                        res.send(boundingBox);
 					})
 				})
 			})
@@ -304,7 +307,8 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					}
 					var newValues = {$set: myObj}
 					mongodb.collection(coll).update(myQuery,newValues, function(err, result) {
-						if (err) throw err;
+                        if (err) throw err;
+                        projectHelper.updateProjectDate(req.body.projectID);
 						res.send(result);
 					})
 				})

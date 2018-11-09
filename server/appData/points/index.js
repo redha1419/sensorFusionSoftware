@@ -1,7 +1,8 @@
 "use strict";
 
 module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
-	return {
+    const projectHelper = require('../libs/helperFunctions.js')(mongodb);
+    return {
 		"configureRoutes": () => {
 /*
 -------------------------------POST---------------------------------
@@ -52,7 +53,8 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					}
 					var newValues = {$set: myObj}
 					mongodb.collection(coll).update(myQuery,newValues, function(err, result) {
-						if (err) throw err;
+                        if (err) throw err;
+                        projectHelper.updateProjectDate(req.body.projectID);
 						res.send(result);
 					})
 				})
@@ -113,7 +115,8 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					}
 					var newValues = {$set: myObj}
 					mongodb.collection(coll).update(myQuery,newValues, function(err, result) {
-						if (err) throw err;
+                        if (err) throw err;
+                        projectHelper.updateProjectDate(req.body.projectID);
 						res.send(result);
 					})
 				})
