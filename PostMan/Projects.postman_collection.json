@@ -312,17 +312,18 @@
 				{
 					"name": "http://127.0.0.1:8081/frame",
 					"request": {
-						"url": "http://127.0.0.1:8081/frame",
+						"url": "http://127.0.0.1:8081/addFrame",
 						"method": "POST",
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json"
+								"value": "application/json",
+								"description": ""
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"frameName\":\"frame3\",\n  \"projectID\" : \"f5746036-906c-49c5-8257-f41a763fd0e2\",\n  \"sensorID\" : \"86442012-5576-4bda-9a8f-f2761a5e2c6c\"\n  \n}"
+							"raw": "{\n  \"frameName\":\"frame4\",\n  \"projectID\" : \"2e551dd7-b671-41e3-acce-e85b9c4cb9a1\",\n  \"sensorID\" : \"ba7a391c-ef8d-4fe5-9b7a-e641011546f6\",\n  \"users\": [\"test\",\"test1\",\"test2\"],\n \"username\": \"test\",\n \"password\": \"1234\"\n}"
 						}
 					},
 					"response": []
@@ -335,12 +336,13 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json"
+								"value": "application/json",
+								"description": ""
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"projectID\": \"f5746036-906c-49c5-8257-f41a763fd0e2\",\r\n  \"sensorID\": \"86442012-5576-4bda-9a8f-f2761a5e2c6c\",\r\n  \"frameID\": \"c890452d-6326-4c21-bbd0-a6998edcdad0\",\r\n  \"frameName\": \"NEWframe2\",\r\n  \"translation\": {\r\n    \"x\":     \"1\",\r\n    \"y\":     \"1\",\r\n    \"z\":     \"1\",\r\n    \"alpha\": \"\",\r\n    \"beta\":  \"\",\r\n    \"gama\":  \"\",\r\n    \"time\":  \"\"\r\n  }\r\n}"
+							"raw": "{\r\n  \"username\": \"test\",\r\n  \"password\": \"1234\",\r\n    \"projectID\": \"2e551dd7-b671-41e3-acce-e85b9c4cb9a1\",\r\n    \"sensorID\": \"ba7a391c-ef8d-4fe5-9b7a-e641011546f6\",\r\n    \"frameID\": \"7cb138cf-f9a4-49f9-82b8-d681ead758a9\",\r\n  \"frameName\": \"ASDF\",\r\n  \"users\": [\"test\",\"newguy\"],\r\n  \"translation\": {\r\n    \"x\":     \"1\",\r\n    \"y\":     \"1\",\r\n    \"z\":     \"1\",\r\n    \"alpha\": \"\",\r\n    \"beta\":  \"\",\r\n    \"gama\":  \"\",\r\n    \"time\":  \"\"\r\n  }\r\n}"
 						}
 					},
 					"response": []
@@ -349,7 +351,7 @@
 					"name": "http://127.0.0.1:8081/frame?projectID=f5746036-906c-49c5-8257-f41a763fd0e2&sensorID=86442012-5576-4bda-9a8f-f2761a5e2c6c&frameID=171eefaa-d85d-4908-bc07-5ffe28dc76f8",
 					"request": {
 						"url": {
-							"raw": "http://127.0.0.1:8081/frame?projectID=f5746036-906c-49c5-8257-f41a763fd0e2&sensorID=86442012-5576-4bda-9a8f-f2761a5e2c6c&frameID=171eefaa-d85d-4908-bc07-5ffe28dc76f8",
+							"raw": "http://127.0.0.1:8081/frame?projectID=2e551dd7-b671-41e3-acce-e85b9c4cb9a1&sensorID=ba7a391c-ef8d-4fe5-9b7a-e641011546f6&frameID=28f34cd0-90a4-48f9-a1e3-7f953bf3f5f4&username=tes&password=1234",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -364,15 +366,33 @@
 							"query": [
 								{
 									"key": "projectID",
-									"value": "f5746036-906c-49c5-8257-f41a763fd0e2"
+									"value": "2e551dd7-b671-41e3-acce-e85b9c4cb9a1",
+									"equals": true,
+									"description": ""
 								},
 								{
 									"key": "sensorID",
-									"value": "86442012-5576-4bda-9a8f-f2761a5e2c6c"
+									"value": "ba7a391c-ef8d-4fe5-9b7a-e641011546f6",
+									"equals": true,
+									"description": ""
 								},
 								{
 									"key": "frameID",
-									"value": "171eefaa-d85d-4908-bc07-5ffe28dc76f8"
+									"value": "28f34cd0-90a4-48f9-a1e3-7f953bf3f5f4",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "username",
+									"value": "tes",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "password",
+									"value": "1234",
+									"equals": true,
+									"description": ""
 								}
 							],
 							"variable": []
@@ -390,7 +410,7 @@
 					"name": "http://127.0.0.1:8081/listFrames?projectID=f5746036-906c-49c5-8257-f41a763fd0e2&sensorID=86442012-5576-4bda-9a8f-f2761a5e2c6c",
 					"request": {
 						"url": {
-							"raw": "http://127.0.0.1:8081/listFrames?projectID=f5746036-906c-49c5-8257-f41a763fd0e2&sensorID=86442012-5576-4bda-9a8f-f2761a5e2c6c",
+							"raw": "http://127.0.0.1:8081/listFrames?projectID=2e551dd7-b671-41e3-acce-e85b9c4cb9a1&sensorID=ba7a391c-ef8d-4fe5-9b7a-e641011546f6",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -405,11 +425,15 @@
 							"query": [
 								{
 									"key": "projectID",
-									"value": "f5746036-906c-49c5-8257-f41a763fd0e2"
+									"value": "2e551dd7-b671-41e3-acce-e85b9c4cb9a1",
+									"equals": true,
+									"description": ""
 								},
 								{
 									"key": "sensorID",
-									"value": "86442012-5576-4bda-9a8f-f2761a5e2c6c"
+									"value": "ba7a391c-ef8d-4fe5-9b7a-e641011546f6",
+									"equals": true,
+									"description": ""
 								}
 							],
 							"variable": []
