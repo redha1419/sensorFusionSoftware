@@ -150,6 +150,18 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 				
 			})
 			
+			
+			
+			
+			
+			app.get('/test', function(req,res){
+			const projectHelper = require('../libs/helperFunctions.js')(mongodb);
+			projectHelper.checkUser(req.query.username,req.query.password);
+				
+			})
+			
+			
+			
 /*
 -----------------------------DELETE-------------------------------------
 */

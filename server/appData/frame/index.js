@@ -13,6 +13,11 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 */		
 		
 			app.post('/addFrame', function(req, res){
+				if (projectHelper.checkUser(req.body.username, req.body.password) == false) {
+					console.log('invalid credentials: ' + req.body.username);
+					res.send({'error': 'invalid credentials: ' + req.body.username});
+					return;
+				}
 				var coll = "projects";
 				var reply;
 				var project;
@@ -31,6 +36,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 							'frameID': uuidv4(),
                             'frameName': req.body.frameName,
                             'description': req.body.description,
+							'users': req.body.users,
 							'translation': {
 								"x": "",
 								"y": "",
@@ -75,6 +81,11 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 			})		
 
 			app.post('/frame', function(req, res){
+				if (projectHelper.checkUser(req.body.username, req.body.password) == false) {
+					console.log('invalid credentials: ' + req.body.username);
+					res.send({'error': 'invalid credentials: ' + req.body.username});
+					return;
+				}
 				var coll = "projects";
 				var reply;
 				var project;
@@ -93,6 +104,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 							'frameID': uuidv4(),
                             'frameName': req.body.frameName,
                             'description': req.body.description,
+							'users': req.body.users,
 							'translation': {
 								"x": "",
 								"y": "",
@@ -163,6 +175,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 							response[i] = {
 								'frameName': result.sensors[sensorIndex].sensorFrames[i].frameName,
 								'frameID': result.sensors[sensorIndex].sensorFrames[i].frameID,
+								'users': result.sensors[sensorIndex].sensorFrames[i].users,
 								
 							}
 						}
@@ -177,6 +190,11 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 			
 			
 			app.get('/frame?',function(req,res){
+				if (projectHelper.checkUser(req.query.username, req.query.password) == false) {
+					console.log('invalid credentials: ' + req.body.username);
+					res.send({'error': 'invalid credentials: ' + req.body.username});
+					return;
+				}
 				var coll = "projects";
 				var projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
 				var sensorID = req.query.sensorID ? req.query.sensorID : 'No Sensor ID';
@@ -201,10 +219,16 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 							}
 						)
 						response = result.sensors[sensorIndex].sensorFrames[frameIndex]
-
-						console.log(response);
-						res.send(response);
-						console.log("Project details sent");
+						for (var i = 0; i < response.users.length; i++){
+							if (response.users[i] == req.query.username){
+								console.log(response);
+								res.send(response);
+								console.log("Project details sent");
+								return;
+							}
+						}
+						console.log("you don't have access");
+						res.send({'error':"you don't have access"});
 		//				db.close		
 					})
 		//		})
@@ -216,6 +240,11 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 */			
 			
 			app.put('/frame',function(req,res){
+				if (projectHelper.checkUser(req.body.username, req.body.password) == false) {
+					console.log('invalid credentials: ' + req.body.username);
+					res.send({'error': 'invalid credentials: ' + req.body.username});
+					return 0;
+				}
 				var coll = "projects";
 				console.log('Updating frame: ' + req.body.frameID);
 		//		MongoClient.connect(mongoDBurl, function(err,db){
@@ -234,33 +263,44 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 								return sensFrame.frameID === req.body.frameID
 							}
 						)
-
-						var myObj = {};
-						myObj["sensors."+sensorIndex+".sensorFrames."+frameIndex] = {
-							'frameID': req.body.frameID,
-                            'frameName': req.body.frameName,
-                            'description': req.body.description,
-							'translation': {
-								"x":     req.body.translation.x,
-								"y":     req.body.translation.y,
-								"z":     req.body.translation.z,
-								"alpha": req.body.translation.alpha,
-								"beta":  req.body.translation.beta,
-								"gama":  req.body.translation.gama,
-								"time":  req.body.translation.time
+						for (var i = 0; i < result.sensors[sensorIndex].sensorFrames[frameIndex].users.length; i++){
+							if (result.sensors[sensorIndex].sensorFrames[frameIndex].users[i] == req.body.username){
+								
+								var myObj = {};
+								myObj["sensors."+sensorIndex+".sensorFrames."+frameIndex] = {
+									'frameID': req.body.frameID,
+									'frameName': req.body.frameName,
+									'description': req.body.description,
+									'users' : req.body.users,
+									'translation': {
+										"x":     req.body.translation.x,
+										"y":     req.body.translation.y,
+										"z":     req.body.translation.z,
+										"alpha": req.body.translation.alpha,
+										"beta":  req.body.translation.beta,
+										"gama":  req.body.translation.gama,
+										"time":  req.body.translation.time
+									}
+								}
+								var myQuery = {
+									"projectID": req.body.projectID
+								}
+								var newValues = {$set: myObj}
+								mongodb.collection(coll).update(myQuery,newValues, function(err, result) {
+									if (err) throw err;
+									console.log(result);
+									projectHelper.updateProjectDate(req.body.projectID);
+									res.send(result);
+				// 					db.close();
+								})		
+								
+								
+								return;
 							}
 						}
-						var myQuery = {
-							"projectID": req.body.projectID
-						}
-						var newValues = {$set: myObj}
-						mongodb.collection(coll).update(myQuery,newValues, function(err, result) {
-							if (err) throw err;
-                            console.log(result);
-                            projectHelper.updateProjectDate(req.body.projectID);
-							res.send(result);
-		// 					db.close();
-						})
+						console.log("access denied");
+						res.send({'error':'access denied'});
+						
 					})
 				
 		//		})

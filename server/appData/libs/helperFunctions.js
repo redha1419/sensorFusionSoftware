@@ -18,7 +18,24 @@ module.exports = function(mongodb) {
 				if (err) throw err;
 			})			
 			return 0;
+		},
+		
+		checkUser: function(username, userpassword){
+			mongodb.collection('users').findOne({'username': username}, function(err, result) {
+				if (err) throw err;
+				if (result != null){
+					if (result.password == userpassword) {
+						return true;
+					}
+				}
+				return false;
+			});
+			
+			
 		}
+		
+		
+		
 	};
 };
 

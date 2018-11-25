@@ -53,7 +53,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					}
 					boundingBox.paramaeters = parameters;
 				}
-				else if (req.body.shape == 3) {					//Ellipse/circle
+				else if (req.body.shape == 3) {							//Ellipse/circle
 					console.log("ellipse");
 					var parameters = {
 						"x": req.body.parameters.x,						//center 
