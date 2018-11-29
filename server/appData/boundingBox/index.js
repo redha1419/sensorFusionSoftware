@@ -285,7 +285,8 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 							"y1": req.body.parameters.y1,
 							"x2": req.body.parameters.x2,						//coordinate 2
 							"y2": req.body.parameters.y2,
-							"theta": req.body.parameters.theta
+							"cx": req.body.parameters.cx,						//coordinate 2
+							"cy": req.body.parameters.cy
 						}
 						boundingBox.paramaeters = parameters;
 					}
