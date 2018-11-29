@@ -49,9 +49,10 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 						"y1": req.body.parameters.y1,
 						"x2": req.body.parameters.x2,						//coordinate 2
 						"y2": req.body.parameters.y2,
-						"theta": req.body.parameters.theta
+						"cx": req.body.parameters.cx,						//coordinate 2
+						"cy": req.body.parameters.cy
 					}
-					boundingBox.paramaeters = parameters;
+					boundingBox.parameters = parameters;
 				}
 				else if (req.body.shape == 3) {							//Ellipse/circle
 					console.log("ellipse");
@@ -62,7 +63,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 						"b": req.body.parameters.b,						//minor radius
 						"theta": req.body.parameters.theta
 					}
-					boundingBox.paramaeters = parameters;
+					boundingBox.parameters = parameters;
 				}
 				else {
 					console.log("bounding box shape not found");
@@ -288,7 +289,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 							"cx": req.body.parameters.cx,						//coordinate 2
 							"cy": req.body.parameters.cy
 						}
-						boundingBox.paramaeters = parameters;
+						boundingBox.parameters = parameters;
 					}
 					else if (req.body.shape == 3) {					//Ellipse/circle
 						console.log("ellipse");
@@ -299,7 +300,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 							"b": req.body.parameters.b,						//minor radius
 							"theta": req.body.parameters.theta
 						}
-						boundingBox.paramaeters = parameters;
+						boundingBox.parameters = parameters;
 					}
 					else {
 						console.log("bounding box shape not found");
