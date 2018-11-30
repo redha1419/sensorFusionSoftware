@@ -174,8 +174,8 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 						for (var i = 0; i < result.sensors[sensorIndex].sensorFrames.length; i++) {
 							response[i] = {
 								'frameName': result.sensors[sensorIndex].sensorFrames[i].frameName,
-								'frameID': result.sensors[sensorIndex].sensorFrames[i].frameID,
 								'users': result.sensors[sensorIndex].sensorFrames[i].users,
+								'frameID': result.sensors[sensorIndex].sensorFrames[i].frameID
 								
 							}
 						}
