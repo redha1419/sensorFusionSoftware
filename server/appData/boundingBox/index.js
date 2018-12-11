@@ -277,6 +277,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 								"y": req.body.points[i].y
 							}
 							boundingBox.points[req.body.points[i].index] = point;
+
 						}					
 					}
 					else if (req.body.shape == 2) {					//Rectangle/Square

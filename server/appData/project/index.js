@@ -50,7 +50,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 			})
 
 
-
+/*
 			app.post('/addProject', function (req, res) {
 				console.log("creating new project:"+req.body.projectName);
 				var coll = "projects";
@@ -79,7 +79,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					res.send(reply);
 				});
 			})
-			
+	*/		
 /*
 -----------------------------PUT-------------------------------------
 */
