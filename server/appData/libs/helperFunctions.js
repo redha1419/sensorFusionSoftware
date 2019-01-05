@@ -30,8 +30,18 @@ module.exports = function(mongodb) {
 				}
 				return false;
 			});
-			
-			
+		},
+		
+		itemInArray: function(item, array) {
+			var i;
+			if ( (array != undefined) && (array.constructor === Array) ) {
+				for(i = 0; i < array.length; i++){
+					if (item == array[i]){
+						return i;
+					}
+				}
+			}
+			return -1;
 		}
 		
 		

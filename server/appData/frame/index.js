@@ -13,11 +13,13 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 */		
 		
 			app.post('/addFrame', function(req, res){
+				/*
 				if (projectHelper.checkUser(req.body.username, req.body.password) == false) {
 					console.log('invalid credentials: ' + req.body.username);
 					res.send({'error': 'invalid credentials: ' + req.body.username});
 					return;
 				}
+				*/
 				var coll = "projects";
 				var reply;
 				var project;
@@ -81,11 +83,13 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 			})		
 
 			app.post('/frame', function(req, res){
+				/*
 				if (projectHelper.checkUser(req.body.username, req.body.password) == false) {
 					console.log('invalid credentials: ' + req.body.username);
 					res.send({'error': 'invalid credentials: ' + req.body.username});
 					return;
 				}
+				*/
 				var coll = "projects";
 				var reply;
 				var project;
@@ -190,11 +194,13 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 			
 			
 			app.get('/frame?',function(req,res){
+				/*
 				if (projectHelper.checkUser(req.query.username, req.query.password) == false) {
 					console.log('invalid credentials: ' + req.body.username);
 					res.send({'error': 'invalid credentials: ' + req.body.username});
 					return;
 				}
+				*/
 				var coll = "projects";
 				var projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
 				var sensorID = req.query.sensorID ? req.query.sensorID : 'No Sensor ID';
@@ -240,11 +246,13 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 */			
 			
 			app.put('/frame',function(req,res){
+				/*
 				if (projectHelper.checkUser(req.body.username, req.body.password) == false) {
 					console.log('invalid credentials: ' + req.body.username);
 					res.send({'error': 'invalid credentials: ' + req.body.username});
 					return 0;
 				}
+				*/
 				var coll = "projects";
 				console.log('Updating frame: ' + req.body.frameID);
 		//		MongoClient.connect(mongoDBurl, function(err,db){
