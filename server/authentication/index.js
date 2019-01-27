@@ -35,7 +35,7 @@ module.exports = (app, mongodb) => {
 								
 				let options = {
                     "algorithm": "RS256",
-                    "expiresIn": "1h",
+                    "expiresIn": "10h",
                     "issuer": "ETF Lab"
                 };
 				
@@ -72,7 +72,7 @@ module.exports = (app, mongodb) => {
 				var cookieList = parseCookies(req);
                 let options = {
                     "algorithm": "RS256",
-                    "expiresIn": "1h",
+                    "expiresIn": "10h",
                     "issuer": "ETF Lab"
                 };
 				var payload = jwt.verify(cookieList.token,publicKey,options);
