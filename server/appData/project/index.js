@@ -14,7 +14,8 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 -----------------------------POST-------------------------------------
 */
 			//post a new project
-			app.post('/project', function (req, res){
+			app.post('/addProject', function (req, res) {
+//			app.post('/project', function (req, res){
 				console.log("creating new project:"+req.body.projectName);
 				var coll = "projects";
 				var date_stamp = new Date();
