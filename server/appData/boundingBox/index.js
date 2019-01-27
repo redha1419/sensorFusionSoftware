@@ -33,7 +33,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					"parameters": {}
 				};
 				
-				if ( (req.body.shape != undefined) && (typeof req.body.shape === 'number') ){
+				if ( (req.body.shape != undefined) && (typeof req.body.shape === 'string') ){
 					boundingBox.shape = req.body.shape;
 				}
 				if ( (req.body.confidence != undefined) && (typeof req.body.confidence === 'number') ){
