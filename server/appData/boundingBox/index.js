@@ -3,9 +3,92 @@
 //libs
 const uuidv4 = require('uuid/v4');
 
+
 module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
-    const projectHelper = require('../libs/helperFunctions.js')(mongodb);
-    const authenticaton = require('../libs/users.js')(mongodb);
+
+	const projectHelper = require('../libs/helperFunctions.js')(mongodb);
+	const authenticaton = require('../libs/users.js')(mongodb);
+		
+	function createBBInstance(req){
+		var boundingBox = {
+			"boundingBoxID": uuidv4(),
+			"shape": 0,
+			"primaryLabel": "",
+			"secondaryLabel": [],
+			"temporalAttribute": "",
+			"confidence": 0,
+			"description": 'No description.',
+			"users": [authenticaton.getUser(req)],
+			"points": [],
+			"parameters": {}
+		};
+		
+		if ( (req.body.shape != undefined) && (typeof req.body.shape === 'string') ){
+			boundingBox.shape = req.body.shape;
+		}
+		if ( (req.body.confidence != undefined) && (typeof req.body.confidence === 'number') ){
+			boundingBox.confidence = req.body.confidence;
+		}
+		if ( (req.body.description != undefined) && (typeof req.body.description === 'string') ){
+			boundingBox.description = req.body.description;
+		}
+		if ( (req.body.primaryLabel != undefined) && (typeof req.body.primaryLabel === 'string') ){
+			boundingBox.primaryLabel = req.body.primaryLabel;
+		}
+		if ( (req.body.secondaryLabel != undefined) && ( Array.isArray(req.body.secondaryLabel) ) ){
+			boundingBox.secondaryLabel = req.body.secondaryLabel;
+		}
+		if ( (req.body.temporalAttribute != undefined) && (typeof req.body.temporalAttribute === 'string') ){
+			boundingBox.temporalAttribute = req.body.temporalAttribute;
+		}
+		if ( (req.body.users != undefined) && (projectHelper.itemInArray(boundingBox.users[0], req.body.users) == -1) ){
+			boundingBox.users = boundingBox.users.concat(req.body.users);
+		} else if (req.body.users != undefined){
+			boundingBox.users = req.body.users;
+		}
+		console.log(req.body.parameters);
+		if (req.body.shape == 1) {						//polygon
+			console.log("polygon");
+			for (var i=0; i<req.body.points.length; i++){
+				var point = {
+					"index": req.body.points[i].index,
+					"x": req.body.points[i].x,
+					"y": req.body.points[i].y
+				}
+				boundingBox.points[req.body.points[i].index] = point;
+			}					
+		}
+		else if (req.body.shape == 2) {					//Rectangle/Square
+			console.log("rectangle");
+			var parameters = {
+				"x1": req.body.parameters.x1,						//coordinate 1
+				"y1": req.body.parameters.y1,
+				"x2": req.body.parameters.x2,						//coordinate 2
+				"y2": req.body.parameters.y2,
+				"cx": req.body.parameters.cx,						//coordinate 2
+				"cy": req.body.parameters.cy
+			}
+			boundingBox.parameters = parameters;
+		}
+		else if (req.body.shape == 3) {							//Ellipse/circle
+			console.log("ellipse");
+			var parameters = {
+				"x": req.body.parameters.x,						//center 
+				"y": req.body.parameters.y,
+				"a": req.body.parameters.a,						//major Radius
+				"b": req.body.parameters.b,						//minor radius
+				"theta": req.body.parameters.theta
+			}
+			boundingBox.parameters = parameters;
+		}
+		else {
+			console.log("bounding box shape not found");
+			return null;
+		}
+		return boundingBox;
+	}
+
+    
     return {
 		"configureRoutes": () => {
 			
@@ -23,9 +106,14 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 							req.body.projectID + 
 							" >> "+ req.body.sensorID + 
 							" >> "+ req.body.frameID);
+				var boundingBox = createBBInstance(req);
+		/*		
 				var boundingBox = {
 					"boundingBoxID": uuidv4(),
 					"shape": 0,
+					"primaryLabel": "",
+					"secondaryLabel": [],
+					"temporalAttribute": "",
                     "confidence": 0,
                     "description": 'No description.',
 					"users": [authenticaton.getUser(req)],
@@ -86,7 +174,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					console.log("bounding box shape not found");
 					return 0;
 				}
-
+		*/
 				mongodb.collection(coll).findOne({'projectID': req.body.projectID}, function(err, result) {
 					if (err) throw err;
 					project = result;
@@ -255,7 +343,9 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 						console.log(boundingBoxIndex);
 
 						var myObj = {};
+						var boundingBox = createBBInstance(req);
 						
+			/*			
 						var boundingBox = {
 							"boundingBoxID": req.body.boundingBoxID,
 							"shape": 0,
@@ -321,6 +411,8 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 							console.log("bounding box shape not found");
 							return 0;
 						}
+			*/			
+						
 						myObj["sensors."+sensorIndex+".sensorFrames."+frameIndex+".boundingBoxes."+boundingBoxIndex] = boundingBox;
 						var myQuery = {
 							"projectID": req.body.projectID
