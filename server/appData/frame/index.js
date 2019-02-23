@@ -5,7 +5,90 @@ const uuidv4 = require('uuid/v4');
 
 module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
     const projectHelper = require('../libs/helperFunctions.js')(mongodb);
-    return {
+	const authenticaton = require('../libs/users.js')(mongodb);
+	
+	function createFrameInstance(req, ID){
+		var sensorFrame = {
+			'frameID': uuidv4(),
+			'frameName': req.body.frameName,
+			'description': req.body.description,
+			'users': [authenticaton.getUser(req)],
+			'translation': {
+				"x": "",
+				"y": "",
+				"z": "",
+				"alpha": "",
+				"beta": "",
+				"gama": "",
+				"time": ""
+			},
+			'boundingBox': []
+		};
+		if (ID != undefined) {
+			sensorFrame.frameID = ID;
+		}
+		if ( (req.body.users != undefined) && (projectHelper.itemInArray(sensorFrame.users[0], req.body.users) == -1) ){
+			sensorFrame.users = sensorFrame.users.concat(req.body.users);
+		} else if (req.body.users != undefined){
+			sensorFrame.users = req.body.users;
+		}
+		if ( (req.body.description != undefined) && (typeof req.body.description === 'string') ){
+			sensorFrame.description = req.body.description;
+		}
+		if ( (req.body.frameName != undefined) && (typeof req.body.frameName === 'string') ){
+			sensorFrame.frameName = req.body.frameName;
+		}
+		
+		if (req.body.translation != undefined) {
+			// default to origin
+			if ( (req.body.translation.x != undefined) && (typeof req.body.translation.x === 'number') ){
+				sensorFrame.translation.x  = req.body.translation.x;
+			}
+			else {
+				sensorFrame.translation.x  = 0;
+			}
+			if ( (req.body.translation.y != undefined) && (typeof req.body.translation.y === 'number') ){
+				sensorFrame.translation.y  = req.body.translation.y;
+			}
+			else {
+				sensorFrame.translation.y  = 0;
+			}
+			if ( (req.body.translation.z != undefined) && (typeof req.body.translation.z === 'number') ){
+				sensorFrame.translation.z = req.body.translation.z;
+			}
+			else {
+				sensorFrame.translation.z  = 0;
+			}
+			if ( (req.body.translation.alpha != undefined) && (typeof req.body.translation.alpha === 'number') ){
+				sensorFrame.translation.alpha  = req.body.translation.alpha;
+			}
+			else {
+				sensorFrame.translation.alpha  = 0;
+			}
+			if ( (req.body.translation.beta != undefined) && (typeof req.body.translation.beta === 'number') ){
+				sensorFrame.translation.beta  = req.body.translation.beta;
+			}
+			else {
+				sensorFrame.translation.beta  = 0;
+			}
+			if ( (req.body.translation.gama != undefined) && (typeof req.body.translation.gama === 'number') ){
+				sensorFrame.translation.gama  = req.body.translation.gama;
+			}
+			else {
+				sensorFrame.translation.gama  = 0;
+			}
+			if ( (req.body.translation.time != undefined) && (typeof req.body.translation.time === 'number') ){
+				sensorFrame.translation.time  = req.body.translation.time;
+			}
+			else {
+				sensorFrame.translation.time  = 0;
+			}
+		}		
+		return sensorFrame;
+	}
+	
+	
+	return {
 		"configureRoutes": () => {
 
 /*
@@ -34,7 +117,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 						if (err) throw err;
 						project = result;
 						var myquery = {'projectID' : project.projectID};
-						sensorFrame = {
+				/*		sensorFrame = {
 							'frameID': uuidv4(),
                             'frameName': req.body.frameName,
                             'description': req.body.description,
@@ -50,6 +133,8 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 							},
 							'boundingBox': []
 						};
+				*/		
+						sensorFrame = createFrameInstance(req, uuidv4());
 						var mySensor = project.sensors.findIndex(
 							function(sense){
 								return sense.sensorID === req.body.sensorID
@@ -120,6 +205,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 							},
 							'boundingBoxes': []
 						};
+						sensorFrame = createFrameInstance(req, uuidv4());
 						var mySensor = project.sensors.findIndex(
 							function(sense){
 								return sense.sensorID === req.body.sensorID
@@ -183,9 +269,15 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 								
 							}
 						}
+						if (projectHelper.itemInArray(
+									authenticaton.getUser(req), 
+									result.sensors[sensorIndex].users) >= 0){
+							console.log(response);
+							res.send(response);
+						}else{
+							res.send({'error' : "unauthorized"});
+						}
 						
-						console.log(response);
-						res.send(response);
 						console.log("Frame details sent");
 		//				db.close		
 					})
@@ -211,6 +303,8 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 		//			if (err) throw err;
 		//			var dbo = db.db("mydb");
 		//			dbo.collection(coll).findOne({'projectID': projectID}, function(err, result){
+			
+				if (authenticaton.getPermission(req).read == 'true'){	
 					mongodb.collection(coll).findOne({'projectID': projectID}, function(err, result){
 						if (err) throw err;
 						var response = 0;
@@ -225,7 +319,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 							}
 						)
 						response = result.sensors[sensorIndex].sensorFrames[frameIndex]
-						for (var i = 0; i < response.users.length; i++){
+				/*		for (var i = 0; i < response.users.length; i++){
 							if (response.users[i] == req.query.username){
 								console.log(response);
 								res.send(response);
@@ -235,8 +329,20 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 						}
 						console.log("you don't have access");
 						res.send({'error':"you don't have access"});
+				*/		
+						if (projectHelper.itemInArray(
+										authenticaton.getUser(req), 
+										result.sensors[sensorIndex].sensorFrames[frameIndex].users) >= 0){
+							res.send(response);
+							console.log("Bounding Boxes sent");
+						}else{
+							res.send({'error' : "unauthorized"});
+						}
 		//				db.close		
 					})
+				}else {
+					res.send({'error' : "unauthorized"});
+				}
 		//		})
 			})
 
@@ -273,37 +379,52 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 						)
 						for (var i = 0; i < result.sensors[sensorIndex].sensorFrames[frameIndex].users.length; i++){
 							if (result.sensors[sensorIndex].sensorFrames[frameIndex].users[i] == req.body.username){
-								
-								var myObj = {};
-								myObj["sensors."+sensorIndex+".sensorFrames."+frameIndex] = {
-									'frameID': req.body.frameID,
-									'frameName': req.body.frameName,
-									'description': req.body.description,
-									'users' : req.body.users,
-									'translation': {
-										"x":     req.body.translation.x,
-										"y":     req.body.translation.y,
-										"z":     req.body.translation.z,
-										"alpha": req.body.translation.alpha,
-										"beta":  req.body.translation.beta,
-										"gama":  req.body.translation.gama,
-										"time":  req.body.translation.time
+								if (authenticaton.getPermission(req).write == 'true') {
+									var myObj = {};
+									myObj["sensors."+sensorIndex+".sensorFrames."+frameIndex] = {
+										'frameID': req.body.frameID,
+										'frameName': req.body.frameName,
+										'description': req.body.description,
+										'users' : req.body.users,
+										'translation': {
+											"x":     req.body.translation.x,
+											"y":     req.body.translation.y,
+											"z":     req.body.translation.z,
+											"alpha": req.body.translation.alpha,
+											"beta":  req.body.translation.beta,
+											"gama":  req.body.translation.gama,
+											"time":  req.body.translation.time
+										}
 									}
+									
+									myObj["sensors."+sensorIndex+".sensorFrames."+frameIndex] = createFrameInstance(req, req.body.frameID)
+									var myQuery = {
+										"projectID": req.body.projectID
+									}
+									var newValues = {$set: myObj}
+									
+									if (projectHelper.itemInArray(
+										authenticaton.getUser(req), 
+										result.sensors[sensorIndex].sensorFrames[frameIndex].users) >= 0){
+											
+										mongodb.collection(coll).update(myQuery,newValues, function(err, result) {
+											if (err) throw err;
+											console.log(result);
+											projectHelper.updateProjectDate(req.body.projectID);
+											res.send(result);
+						// 					db.close();
+										})	
+											
+											
+									} else {
+										res.send({'error' : "unauthorized"});
+									}
+									
+									
+									return;
 								}
-								var myQuery = {
-									"projectID": req.body.projectID
-								}
-								var newValues = {$set: myObj}
-								mongodb.collection(coll).update(myQuery,newValues, function(err, result) {
-									if (err) throw err;
-									console.log(result);
-									projectHelper.updateProjectDate(req.body.projectID);
-									res.send(result);
-				// 					db.close();
-								})		
-								
-								
-								return;
+							} else {
+								res.send({'error' : "unauthorized"});
 							}
 						}
 						console.log("access denied");

@@ -5,6 +5,30 @@ const uuidv4 = require('uuid/v4');
 
 module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
     const projectHelper = require('../libs/helperFunctions.js')(mongodb);
+	const authenticaton = require('../libs/users.js')(mongodb);
+	
+	function createSensorInstance(req, ID){
+		var sensor = {
+			'sensorID': uuidv4(),
+			'sensorType': req.body.sensorReference,
+			'sensorName': req.body.sensorName,
+			'users': [authenticaton.getUser(req)],
+			'sensorFrames': []
+		};
+		if (ID != undefined) {
+			sensor.sensorID = ID;
+		}
+		if ( (req.body.users != undefined) && (projectHelper.itemInArray(sensor.users[0], req.body.users) == -1) ){
+			sensor.users = sensor.users.concat(req.body.users);
+		} else if (req.body.users != undefined){
+			sensor.users = req.body.users;
+		}
+		if ( (req.body.sensorName != undefined) && (typeof req.body.sensorName === 'string') ){
+			sensor.sensorName = req.body.sensorName;
+		}
+		return sensor;
+	}
+	
 	return {
 		"configureRoutes": () => {
 
@@ -21,12 +45,14 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					if (err) throw err;
 					project = result;
 					var myquery = {'projectID' : project.projectID};
-					var sensor = {
+			/*		var sensor = {
 						'sensorID': uuidv4(),
 						'sensorType': req.body.sensorReference,
 						'sensorName': req.body.sensorName,
 						'sensorFrames': []
 					};
+			*/		
+					var sensor = createSensorInstance(req);
 					var newvalues = {$push: {'sensors': sensor}};
 					mongodb.collection(coll).updateOne(myquery, newvalues, function(err, result) {
 					if (err) throw err;
@@ -53,12 +79,14 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					if (err) throw err;
 					project = result;
 					var myquery = {'projectID' : project.projectID};
-					var sensor = {
+				/*	var sensor = {
 						'sensorID': uuidv4(),
 						'sensorType': req.body.sensorReference,
 						'sensorName': req.body.sensorName,
 						'sensorFrames': []
 					};
+				*/	
+					var sensor = createSensorInstance(req);
 					var newvalues = {$push: {'sensors': sensor}};
 					mongodb.collection(coll).updateOne(myquery, newvalues, function(err, result) {
 					if (err) throw err;
@@ -95,7 +123,16 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 							'sensorType': result.sensors[i].sensorReference
 						}
 					}
-					res.send(reply);
+					
+					if (projectHelper.itemInArray(
+								authenticaton.getUser(req), 
+								result.users) >= 0){
+						console.log(response);
+						res.send(reply);
+					}else{
+						res.send({'error' : "unauthorized"});
+					}
+					
 					console.log("Project details sent");
 				})
 			})
@@ -106,20 +143,33 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 				var sensorID = req.query.sensorID ? req.query.sensorID : 'No Sensor ID';
 				console.log("Sensor details requested");
 				console.log(projectID);
-				mongodb.collection(coll).findOne({'projectID': projectID}, function(err, result){
-					if (err) throw err;
-					var response = 0;
-					var sensorIndex = result.sensors.findIndex(
-						function(sense) {
-							return sense.sensorID === sensorID
+				if (authenticaton.getPermission(req).read == 'true'){
+					mongodb.collection(coll).findOne({'projectID': projectID}, function(err, result){
+						if (err) throw err;
+						var response = 0;
+						var sensorIndex = result.sensors.findIndex(
+							function(sense) {
+								return sense.sensorID === sensorID
+							}
+						)
+						response = result.sensors[sensorIndex]
+						
+						if (projectHelper.itemInArray(
+										authenticaton.getUser(req), 
+										result.sensors[sensorIndex].users) >= 0){
+							
+							console.log(response);
+							res.send(response);
+						}else{
+							res.send({'error' : "unauthorized"});
 						}
-					)
-					response = result.sensors[sensorIndex]
-
-					console.log(response);
-					res.send(response);
-					console.log("Project details sent");
-				})
+						
+						
+						console.log("Project details sent");
+					})
+				}else {
+					res.send({'error' : "unauthorized"});
+				}
 			})
 /*
 -------------------------------PUT--------------------------------
@@ -134,22 +184,51 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 							return sense.sensorID === req.body.sensorID
 						}
 					)
-					var myObj = {};
-					myObj["sensors."+sensorIndex] = {
-						'sensorID': req.body.sensorID,
-						'sensorType': req.body.sensorReference,
-						'sensorName': req.body.sensorName,
-					};
-					var myQuery = {
-						"projectID": req.body.projectID
-					}
-					var newValues = {$set: myObj}
-					mongodb.collection(coll).update(myQuery,newValues, function(err, result) {
-						if (err) throw err;
-                        console.log(result);
-                        projectHelper.updateProjectDate(req.body.projectID);
-						res.send(result);
-					})
+					
+					for (var i = 0; i < result.sensors[sensorIndex].users.length; i++){
+							if (result.sensors[sensorIndex].users[i] == req.body.username){
+								if (authenticaton.getPermission(req).write == 'true') {
+									
+								
+									var myObj = {};
+									myObj["sensors."+sensorIndex] = {
+										'sensorID': req.body.sensorID,
+										'sensorType': req.body.sensorReference,
+										'sensorName': req.body.sensorName,
+									};
+									var myQuery = {
+										"projectID": req.body.projectID
+									}
+									var newValues = {$set: myObj}
+					
+									if (projectHelper.itemInArray(
+										authenticaton.getUser(req), 
+										result.sensors[sensorIndex].users) >= 0){
+										mongodb.collection(coll).update(myQuery,newValues, function(err, result) {
+											if (err) throw err;
+											console.log(result);
+											projectHelper.updateProjectDate(req.body.projectID);
+											res.send(result);
+										})	
+											
+											
+									} else {
+										res.send({'error' : "unauthorized"});
+									}
+									
+									
+									return;
+								}
+							} else {
+								res.send({'error' : "unauthorized"});
+							}
+						}
+						console.log("access denied");
+						res.send({'error':'access denied'});
+					
+					
+					
+					
 				})
 			})
 /*

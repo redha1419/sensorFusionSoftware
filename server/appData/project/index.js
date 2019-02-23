@@ -5,6 +5,11 @@ const uuidv4 = require('uuid/v4');
 
 module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 	const projectHelper = require('../libs/helperFunctions.js')(mongodb);
+	const authenticaton = require('../libs/users.js')(mongodb);
+	
+	function createProjectInstance(req, ID){
+		
+	}
 	return {
 		"configureRoutes": () => {
 
@@ -23,7 +28,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 				var myobj = {
 					"projectID": uuidv4(),
 					"projectName": req.body.projectName,
-					"Users": [],
+					"Users": [authenticaton.getUser(req)],
 					"sensors": [],
 					"operations": [],
 					"superframe": {},
@@ -31,6 +36,11 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					"dateModified": date_stamp.toString(),
 					"description": req.body.description
 				};
+				if ( (req.body.users != undefined) && (projectHelper.itemInArray(myobj.users[0], req.body.users) == -1) ){
+					myobj.users = myobj.users.concat(req.body.users);
+				} else if (req.body.users != undefined){
+					myobj.users = req.body.users;
+				}
 				mongodb.createCollection(coll, function(err, res) {			//create projects Collection if non exists
 					if (err) throw err;
 				});
@@ -111,12 +121,28 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 				var projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
 				console.log("Project details requested");
 				console.log(projectID);
-				mongodb.collection(coll).findOne({'projectID': projectID}, function(err, result){
-					if (err) throw err;
-					console.log(result);
-					res.send(result);
-					console.log("Project details sent");
-				})
+				if (authenticaton.getPermission(req).read == 'true'){
+					mongodb.collection(coll).findOne({'projectID': projectID}, function(err, result){
+						if (err) throw err;
+						
+						
+						if (projectHelper.itemInArray(
+										authenticaton.getUser(req), 
+										result.users) >= 0){
+							console.log(result);
+							res.send(result);
+						}else{
+							res.send({'error' : "unauthorized"});
+						}
+						
+						
+						
+						console.log("Project details sent");
+					})
+				}else {
+					res.send({'error' : "unauthorized"});
+				}	
+					
 			})
 			app.get('/date?', function(req,res){
 				var date_stamp = new Date();
@@ -154,12 +180,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 			
 			
 			
-			
-			app.get('/test', function(req,res){
-			const projectHelper = require('../libs/helperFunctions.js')(mongodb);
-			projectHelper.checkUser(req.query.username,req.query.password);
-				
-			})
+
 			
 			
 			

@@ -9,7 +9,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 	const projectHelper = require('../libs/helperFunctions.js')(mongodb);
 	const authenticaton = require('../libs/users.js')(mongodb);
 		
-	function createBBInstance(req){
+	function createBBInstance(req, ID){
 		var boundingBox = {
 			"boundingBoxID": uuidv4(),
 			"shape": 0,
@@ -22,7 +22,9 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 			"points": [],
 			"parameters": {}
 		};
-		
+		if (ID != undefined) {
+			boundingBox.boundingBoxID = ID;
+		}
 		if ( (req.body.shape != undefined) && (typeof req.body.shape === 'string') ){
 			boundingBox.shape = req.body.shape;
 		}
@@ -106,7 +108,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 							req.body.projectID + 
 							" >> "+ req.body.sensorID + 
 							" >> "+ req.body.frameID);
-				var boundingBox = createBBInstance(req);
+				var boundingBox = createBBInstance(req, null);
 		/*		
 				var boundingBox = {
 					"boundingBoxID": uuidv4(),
@@ -269,7 +271,15 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 							return frameElement.frameID === frameID
 						})
 			//		res.send({'test':'this'});
-					res.send(result.sensors[sensorIndex].sensorFrames[frameIndex].boundingBoxes);
+					if (projectHelper.itemInArray(
+									authenticaton.getUser(req), 
+									result.sensors[sensorIndex].sensorFrames[frameIndex].users) >= 0){
+						res.send(result.sensors[sensorIndex].sensorFrames[frameIndex].boundingBoxes); //res.send(response);
+						console.log("Bounding Boxes sent");
+					}else{
+						res.send({'error' : "unauthorized"});
+					}
+					
 						
 				})
 			})
@@ -320,7 +330,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 			app.put('/boundingBox',function(req,res){
 				var coll = "projects";
 				console.log('Updating frame: ' + req.body.frameID);
-				if (authenticaton.getPermission(req).read == 'true') {
+				if (authenticaton.getPermission(req).write == 'true') {
 					mongodb.collection(coll).findOne({'projectID': req.body.projectID}, function(err, result){
 						var sensorIndex = result.sensors.findIndex(
 							function(sense) {
@@ -343,7 +353,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 						console.log(boundingBoxIndex);
 
 						var myObj = {};
-						var boundingBox = createBBInstance(req);
+						var boundingBox = createBBInstance(req,req.body.boundingBoxID);
 						
 			/*			
 						var boundingBox = {
