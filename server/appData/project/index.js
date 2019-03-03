@@ -28,7 +28,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 				var myobj = {
 					"projectID": uuidv4(),
 					"projectName": req.body.projectName,
-					"Users": [authenticaton.getUser(req)],
+					"users": [authenticaton.getUser(req)],
 					"sensors": [],
 					"operations": [],
 					"superframe": {},

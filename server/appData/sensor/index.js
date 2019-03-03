@@ -123,11 +123,18 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 							'sensorType': result.sensors[i].sensorReference
 						}
 					}
-					
+					console.log("--------------");
+					console.log(authenticaton.getUser(req));
+					console.log(result);
+					console.log(projectHelper.itemInArray(
+								authenticaton.getUser(req), 
+								result.users));
+													console.log("--------------");
+
 					if (projectHelper.itemInArray(
 								authenticaton.getUser(req), 
 								result.users) >= 0){
-						console.log(response);
+						console.log(reply);
 						res.send(reply);
 					}else{
 						res.send({'error' : "unauthorized"});
@@ -184,18 +191,24 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 							return sense.sensorID === req.body.sensorID
 						}
 					)
+					console.log(result);
+					console.log(result.sensors);
+					console.log(sensorIndex);
+					console.log(result.sensors[sensorIndex]);
+					console.log();
 					
 					for (var i = 0; i < result.sensors[sensorIndex].users.length; i++){
-							if (result.sensors[sensorIndex].users[i] == req.body.username){
+							if (result.sensors[sensorIndex].users[i] == authenticaton.getUser(req)){
 								if (authenticaton.getPermission(req).write == 'true') {
 									
 								
 									var myObj = {};
-									myObj["sensors."+sensorIndex] = {
+						/*			myObj["sensors."+sensorIndex] = {
 										'sensorID': req.body.sensorID,
 										'sensorType': req.body.sensorReference,
 										'sensorName': req.body.sensorName,
 									};
+						*/			myObj["sensors."+sensorIndex] = createSensorInstance(req, req.body.sensorID);
 									var myQuery = {
 										"projectID": req.body.projectID
 									}
@@ -219,8 +232,6 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 									
 									return;
 								}
-							} else {
-								res.send({'error' : "unauthorized"});
 							}
 						}
 						console.log("access denied");
