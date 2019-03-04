@@ -49,7 +49,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 			boundingBox.users = req.body.users;
 		}
 		console.log(req.body.parameters);
-		if (req.body.shape == 1) {						//polygon
+		if (req.body.shape == 3) {						//polygon
 			console.log("polygon");
 			for (var i=0; i<req.body.points.length; i++){
 				var point = {
@@ -60,7 +60,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 				boundingBox.points[req.body.points[i].index] = point;
 			}					
 		}
-		else if (req.body.shape == 2) {					//Rectangle/Square
+		else if (req.body.shape == 1) {					//Rectangle/Square
 			console.log("rectangle");
 			var parameters = {
 				"x1": req.body.parameters.x1,						//coordinate 1
@@ -72,7 +72,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 			}
 			boundingBox.parameters = parameters;
 		}
-		else if (req.body.shape == 3) {							//Ellipse/circle
+		else if (req.body.shape == 2) {							//Ellipse/circle
 			console.log("ellipse");
 			var parameters = {
 				"x": req.body.parameters.x,						//center 

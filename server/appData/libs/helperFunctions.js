@@ -14,7 +14,6 @@ function getAllUsersRecursive(item, list) {
 	}
 	for (var level = 0; level < levels.length; level++){
 		if (item[levels[level]] != undefined){
-			console.log(item[levels[level]]);
 			for (var itemID = 0; itemID < item[levels[level]].length; itemID++){
 				list = getAllUsersRecursive(item[levels[level]][itemID], list);
 			}
@@ -24,7 +23,6 @@ function getAllUsersRecursive(item, list) {
 		return list.indexOf(item) == pos;
 	})
 	
-	console.log(result);
 	return result;
 }
 
