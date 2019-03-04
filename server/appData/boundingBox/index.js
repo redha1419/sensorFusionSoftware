@@ -15,7 +15,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 			"shape": 0,
 			"primaryLabel": "",
 			"secondaryLabel": [],
-			"colour": "";
+			"colour": "",
 			"temporalAttribute": "",
 			"confidence": 0,
 			"lastUser": authenticaton.getUser(req),
