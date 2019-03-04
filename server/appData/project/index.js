@@ -144,8 +144,41 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 				}	
 					
 			})
+			app.get('/projectUsers?', function(req,res){
+				var coll = "projects";
+				var projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
+				console.log("Project details requested");
+				console.log(projectID);
+				if (authenticaton.getPermission(req).read == 'true'){
+					mongodb.collection(coll).findOne({'projectID': projectID}, function(err, result){
+						if (err) throw err;
+						
+						
+						if (projectHelper.itemInArray(
+										authenticaton.getUser(req), 
+										result.users) >= 0){
+							result = projectHelper.getAllUsers(result);
+							
+							console.log("----");
+							console.log(result);
+							console.log("---");
+							res.send(result);
+						}else{
+							res.send({'error' : "unauthorized"});
+						}
+						
+						
+						
+						console.log("Project details sent");
+					})
+				}else {
+					res.send({'error' : "unauthorized"});
+				}	
+					
+			})
 			app.get('/date?', function(req,res){
 				var date_stamp = new Date();
+				projectHelper.getAllUsers();
 				console.log(date_stamp.toString());
 				res.send(date_stamp.toString());
 			})

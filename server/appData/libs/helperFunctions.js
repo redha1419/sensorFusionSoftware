@@ -1,5 +1,33 @@
 "use strict";
 
+function getAllUsersRecursive(item, list) {
+	var levels = ["sensors", "sensorFrames", "boundingBoxes"];
+	if (list == undefined){
+		list = [];
+	}
+	if (item == undefined){
+		return list;
+	}
+
+	if (item.users != undefined ){
+		list = list.concat(item.users);
+	}
+	for (var level = 0; level < levels.length; level++){
+		if (item[levels[level]] != undefined){
+			console.log(item[levels[level]]);
+			for (var itemID = 0; itemID < item[levels[level]].length; itemID++){
+				list = getAllUsersRecursive(item[levels[level]][itemID], list);
+			}
+		}
+	}
+	var result = list.filter(function(item, pos) {
+		return list.indexOf(item) == pos;
+	})
+	
+	console.log(result);
+	return result;
+}
+
 module.exports = function(mongodb) {
 	return{
 		updateProjectDate: function(projectID) {
@@ -42,10 +70,12 @@ module.exports = function(mongodb) {
 				}
 			}
 			return -1;
+		},
+		
+		getAllUsers: function(item) {
+			return getAllUsersRecursive(item);				
 		}
-		
-		
-		
+
 	};
 };
 
