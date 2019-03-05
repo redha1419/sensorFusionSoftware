@@ -9,9 +9,10 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 	const projectHelper = require('../libs/helperFunctions.js')(mongodb);
 	const authenticaton = require('../libs/users.js')(mongodb);
 		
-	function createBBInstance(req, ID){
+	function createBBInstance(req, index, ID){
 		var boundingBox = {
 			"boundingBoxID": uuidv4(),
+			"globalIndex": -1,
 			"shape": 0,
 			"primaryLabel": "",
 			"secondaryLabel": [],
@@ -29,6 +30,9 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 		}
 		if ( (req.body.shape != undefined) && (typeof req.body.shape === 'string') ){
 			boundingBox.shape = req.body.shape;
+		}
+		if ( (index != undefined) && (typeof index === 'number') ){
+			boundingBox.globalIndex = index;
 		}
 		if ( (req.body.confidence != undefined) && (typeof req.body.confidence === 'number') ){
 			boundingBox.confidence = req.body.confidence;
@@ -113,7 +117,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 							req.body.projectID + 
 							" >> "+ req.body.sensorID + 
 							" >> "+ req.body.frameID);
-				var boundingBox = createBBInstance(req, null);
+		//		var boundingBox = createBBInstance(req, null);
 		/*		
 				var boundingBox = {
 					"boundingBoxID": uuidv4(),
@@ -196,14 +200,15 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 							return theFrame.frameID === req.body.frameID
 						});
 					var myObj = {};
-					myObj["sensors."+sensorIndex+".sensorFrames."+myFrame+".boundingBoxes"] = boundingBox;
+					var index = project.sensors[sensorIndex].sensorFrames[myFrame].boundingBoxes.length;
+					myObj["sensors."+sensorIndex+".sensorFrames."+myFrame+".boundingBoxes"] = createBBInstance(req, index, null);
 					var newValues = {$push: myObj};
 					var myQuery = {'projectID' : project.projectID};
 					mongodb.collection(coll).updateOne(myQuery, newValues, function(err, result) {
 						if (err) throw err;
 						console.log("Bounding Box Saved");
                         projectHelper.updateProjectDate(req.body.projectID);
-                        res.send(boundingBox);
+                        res.send(createBBInstance(req, index, null));
 					})
 				})
 			})
@@ -358,7 +363,8 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 						console.log(boundingBoxIndex);
 
 						var myObj = {};
-						var boundingBox = createBBInstance(req,req.body.boundingBoxID);
+						var index = result.sensors[sensorIndex].sensorFrames[frameIndex].boundingBoxes[boundingBoxIndex].globalIndex;
+						var boundingBox = createBBInstance(req, index, req.body.boundingBoxID);
 						
 			/*			
 						var boundingBox = {
