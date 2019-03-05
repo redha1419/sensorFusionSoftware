@@ -16,7 +16,6 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 			"shape": 0,
 			"primaryLabel": "",
 			"secondaryLabel": [],
-			"colour": "",
 			"temporalAttribute": "",
 			"confidence": 0,
 			"lastUser": authenticaton.getUser(req),
@@ -42,9 +41,6 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 		}
 		if ( (req.body.primaryLabel != undefined) && (typeof req.body.primaryLabel === 'string') ){
 			boundingBox.primaryLabel = req.body.primaryLabel;
-		}
-		if ( (req.body.colour != undefined) && (typeof req.body.colour === 'string') ){
-			boundingBox.colour = req.body.colour;
 		}
 		if ( (req.body.secondaryLabel != undefined) && ( Array.isArray(req.body.secondaryLabel) ) ){
 			boundingBox.secondaryLabel = req.body.secondaryLabel;
