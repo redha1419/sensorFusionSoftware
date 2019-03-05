@@ -204,7 +204,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 						if (err) throw err;
 						console.log("Bounding Box Saved");
                         projectHelper.updateProjectDate(req.body.projectID);
-                        res.send(createBBInstance(req, index, null));
+                        res.send(myObj["sensors."+sensorIndex+".sensorFrames."+myFrame+".boundingBoxes"]);
 					})
 				})
 			})
@@ -455,7 +455,74 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 				
 			})
 			
+/*
+------------------------------DELETE-----------------------------
+*/			
 			
+			app.delete('/boundingBox',function(req,res){
+				var coll = "projects";
+				console.log('Updating frame: ' + req.body.frameID);
+				if (authenticaton.getPermission(req).write == 'true') {
+					mongodb.collection(coll).findOne({'projectID': req.body.projectID}, function(err, result){
+						var sensorIndex = result.sensors.findIndex(
+							function(sense) {
+								return sense.sensorID === req.body.sensorID
+							}
+						)
+						console.log(sensorIndex);
+						var frameIndex = result.sensors[sensorIndex].sensorFrames.findIndex(
+							function(sensFrame) {
+								return sensFrame.frameID === req.body.frameID
+							}
+						)
+						console.log(frameIndex);
+
+						var boundingBoxIndex = result.sensors[sensorIndex].sensorFrames[frameIndex].boundingBoxes.findIndex(
+							function(boundingBox) {
+								return boundingBox.boundingBoxID === req.body.boundingBoxID
+							}
+						)
+						console.log(boundingBoxIndex);
+						
+						var boundingBoxesOld = result.sensors[sensorIndex].sensorFrames[frameIndex].boundingBoxes;
+						var boundingBoxesNew = [];
+						var BBIDnew = 0;
+						
+						for (var BBID = 0; BBID < boundingBoxesOld.length; BBID++){
+							if(boundingBoxesOld[BBID].boundingBoxID != req.body.boundingBoxID){
+								boundingBoxesNew[BBIDnew] = boundingBoxesOld[BBID];
+								boundingBoxesNew[BBIDnew].globalIndex = BBIDnew;
+								BBIDnew++;
+								
+							}
+						}
+
+						var myObj = {};
+						
+						myObj["sensors."+sensorIndex+".sensorFrames."+frameIndex+".boundingBoxes"] = boundingBoxesNew;
+						var myQuery = {
+							"projectID": req.body.projectID
+						}
+						var newValues = {$set: myObj}
+						if (projectHelper.itemInArray(
+										authenticaton.getUser(req), 
+										result.sensors[sensorIndex].sensorFrames[frameIndex].boundingBoxes[boundingBoxIndex].users) >= 0){
+						
+							mongodb.collection(coll).update(myQuery,newValues, function(err, result) {
+								if (err) throw err;
+								projectHelper.updateProjectDate(req.body.projectID);
+								res.send(result);
+							})
+						} else {
+							res.send({'error' : "unauthorized"});
+						}
+					})
+				} else {
+					res.send({'error' : "unauthorized"});
+
+				}
+				
+			})
 		
 		}
 	}
