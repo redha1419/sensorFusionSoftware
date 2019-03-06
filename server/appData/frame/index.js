@@ -22,7 +22,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 				"gama": "",
 				"time": ""
 			},
-			'boundingBox': []
+			'boundingBoxes': []
 		};
 		if (ID != undefined) {
 			sensorFrame.frameID = ID;
@@ -131,7 +131,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 								"gama": "",
 								"time": ""
 							},
-							'boundingBox': []
+							'boundingBoxes': []
 						};
 				*/		
 						sensorFrame = createFrameInstance(req, uuidv4());
