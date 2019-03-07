@@ -45,13 +45,6 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					if (err) throw err;
 					project = result;
 					var myquery = {'projectID' : project.projectID};
-			/*		var sensor = {
-						'sensorID': uuidv4(),
-						'sensorType': req.body.sensorReference,
-						'sensorName': req.body.sensorName,
-						'sensorFrames': []
-					};
-			*/		
 					var sensor = createSensorInstance(req);
 					var newvalues = {$push: {'sensors': sensor}};
 					mongodb.collection(coll).updateOne(myquery, newvalues, function(err, result) {
@@ -79,13 +72,6 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					if (err) throw err;
 					project = result;
 					var myquery = {'projectID' : project.projectID};
-				/*	var sensor = {
-						'sensorID': uuidv4(),
-						'sensorType': req.body.sensorReference,
-						'sensorName': req.body.sensorName,
-						'sensorFrames': []
-					};
-				*/	
 					var sensor = createSensorInstance(req);
 					var newvalues = {$push: {'sensors': sensor}};
 					mongodb.collection(coll).updateOne(myquery, newvalues, function(err, result) {
@@ -238,12 +224,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 									
 								
 									var myObj = {};
-						/*			myObj["sensors."+sensorIndex] = {
-										'sensorID': req.body.sensorID,
-										'sensorType': req.body.sensorReference,
-										'sensorName': req.body.sensorName,
-									};
-						*/			myObj["sensors."+sensorIndex] = createSensorInstance(req, req.body.sensorID);
+									myObj["sensors."+sensorIndex] = createSensorInstance(req, req.body.sensorID);
 									var myQuery = {
 										"projectID": req.body.projectID
 									}
