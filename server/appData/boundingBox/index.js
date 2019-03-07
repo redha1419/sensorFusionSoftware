@@ -220,6 +220,35 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 						
 				})
 			})
+			app.get('/numberOfBoundingBoxes',function(req,res){
+				var coll = "projects";
+				var projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
+				var sensorID = req.query.sensorID ? req.query.sensorID : 'No sensor ID';
+				var frameID = req.query.frameID ? req.query.frameID : 'No Frame ID';
+				console.log("Bounding Boxes details requested");
+				mongodb.collection(coll).findOne({'projectID': projectID}, function(err, result){
+					if (err) throw err;
+					var response = 0;
+					var sensorIndex = result.sensors.findIndex(
+						function(sense){
+							return sense.sensorID === sensorID
+						})
+					var frameIndex = result.sensors[sensorIndex].sensorFrames.findIndex(
+						function(frameElement){
+							return frameElement.frameID === frameID
+						})
+					if (projectHelper.itemInArray(
+									authenticaton.getUser(req), 
+									result.sensors[sensorIndex].sensorFrames[frameIndex].users) >= 0){
+						res.send(result.sensors[sensorIndex].sensorFrames[frameIndex].boundingBoxes.length); //res.send(response);
+						console.log(result.sensors[sensorIndex].sensorFrames[frameIndex].boundingBoxes.length);
+					}else{
+						res.send({'error' : "unauthorized"});
+					}
+					
+						
+				})
+			})
 			
 			app.get('/boundingBox?', function(req,res){
 				var coll = "projects";

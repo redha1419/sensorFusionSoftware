@@ -230,6 +230,41 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					console.log("Frame details sent");
 				})
 			})
+			app.get('/numberOfFrames?',function(req,res){
+				var coll = "projects";
+				var projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
+				var sensorID = req.query.sensorID ? req.query.sensorID : 'No Sensor ID';
+				console.log("Sensor details requested");
+				console.log(projectID);
+				mongodb.collection(coll).findOne({'projectID': projectID}, function(err, result){
+					if (err) throw err;
+					var response = [];
+					var sensorIndex = result.sensors.findIndex(
+						function(sense) {
+							return sense.sensorID === sensorID
+						}
+					)
+					console.log(sensorIndex);
+					for (var i = 0; i < result.sensors[sensorIndex].sensorFrames.length; i++) {
+						response[i] = {
+							'frameName': result.sensors[sensorIndex].sensorFrames[i].frameName,
+							'users': result.sensors[sensorIndex].sensorFrames[i].users,
+							'frameID': result.sensors[sensorIndex].sensorFrames[i].frameID
+							
+						}
+					}
+					if (projectHelper.itemInArray(
+								authenticaton.getUser(req), 
+								result.sensors[sensorIndex].users) >= 0){
+						console.log(response.length);
+						res.send(response.length);
+					}else{
+						res.send({'error' : "unauthorized"});
+					}
+					
+					console.log("Frame details sent");
+				})
+			})
 			
 			
 			app.get('/frame?',function(req,res){

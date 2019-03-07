@@ -178,6 +178,30 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 				})
 				
 			})
+			app.get('/numberOfProjects', function(req,res){
+				var coll = "projects";
+				var reply;
+				var project;
+				console.log("Project list requested");
+				mongodb.collection(coll).find({}).toArray(function(err, result){
+					if (err) throw err;
+					var reply = [{}];
+					for (var i = 0; i < result.length; i++) {
+						reply[i] = {
+							'projectName': result[i].projectName,
+							'projectID': result[i].projectID,
+							'description': result[i].description,
+							'dateCreated': result[i].dateCreated,
+							'dateModified': result[i].dateModified
+						}
+					}
+					console.log(reply.length);
+					res.send(reply.length);
+					console.log("Project list sent");
+			
+				})
+				
+			})
 			
 			
 			

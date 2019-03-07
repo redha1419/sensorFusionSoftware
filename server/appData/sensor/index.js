@@ -143,6 +143,41 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					console.log("Project details sent");
 				})
 			})
+			app.get('/numberOfSensors?', function(req,res){
+				var coll = "projects";
+				var projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
+				console.log("Sensor details requested in project " + projectID);
+				console.log(projectID);
+				mongodb.collection(coll).findOne({'projectID': projectID}, function(err, result){
+					if (err) throw err;
+					var reply = [{}];
+					for (var i = 0; i < result.sensors.length; i++) {
+						reply[i] = {
+							'sensorName': result.sensors[i].sensorName,
+							'sensorID': result.sensors[i].sensorID,
+							'sensorType': result.sensors[i].sensorReference
+						}
+					}
+					console.log("--------------");
+					console.log(authenticaton.getUser(req));
+					console.log(result);
+					console.log(projectHelper.itemInArray(
+								authenticaton.getUser(req), 
+								result.users));
+													console.log("--------------");
+
+					if (projectHelper.itemInArray(
+								authenticaton.getUser(req), 
+								result.users) >= 0){
+						console.log(reply.length);
+						res.send(reply.length);
+					}else{
+						res.send({'error' : "unauthorized"});
+					}
+					
+					console.log("Project details sent");
+				})
+			})
 			
 			app.get('/sensor?', function(req,res){
 				var coll = "projects";
