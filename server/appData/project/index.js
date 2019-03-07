@@ -20,7 +20,6 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 */
 			//post a new project
 			app.post('/addProject', function (req, res) {
-//			app.post('/project', function (req, res){
 				console.log("creating new project:"+req.body.projectName);
 				var coll = "projects";
 				var date_stamp = new Date();
@@ -61,36 +60,6 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 			})
 
 
-/*
-			app.post('/addProject', function (req, res) {
-				console.log("creating new project:"+req.body.projectName);
-				var coll = "projects";
-				var reply;
-				var myobj = {
-					"projectID": uuidv4(),
-					"projectName": req.body.projectName,
-					"Users": [],
-					"sensors": [],
-					"operations": [],
-					"superframe": {}		  
-				};
-				mongodb.createCollection(coll, function(err, res) {			//create projects Collection if non exists
-					if (err) throw err;
-				});
-				mongodb.collection(coll).insertOne(myobj, function(err, result) {	//Create Project Document
-					if (err) throw err;
-					console.log("Project Document Created");		
-					reply = {
-					   "insertedCount": result.insertedCount,
-					   "collection": coll,
-					   "projectName": result.ops[0].projectName,
-					   "projectID": result.ops[0].projectID,
-					   "_ID": result.ops[0]._id
-					};
-					res.send(reply);
-				});
-			})
-	*/		
 /*
 -----------------------------PUT-------------------------------------
 */

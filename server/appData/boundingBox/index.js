@@ -113,75 +113,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 							req.body.projectID + 
 							" >> "+ req.body.sensorID + 
 							" >> "+ req.body.frameID);
-		//		var boundingBox = createBBInstance(req, null);
-		/*		
-				var boundingBox = {
-					"boundingBoxID": uuidv4(),
-					"shape": 0,
-					"primaryLabel": "",
-					"secondaryLabel": [],
-					"temporalAttribute": "",
-                    "confidence": 0,
-                    "description": 'No description.',
-					"users": [authenticaton.getUser(req)],
-					"points": [],
-					"parameters": {}
-				};
-				
-				if ( (req.body.shape != undefined) && (typeof req.body.shape === 'string') ){
-					boundingBox.shape = req.body.shape;
-				}
-				if ( (req.body.confidence != undefined) && (typeof req.body.confidence === 'number') ){
-					boundingBox.confidence = req.body.confidence;
-				}
-				if ( (req.body.description != undefined) && (typeof req.body.description === 'string') ){
-					boundingBox.description = req.body.description;
-				}
-				if ( (req.body.users != undefined) && (projectHelper.itemInArray(boundingBox.users[0], req.body.users) == -1) ){
-					boundingBox.users = boundingBox.users.concat(req.body.users);
-				} else if (req.body.users != undefined){
-					boundingBox.users = req.body.users;
-				}
-				console.log(req.body.parameters);
-				if (req.body.shape == 1) {						//polygon
-					console.log("polygon");
-					for (var i=0; i<req.body.points.length; i++){
-						var point = {
-							"index": req.body.points[i].index,
-							"x": req.body.points[i].x,
-							"y": req.body.points[i].y
-						}
-						boundingBox.points[req.body.points[i].index] = point;
-					}					
-				}
-				else if (req.body.shape == 2) {					//Rectangle/Square
-					console.log("rectangle");
-					var parameters = {
-						"x1": req.body.parameters.x1,						//coordinate 1
-						"y1": req.body.parameters.y1,
-						"x2": req.body.parameters.x2,						//coordinate 2
-						"y2": req.body.parameters.y2,
-						"cx": req.body.parameters.cx,						//coordinate 2
-						"cy": req.body.parameters.cy
-					}
-					boundingBox.parameters = parameters;
-				}
-				else if (req.body.shape == 3) {							//Ellipse/circle
-					console.log("ellipse");
-					var parameters = {
-						"x": req.body.parameters.x,						//center 
-						"y": req.body.parameters.y,
-						"a": req.body.parameters.a,						//major Radius
-						"b": req.body.parameters.b,						//minor radius
-						"theta": req.body.parameters.theta
-					}
-					boundingBox.parameters = parameters;
-				}
-				else {
-					console.log("bounding box shape not found");
-					return 0;
-				}
-		*/
+
 				mongodb.collection(coll).findOne({'projectID': req.body.projectID}, function(err, result) {
 					if (err) throw err;
 					project = result;
@@ -276,7 +208,6 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 						function(frameElement){
 							return frameElement.frameID === frameID
 						})
-			//		res.send({'test':'this'});
 					if (projectHelper.itemInArray(
 									authenticaton.getUser(req), 
 									result.sensors[sensorIndex].sensorFrames[frameIndex].users) >= 0){
@@ -362,73 +293,6 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 						var index = result.sensors[sensorIndex].sensorFrames[frameIndex].boundingBoxes[boundingBoxIndex].globalIndex;
 						var boundingBox = createBBInstance(req, index, req.body.boundingBoxID);
 						
-			/*			
-						var boundingBox = {
-							"boundingBoxID": req.body.boundingBoxID,
-							"shape": 0,
-							"confidence": 0,
-							"description": 'No description.',
-							"users": [authenticaton.getUser(req)],
-							"points": [],
-							"parameters": {}
-						};
-						
-						if ( (req.body.shape != undefined) && (typeof req.body.shape === 'number') ){
-							boundingBox.shape = req.body.shape;
-						}
-						if ( (req.body.confidence != undefined) && (typeof req.body.confidence === 'number') ){
-							boundingBox.confidence = req.body.confidence;
-						}
-						if ( (req.body.description != undefined) && (typeof req.body.description === 'string') ){
-							boundingBox.description = req.body.description;
-						}
-						if ( (req.body.users != undefined) && (projectHelper.itemInArray(boundingBox.users[0], req.body.users) == -1) ){
-							boundingBox.users = boundingBox.users.concat(req.body.users);
-						} else if (req.body.users != undefined) {
-							boundingBox.users = req.body.users;
-						}
-					
-						
-						if (req.body.shape == 1) {						//polygon
-							console.log("polygon");
-							for (var i=0; i<req.body.points.length; i++){
-								var point = {
-									"index": req.body.points[i].index,
-									"x": req.body.points[i].x,
-									"y": req.body.points[i].y
-								}
-								boundingBox.points[req.body.points[i].index] = point;
-
-							}					
-						}
-						else if (req.body.shape == 2) {					//Rectangle/Square
-							console.log("rectangle");
-							var parameters = {
-								"x1": req.body.parameters.x1,						//coordinate 1
-								"y1": req.body.parameters.y1,
-								"x2": req.body.parameters.x2,						//coordinate 2
-								"y2": req.body.parameters.y2,
-								"cx": req.body.parameters.cx,						//coordinate 2
-								"cy": req.body.parameters.cy
-							}
-							boundingBox.parameters = parameters;
-						}
-						else if (req.body.shape == 3) {					//Ellipse/circle
-							console.log("ellipse");
-							var parameters = {
-								"x": req.body.parameters.x,						//center 
-								"y": req.body.parameters.y,
-								"a": req.body.parameters.a,						//major Radius
-								"b": req.body.parameters.b,						//minor radius
-								"theta": req.body.parameters.theta
-							}
-							boundingBox.parameters = parameters;
-						}
-						else {
-							console.log("bounding box shape not found");
-							return 0;
-						}
-			*/			
 						
 						myObj["sensors."+sensorIndex+".sensorFrames."+frameIndex+".boundingBoxes."+boundingBoxIndex] = boundingBox;
 						var myQuery = {
