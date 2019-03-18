@@ -142,8 +142,7 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 					})
 				}else {
 					res.send({'error' : "unauthorized"});
-				}	
-					
+				}
 			})
 			app.get('/date?', function(req,res){
 				var date_stamp = new Date();
