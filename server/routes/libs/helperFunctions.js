@@ -28,6 +28,7 @@ function getAllUsersRecursive(item, list) {
 
 module.exports = function(mongodb) {
 	return{
+		/*
 		updateProjectDate: function(projectID) {
 			var date_stamp = new Date();
 			//console.log("update date" + date_stamp.toString());
@@ -45,7 +46,10 @@ module.exports = function(mongodb) {
 			})			
 			return 0;
 		},
+		*/
 		
+		
+		/*
 		checkUser: function(username, userpassword){
 			mongodb.collection('users').findOne({'username': username}, function(err, result) {
 				if (err) throw err;
@@ -57,6 +61,7 @@ module.exports = function(mongodb) {
 				return false;
 			});
 		},
+		*/
 		
 		itemInArray: function(item, array) {
 			var i;
