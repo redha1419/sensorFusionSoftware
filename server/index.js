@@ -38,6 +38,7 @@ app.use(function(req, res, next) {
 
 //project routes
 const projectRoutes = require('./routes/project');
+const userRoutes = require('./authentication');
 
 //base route
 app.get('/', function(req, res) 
@@ -48,6 +49,7 @@ app.get('/', function(req, res)
 
 //additional routes
 app.use('/api/', projectRoutes);
+app.use('/api/', userRoutes);
 
 //hosting server
 const server = app.listen(process.env.PORT, function () {

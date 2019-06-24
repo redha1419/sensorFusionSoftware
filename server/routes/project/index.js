@@ -1,14 +1,16 @@
 "use strict";
 
 //libs
-const uuidv4 = require('uuid/v4');
+const uuidv4  = require('uuid/v4');
 const express = require('express');
-const router = new express.Router();
-const knex =require('../../db/knex');
+const router  = new express.Router();
+const knex    = require('../../db/knex');
+const moment  = require('moment');
+const projectHelper = require('../libs/helperFunctions.js')(knex);
 
 /*
 module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
-	const projectHelper = require('../libs/helperFunctions.js.js')(mongodb);
+	
 	const authenticaton = require('../libs/users.js.js')(mongodb);
 	
 	function createProjectInstance(req, ID){
@@ -26,12 +28,12 @@ module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 //post a new project
 router.post('/addProject', function (req, res) {
 	console.log("creating new project: " + req.body.projectName);
-	const date_stamp = new Date().toString();
+	const date_stamp = moment().format();
 	const project_to_add = {
 		"project_id": uuidv4(),
 		"name": req.body.projectName,
-		"date_created": date_stamp.toString() ,
-		"date_modified": date_stamp.toString(),
+		"date_created": date_stamp,
+		"date_modified": date_stamp,
 		"description": req.body.description
 	};
 
@@ -49,14 +51,14 @@ router.post('/addProject', function (req, res) {
 	.returning(['*'])
 	.then((result)=>{
 		console.log(result)
-		reply = {
-			"insertedCount": result.insertedCount, //lets see if we can get this info
+		let reply = {
+			"insertedCount": result.length, //lets see if we can get this info
 			"collection": "projects",
-			"projectName": result[0].project_name,
+			"projectName": result[0].name,
 			"projectID": result[0].project_id,
 			"_ID": result[0].id,
-			"dateCreated": result.ops[0].date_created,
-			"dateModified": result.ops[0].date_modified
+			"dateCreated": result[0].date_created,
+			"dateModified": result[0].date_modified
 		};
 		res.send(reply);
 	})
@@ -67,20 +69,20 @@ router.post('/addProject', function (req, res) {
 -----------------------------PUT-------------------------------------
 */
 router.put('/project', function (req, res) {
-	console.log("PUT CALLED");
-	var coll = "projects";
 	console.log('Updating Project: ' + req.body.projectID);
-	var newValues = {$set: {
-		"projectName": req.body.projectName
-	} };
-	var myQuery = {
-		"projectID": req.body.projectID
-	}
-	mongodb.collection(coll).update(myQuery,newValues, function(err, result) {
-		if (err) throw err;
-		console.log(result);
-		res.send(result);
+	const newValues = { "name": req.body.projectName };
+	const myQuery = {"project_id": req.body.projectID };
+
+	knex('projects')
+	.update(newValues)
+	.where(myQuery)
+	.returning(['*'])
+	.then((result)=>{
 		projectHelper.updateProjectDate(req.body.projectID);
+		res.send(result);
+	})
+	.catch(err=>{
+		res.status(500).json({message: err.message, stack:err.stack});
 	})
 })
 
