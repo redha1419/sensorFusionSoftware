@@ -4,8 +4,8 @@
 const uuidv4 = require('uuid/v4');
 
 module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
-    const projectHelper = require('../libs/helperFunctions.js')(mongodb);
-	const authenticaton = require('../libs/users.js')(mongodb);
+    const projectHelper = require('../libs/helperFunctions.js.js')(mongodb);
+	const authenticaton = require('../libs/users.js.js')(mongodb);
 	
 	function createFrameInstance(req, ID){
 		var sensorFrame = {

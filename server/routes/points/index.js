@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
-    const projectHelper = require('../libs/helperFunctions.js')(mongodb);
+    const projectHelper = require('../libs/helperFunctions.js.js')(mongodb);
     return {
 		"configureRoutes": () => {
 /*
