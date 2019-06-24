@@ -1,17 +1,16 @@
-//libs
-//const uuidv4 = require('uuid/v4');
-var express = require('express');
-var MongoClient = require('mongodb').MongoClient;
+require('dotenv').config();
+const express = require('express');
 const bodyParser = require("body-parser");
-
 const passport = require('passport');
+//server config
+const app = express();
+
+
+
+
+/* //TODO: WHY ARE WE USING REDIS STORE ?
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session)
-
-
-//server config
-var app = express();
-
 app.use(session({
   store: new RedisStore({
     url: process.env.REDIS_STORE_URI
@@ -20,9 +19,10 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }))
+*/
+
 app.use(passport.initialize());
 app.use(passport.session());
-
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
