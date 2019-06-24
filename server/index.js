@@ -47,7 +47,7 @@ app.get('/', function(req, res)
 });
 
 //additional routes
-app.use('/api/projects', projectRoutes);
+app.use('/api/', projectRoutes);
 
 //hosting server
 const server = app.listen(process.env.PORT, function () {

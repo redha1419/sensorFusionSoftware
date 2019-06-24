@@ -118,7 +118,7 @@ router.get('/project?', function(req,res){
 })
 
 
-app.get('/projectUsers?', function(req,res){
+router.get('/projectUsers?', function(req,res){
 	var coll = "projects";
 	var projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
 	console.log("Project details requested");
@@ -222,16 +222,18 @@ router.get('/numberOfProjects', function(req,res){
 -----------------------------DELETE-------------------------------------
 */
 
-			app.delete('/project?', function(req,res){
-				var coll = "projects";
-				var projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
-				console.log("Delete Project requested");
-				console.log(projectID);
-				mongodb.collection(coll).deleteOne({'projectID': projectID}, function(err, result){
-					if (err) throw err;
-					console.log(result);
-					res.send(result);
-					console.log("Project deleted");
-				})
-			})	
+router.delete('/project?', function(req,res){
+	var coll = "projects";
+	var projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
+	console.log("Delete Project requested");
+	console.log(projectID);
+	mongodb.collection(coll).deleteOne({'projectID': projectID}, function(err, result){
+		if (err) throw err;
+		console.log(result);
+		res.send(result);
+		console.log("Project deleted");
+	})
+})	
 		
+
+module.exports = router;
