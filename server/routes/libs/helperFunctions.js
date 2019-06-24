@@ -44,6 +44,7 @@ module.exports = function(knex) {
 		},
 		
 		/*
+		NOT USED
 		checkUser: function(username, userpassword){
 			mongodb.collection('users').findOne({'username': username}, function(err, result) {
 				if (err) throw err;
@@ -75,10 +76,3 @@ module.exports = function(knex) {
 
 	};
 };
-
-/*
-exports.updateProjectDate = function() {
-	console.log('funciton called');
-	return 0;
-}	
-*/

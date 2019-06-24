@@ -62,7 +62,7 @@ router.post('/addProject', function (req, res) {
 		};
 		res.send(reply);
 	})
-})
+});
 
 
 /*
@@ -84,12 +84,14 @@ router.put('/project', function (req, res) {
 	.catch(err=>{
 		res.status(500).json({message: err.message, stack:err.stack});
 	})
-})
+});
 
 /*
 -----------------------------GET-------------------------------------
 */
 //get a project by ID
+//NOT USED
+/*
 router.get('/project?', function(req,res){
 	var coll = "projects";
 	var projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
@@ -118,8 +120,9 @@ router.get('/project?', function(req,res){
 	}	
 		
 })
+*/
 
-
+/* NOT USED
 router.get('/projectUsers?', function(req,res){
 	var coll = "projects";
 	var projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
@@ -151,43 +154,46 @@ router.get('/projectUsers?', function(req,res){
 		res.send({'error' : "unauthorized"});
 	}
 })
+*/
 
-
+/*
+NOT USED
 router.get('/date?', function(req,res){
 	var date_stamp = new Date();
 	projectHelper.getAllUsers();
 	console.log(date_stamp.toString());
 	res.send(date_stamp.toString());
 })
+*/
 		
 		
 //get list of porjects and IDs
 router.get('/listProjects', function(req,res){
-	var coll = "projects";
-	var reply;
-	var project;
 	console.log("Project list requested");
-	mongodb.collection(coll).find({}).toArray(function(err, result){
-		if (err) throw err;
-		var reply = [{}];
-		for (var i = 0; i < result.length; i++) {
-			reply[i] = {
-				'projectName': result[i].projectName,
-				'projectID': result[i].projectID,
-				'description': result[i].description,
-				'dateCreated': result[i].dateCreated,
-				'dateModified': result[i].dateModified
-			}
+	knex('projects')
+	.select('projects.*')
+	.then(projects=>{
+		let reply = [];
+		for (var i = 0; i < projects.length; i++) {
+			reply.push({
+				'projectName': projects[i].name,
+				'projectID': projects[i].project_id,
+				'description': projects[i].description,
+				'dateCreated': projects[i].date_created,
+				'dateModified': projects[i].date_modified
+			});
 		}
 		console.log(reply);
 		res.send(reply);
 		console.log("Project list sent");
-
 	})
-	
-})
+	.catch(err=>{
+		res.status(500).json({message: err.message, stack:err.stack});
+	})
+});
 
-
+/*
+NOT USED
 router.get('/numberOfProjects', function(req,res){
 	var coll = "projects";
 	var reply;
@@ -212,6 +218,7 @@ router.get('/numberOfProjects', function(req,res){
 	})
 	
 })
+*/
 			
 			
 			
@@ -223,7 +230,7 @@ router.get('/numberOfProjects', function(req,res){
 /*
 -----------------------------DELETE-------------------------------------
 */
-
+/*
 router.delete('/project?', function(req,res){
 	var coll = "projects";
 	var projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
@@ -236,6 +243,6 @@ router.delete('/project?', function(req,res){
 		console.log("Project deleted");
 	})
 })	
-		
+*/
 
 module.exports = router;
