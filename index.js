@@ -52,11 +52,11 @@ app.get('/', function(req, res)
 });
 
 //additional routes
-app.use('/api/', projectRoutes);
-app.use('/api/', userRoutes);
-app.use('/api/', sensorRoutes);
-app.use('/api/', frameRoutes);
-app.use('/api/', boundingBoxRoutes);
+app.use('/', projectRoutes);
+app.use('/', userRoutes);
+app.use('/', sensorRoutes);
+app.use('/', frameRoutes);
+app.use('/', boundingBoxRoutes);
 
 //hosting server
 const server = app.listen(process.env.PORT, function () {
