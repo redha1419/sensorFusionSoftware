@@ -39,7 +39,10 @@ app.use(function(req, res, next) {
 //project routes
 const projectRoutes = require('./server/routes/project');
 const sensorRoutes = require('./server/routes/sensor');
+const frameRoutes = require('./server/routes/frame');
+const boundingBoxRoutes = require('./server/routes/boundingBox');
 const userRoutes = require('./server/authentication');
+
 
 //base route
 app.get('/', function(req, res) 
@@ -52,6 +55,8 @@ app.get('/', function(req, res)
 app.use('/api/', projectRoutes);
 app.use('/api/', userRoutes);
 app.use('/api/', sensorRoutes);
+app.use('/api/', frameRoutes);
+app.use('/api/', boundingBoxRoutes);
 
 //hosting server
 const server = app.listen(process.env.PORT, function () {
