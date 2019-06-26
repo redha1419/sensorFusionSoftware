@@ -20,12 +20,14 @@ function createSensorInstance(req, ID){
 		sensor.sensor_id = ID;
 	}
 
+	/*
 	if ( (req.body.users != undefined) && (projectHelper.itemInArray(sensor.users[0], req.body.users) == -1) ){
 		sensor.users = sensor.users.concat(req.body.users);
 	}
 	else if (req.body.users != undefined){
 		sensor.users = req.body.users;
 	}
+	*/
 
 	return sensor;
 }

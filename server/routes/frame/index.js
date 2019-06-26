@@ -28,11 +28,13 @@ function createFrameInstance(req, ID){
 	if (ID != undefined) {
 		sensorFrame.frame_id = ID;
 	}
+	/*
 	if ( (req.body.users != undefined) && (projectHelper.itemInArray(sensorFrame.users[0], req.body.users) == -1) ){
 		sensorFrame.users = sensorFrame.users.concat(req.body.users);
 	} else if (req.body.users != undefined){
 		sensorFrame.users = req.body.users;
 	}
+	*/
 	if ( (req.body.description != undefined) && (typeof req.body.description === 'string') ){
 		sensorFrame.description = req.body.description;
 	}
