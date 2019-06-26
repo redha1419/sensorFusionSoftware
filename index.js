@@ -7,6 +7,7 @@ const knex = require('./server/db/knex')
 const uuidv4  = require('uuid/v4');
 //server config
 const app = express();
+const logResponseTime = require("./response-time-logger");
 
 
 
@@ -23,6 +24,9 @@ app.use(session({
   saveUninitialized: false
 }))
 */
+
+//for measuring times
+app.use(logResponseTime);
 
 //passport configs
 app.use(passport.initialize());
