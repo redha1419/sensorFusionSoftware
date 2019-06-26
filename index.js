@@ -2,6 +2,9 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require("body-parser");
 const passport = require('passport');
+const bcrypt = require('bcryptjs')
+const knex = require('./server/db/knex')
+const uuidv4  = require('uuid/v4');
 //server config
 const app = express();
 
@@ -67,3 +70,24 @@ const server = app.listen(process.env.PORT, function () {
    console.log("Example app listening at http://%s:%s", host, port)
 })
 
+
+knex('users')
+.then(users=>{
+  if(users.length == 0){
+    //create a user
+    const user = {
+      'user_id': uuidv4(),
+      'username': 'admin',
+      'password_hash': bcrypt.hashSync('admin', 10),
+      'user_role': 'administrator'
+    };
+    knex('users')
+    .insert(user)
+    .then(user=>{
+      console.log('made a user')
+    })
+  }
+  else{
+    console.log('users already exist')
+  }
+})
