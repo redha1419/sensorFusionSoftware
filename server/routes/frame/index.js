@@ -193,7 +193,18 @@ router.get('/listFrames?',function(req,res){
 		.select('frames.frame_id', 'frames.frame_name')
 		.then(frames=>{
 			//TODO: authentication!
-			res.send(frames);
+			let reply= [];
+			for(let i=0; i<frames.length; i++){
+				reply.push(
+					{
+						'frameName': frames[i].frame_name,
+						'frameID': frames[i].frame_id
+					}
+				);
+			}
+			console.log('list of frames');
+			console.log(reply);
+			res.send(reply);
 		})
 		.catch(err=>{
 			res.status(500).json({message: err.message, stack:err.stack});

@@ -77,6 +77,7 @@ router.post('/addSensor', function(req, res){
 	.then(project=>{
 		let sensor = createSensorInstance(req);
 		console.log(sensor)
+		console.log(project)
 		sensor.project_id = project.project_id;
 		knex('sensors')
 		.insert(sensor)

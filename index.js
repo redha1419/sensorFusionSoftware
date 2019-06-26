@@ -77,8 +77,8 @@ knex('users')
     //create a user
     const user = {
       'user_id': uuidv4(),
-      'username': 'admin',
-      'password_hash': bcrypt.hashSync('admin', 10),
+      'username': 'Ahmed',
+      'password_hash': bcrypt.hashSync('000', 10),
       'user_role': 'administrator'
     };
     knex('users')

@@ -76,7 +76,7 @@ function createBBInstance(req, index, ID){
 			"cx": req.body.parameters.cx,						//coordinate 2
 			"cy": req.body.parameters.cy
 		}
-		boundingBox.points = parameters;
+		boundingBox.parameters = parameters;
 	}
 	else if (req.body.shape == 2) {							//Ellipse/circle
 		console.log("ellipse");
@@ -87,7 +87,7 @@ function createBBInstance(req, index, ID){
 			"b": req.body.parameters.b,						//minor radius
 			"theta": req.body.parameters.theta
 		}
-		boundingBox.points = parameters;
+		boundingBox.parameters = parameters;
 	}
 	else {
 		console.log("bounding box shape not found");
@@ -102,46 +102,33 @@ function createBBInstance(req, index, ID){
 */			
 
 router.post('/boundingBox', function(req,res){
-	var coll = "projects";
-	var project;
 	console.log("adding frame to" + 
 				req.body.projectID + 
 				" >> "+ req.body.sensorID + 
 				" >> "+ req.body.frameID
 				);
-	
-	knex('frames')
+
+		
+	knex('bounding_boxes')
 	.where('frame_id', req.body.frameID)
-	.first()
-	.then(frame=>{
-		if(frame){
-			console.log('found frame, will add new Boundary Box')
-			//TODO: need a "global index"
-			knex('bounding_boxes')
-			.where('frame_id', req.body.frameID)
-			.then(boxes=>{
-				let new_box = createBBInstance(req, boxes.length, null);
-				console.log(new_box)
-				knex('bounding_boxes')
-				.insert(new_box)
-				.returning(['*'])
-				.then(box=>{
-					console.log("Bounding Box Saved");
-					projectHelper.updateProjectDate(req.body.projectID);
-					let reply = {
-						boundingBoxID: box[0].bounding_box_id,
-						frameID: box[0].frame_id
-					};
-					res.send(reply)
-				})
-				.catch(err=>{
-					res.status(500).json({message: err.message, stack:err.stack});
-				})
-			})
-		}
-		else{
-			throw new Error('frame not found!');
-		}
+	.then(boxes=>{
+		let new_box = createBBInstance(req, boxes.length, null);
+		console.log(new_box)
+		knex('bounding_boxes')
+		.insert(new_box)
+		.returning(['*'])
+		.then(box=>{
+			console.log("Bounding Box Saved");
+			projectHelper.updateProjectDate(req.body.projectID);
+			let reply = {
+				boundingBoxID: box[0].bounding_box_id,
+				frameID: box[0].frame_id
+			};
+			res.send(reply)
+		})
+		.catch(err=>{
+			res.status(500).json({message: err.message, stack:err.stack});
+		})
 	})
 	.catch(err=>{
 		res.status(500).json({message: err.message, stack:err.stack});
@@ -218,7 +205,38 @@ router.get('/listBoundingBoxes',function(req,res){
 		let reply = [];
 		for(let i=0; i<boxes.length; i++){
 			//for each box we should put into reply with proper format bruh
-			reply.push({'some_data': 0})
+			/*
+				var boundingBox = {
+					"boundingBoxID": uuidv4(),
+					"globalIndex": -1,
+					"shape": 0,
+					"primaryLabel": "",
+					"secondaryLabel": [],
+					"temporalAttribute": "",
+					"confidence": 0,
+					"lastUser": authenticaton.getUser(req),
+					"description": 'No description.',
+					"users": [authenticaton.getUser(req)],
+					"points": [],
+					"parameters": {}
+				};
+			 */
+			reply.push(
+				{
+					boundingBoxID: boxes[i].bounding_box_id,
+					globalIndex: boxes[i].global_index,
+					shape:boxes[i].shape,
+					primaryLabel: boxes[i].label,
+					secondaryLabel: [],
+					temporalAttribute: boxes[i].temporal_attribute,
+					confidence: boxes[i].confidence,
+					lastUser: "me",
+					description: boxes[i].description,
+					users: "none",
+					points: boxes[i].points.data,
+					parameters: boxes[i].parameters
+				}
+			);
 		}
 		res.send(reply)
 	})
