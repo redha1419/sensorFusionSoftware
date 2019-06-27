@@ -56,7 +56,7 @@ function createBBInstance(req, index, ID){
 		boundingBox.points = {
 			data: []
 		};
-		//TODO: does this work ?
+		/*
 		for (var i=0; i<req.body.points.length; i++){
 			var point = {
 				"index": req.body.points[i].index,
@@ -64,7 +64,9 @@ function createBBInstance(req, index, ID){
 				"y": req.body.points[i].y
 			}
 			boundingBox.points.data[req.body.points[i].index] = point;
-		}					
+		}	
+		*/
+		boundingBox.points.data = req.body.points;				
 	}
 	else if (req.body.shape == 1) {					//Rectangle/Square
 		console.log("rectangle");
