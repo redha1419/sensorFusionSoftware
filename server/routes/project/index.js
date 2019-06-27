@@ -238,6 +238,7 @@ router.delete('/project?', function(req,res){
 	console.log(projectID);
 	knex('projects')
 	.where('project_id', projectID)
+	.delete()
 	.then(()=>{
 		console.log("Project deleted");
 		res.status(200).json({status: 'ok', message: 'Succesfully deleted project!'})
