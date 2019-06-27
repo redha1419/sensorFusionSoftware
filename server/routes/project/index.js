@@ -230,19 +230,22 @@ router.get('/numberOfProjects', function(req,res){
 /*
 -----------------------------DELETE-------------------------------------
 */
-/*
+
+
 router.delete('/project?', function(req,res){
-	var coll = "projects";
 	var projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
 	console.log("Delete Project requested");
 	console.log(projectID);
-	mongodb.collection(coll).deleteOne({'projectID': projectID}, function(err, result){
-		if (err) throw err;
-		console.log(result);
-		res.send(result);
+	knex('projects')
+	.where('project_id', projectID)
+	.then(()=>{
 		console.log("Project deleted");
+		res.status(200).json({status: 'ok', message: 'Succesfully deleted project!'})
+	})
+	.catch(err=>{
+		res.status(500).json({message: 'Error', stack:err.stack});
 	})
 })	
-*/
+
 
 module.exports = router;

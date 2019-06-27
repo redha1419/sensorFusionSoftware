@@ -40,6 +40,9 @@ module.exports = function(knex) {
 			.where(myQuery)
 			.then(()=>{
 				return 0;
+			})
+			.catch(err=>{
+				console.log('failed to update project date modifified, most likely did not give valid projectID');
 			})	
 		},
 		
