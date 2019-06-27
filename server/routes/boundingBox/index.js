@@ -37,7 +37,7 @@ function createBBInstance(req, index, ID){
 		boundingBox.description = req.body.description;
 	}
 	if ( (req.body.primaryLabel != undefined) && (typeof req.body.primaryLabel === 'string') ){
-		boundingBox.label = req.body.label;
+		boundingBox.label = req.body.primaryLabel;
 	}
 	if ( (req.body.temporalAttribute != undefined) && (typeof req.body.temporalAttribute === 'string') ){
 		boundingBox.temporal_attribute = req.body.temporalAttribute;
