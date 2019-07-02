@@ -398,19 +398,25 @@ router.delete('/boundingBox',function(req,res){
 		.where('frame_id', req.body.frameID)
 		.delete() // delete all
 		.then(()=>{
-			knex('bounding_boxes')
-			.insert(boxes_to_keep)
-			.returning(['*'])
-			.then((good_boxes)=>{
-				console.log('number of boxes in frame after')
-				console.log(good_boxes.length)
+			if(boxes_to_keep.length > 0){
+				knex('bounding_boxes')
+				.insert(boxes_to_keep)
+				.returning(['*'])
+				.then((good_boxes)=>{
+					console.log('number of boxes in frame after')
+					console.log(good_boxes.length)
+					let reply = "some message"
+					projectHelper.updateProjectDate(req.body.projectID);
+					res.send(reply);
+				})
+				.catch(err => {
+					res.status(500).json({message: 'Error', stack:err.stack});
+				})
+			}
+			else {
 				let reply = "some message"
-				projectHelper.updateProjectDate(req.body.projectID);
 				res.send(reply);
-			})
-			.catch(err => {
-				res.status(500).json({message: 'Error', stack:err.stack});
-			})
+			}
 		})
 		.catch(err => {
 			res.status(500).json({message: 'Error', stack:err.stack});
