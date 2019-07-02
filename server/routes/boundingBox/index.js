@@ -384,6 +384,8 @@ router.delete('/boundingBox',function(req,res){
 		//got all bounding boxes
 		let boxes_to_keep = [];
 		let global_index = 0;
+		console.log('number of boxes in frame before')
+		console.log(boxes.length)
 		for(let i=0;i<boxes.length; i++){
 			if(boxes[i].bounding_box_id != req.body.boundingBoxID){
 				boxes[i].global_index = global_index;
@@ -400,8 +402,8 @@ router.delete('/boundingBox',function(req,res){
 			.insert(boxes_to_keep)
 			.returning(['*'])
 			.then((good_boxes)=>{
-				console.log('boxes in frame')
-				console.log(good_boxes)
+				console.log('number of boxes in frame after')
+				console.log(good_boxes.length)
 				let reply = "some message"
 				projectHelper.updateProjectDate(req.body.projectID);
 				res.send(reply);
