@@ -379,7 +379,7 @@ router.delete('/boundingBox',function(req,res){
 	//TODO: authentication
 	knex('bounding_boxes')
 	.where('frame_id', req.body.frameID)
-	.orderBy('global_index', 'asc')
+	.orderBy('global_index')
 	.then(boxes=>{
 		//got all bounding boxes
 		let boxes_to_keep = [];
@@ -398,7 +398,10 @@ router.delete('/boundingBox',function(req,res){
 		.then(()=>{
 			knex('bounding_boxes')
 			.insert(boxes_to_keep)
-			.then(()=>{
+			.returning(['*'])
+			.then((good_boxes)=>{
+				console.log('boxes in frame')
+				console.log(good_boxes)
 				let reply = "some message"
 				projectHelper.updateProjectDate(req.body.projectID);
 				res.send(reply);
