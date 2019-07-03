@@ -51,6 +51,7 @@ router.post('/addProject', function (req, res) {
 	.returning(['*'])
 	.then((result)=>{
 		console.log(result)
+		//TODO: create users_projects, make sure users are good
 		let reply = {
 			"insertedCount": result.length, //lets see if we can get this info
 			"collection": "projects",
