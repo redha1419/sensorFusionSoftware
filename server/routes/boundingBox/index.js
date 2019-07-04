@@ -214,6 +214,7 @@ router.get('/listBoundingBoxes',function(req,res){
 	//console.log("Bounding Boxes details requested");
 	knex('bounding_boxes')
 	.where('frame_id', frameID)
+	.orderBy('global_index')
 	.then(boxes=>{
 		//TODO: authentication
 		//console.log(boxes)
