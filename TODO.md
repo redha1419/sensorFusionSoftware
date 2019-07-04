@@ -13,3 +13,5 @@
 #add algorithm field to bounding box not mandatory
 
 #add route, gets frame and index, gives back bounding box (GET: /boundingBox)
+
+#bulk insert put bounding boxes 
