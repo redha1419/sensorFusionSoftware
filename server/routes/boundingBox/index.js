@@ -210,9 +210,6 @@ app.post('/addBoundingBox', function(req,res){
 */
 
 router.get('/listBoundingBoxes',function(req,res){
-	var coll = "projects";
-	var projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
-	var sensorID = req.query.sensorID ? req.query.sensorID : 'No sensor ID';
 	var frameID = req.query.frameID ? req.query.frameID : 'No Frame ID';
 	//console.log("Bounding Boxes details requested");
 	knex('bounding_boxes')
@@ -256,6 +253,7 @@ router.get('/listBoundingBoxes',function(req,res){
 				}
 			);
 		}
+		console.log(reply)
 		res.send(reply)
 	})
 	.catch(err=>{
