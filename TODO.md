@@ -11,3 +11,5 @@
 #latency -> try better aws node
 
 #add algorithm field to bounding box not mandatory
+
+#add route, gets frame and index, gives back bounding box (GET: /boundingBox)
