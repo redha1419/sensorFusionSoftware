@@ -50,8 +50,20 @@ router.post('/addProject', function (req, res) {
 	.insert(project_to_add)
 	.returning(['*'])
 	.then((result)=>{
-		console.log(result)
-		//TODO: create users_projects, make sure users are good
+		req.body.users.forEach( async function(user){
+			return new Promise(() => {
+				knex('users_projects')
+				.insert({
+					user_id: knex('users').where('username',user).select('user_id'),
+					project_id: result[0].project_id
+				}).then(()=>{
+					//we need this .then ? I think this needs to be here so the promise is satisfied ?
+				})
+				.catch(err=>{
+					console.log(err)
+				})
+			})
+		})
 		let reply = {
 			"insertedCount": result.length, //lets see if we can get this info
 			"collection": "projects",

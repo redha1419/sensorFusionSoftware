@@ -19,7 +19,8 @@ function createBBInstance(req, index, ID){
 		"confidence": 0,
 		"description": 'No description.',
 		"points": {},
-		"frame_id": req.body.frameID
+		"frame_id": req.body.frameID,
+		"user_id": ""
 	};
 	if (ID != undefined) {
 		boundingBox.bounding_box_id = ID;
@@ -42,14 +43,9 @@ function createBBInstance(req, index, ID){
 	if ( (req.body.temporalAttribute != undefined) && (typeof req.body.temporalAttribute === 'string') ){
 		boundingBox.temporal_attribute = req.body.temporalAttribute;
 	}
-
-	/*
-	if ( (req.body.users != undefined) && (projectHelper.itemInArray(boundingBox.users[0], req.body.users) == -1) ){
-		boundingBox.users = boundingBox.users.concat(req.body.users);
-	} else if (req.body.users != undefined){
-		boundingBox.users = req.body.users;
+	if(req.body.user != undefined){
+		boundingBox.user = knex('users').where('username', req.body.user).select('user_id');
 	}
-	*/
 
 	if (req.body.shape == 3) {						//polygon
 		console.log("polygon");
@@ -121,7 +117,6 @@ router.post('/boundingBox', function(req,res){
 		//console.log(frame);
 		if(frame){
 			//console.log('found frame, will add new Boundary Box')
-			//TODO: need a "global index"
 			knex('bounding_boxes')
 			.where('frame_id', req.body.frameID)
 			.then(boxes=>{
@@ -214,7 +209,9 @@ router.get('/listBoundingBoxes',function(req,res){
 	//console.log("Bounding Boxes details requested");
 	knex('bounding_boxes')
 	.where('frame_id', frameID)
+	.join('users', 'users.user_id', '=', 'bounding_boxes.user_id')
 	.orderBy('global_index')
+	.select('bounding_boxes.*', 'users.username')
 	.then(boxes=>{
 		//TODO: authentication
 		//console.log(boxes)
@@ -246,15 +243,46 @@ router.get('/listBoundingBoxes',function(req,res){
 					secondaryLabel: [],
 					temporalAttribute: boxes[i].temporal_attribute,
 					confidence: boxes[i].confidence,
-					lastUser: "me",
 					description: boxes[i].description,
-					users: "none",
 					points: boxes[i].points.data || [],
-					parameters: boxes[i].parameters
+					parameters: boxes[i].parameters,
+					originalUser: boxes[i].username
 				}
 			);
 		}
-		console.log(reply)
+		res.send(reply)
+	})
+	.catch(err=>{
+		res.status(500).json({message: err.message, stack:err.stack});
+	})
+});
+
+router.get('/listUserBoundingBox', function(req, res){
+	knex('bounding_boxes')
+	.where('frame_id', req.body.frameID)
+	.where('user_id', knex('users').where('username', req.body.user).select('user_id'))
+	.orderBy('global_index')
+	.then(boxes => {
+		//TODO: authentication
+		//console.log(boxes)
+		let reply = [];
+		for(let i=0; i<boxes.length; i++){
+			reply.push(
+				{
+					boundingBoxID: boxes[i].bounding_box_id,
+					globalIndex: boxes[i].global_index,
+					shape:boxes[i].shape,
+					primaryLabel: boxes[i].label,
+					secondaryLabel: [],
+					temporalAttribute: boxes[i].temporal_attribute,
+					confidence: boxes[i].confidence,
+					description: boxes[i].description,
+					points: boxes[i].points.data || [],
+					parameters: boxes[i].parameters,
+					originalUser: req.body.user
+				}
+			);
+		}
 		res.send(reply)
 	})
 	.catch(err=>{
