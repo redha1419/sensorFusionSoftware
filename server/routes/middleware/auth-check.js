@@ -36,19 +36,23 @@ module.exports = (req, res, next) => {
     //For now all we will do is make sure that the user can acess the project
     decoded = checkCookie(req); //should be decoded.username and decoded.user_role
 
-    console.log(list)
-    knex('users_projects')
-    .where('user_id', decoded.username )
-    .where('project_id', req.body.project)
-    .then(project => {
-        if(project){
-            next()
-        }
-        else {
-            return res.status(401).json({"error": "an error occured during authentication"});
-        }
-    })
-    .catch(err => {
-        return res.status(401).json(err);
-    })
+    if(decoded.user_role != "Administrator"){
+        knex('users_projects')
+        .where('user_id', decoded.username )
+        .where('project_id', req.body.project)
+        .then(project => {
+            if(project){
+                next()
+            }
+            else {
+                return res.status(401).json({"error": "an error occured during authentication"});
+            }
+        })
+        .catch(err => {
+            return res.status(401).json(err);
+        })
+    }
+    else {
+        next()
+    }
 };
