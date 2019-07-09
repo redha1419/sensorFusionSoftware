@@ -26,7 +26,7 @@ var privateKey  = fs.readFileSync('./server/authentication/private.key', 'utf8')
 var publicKey  = fs.readFileSync('./server/authentication/public.key', 'utf8');
 let options = {
 	"algorithm": "RS256",
-	"expiresIn": "1h",
+	"expiresIn": "2h",
 	"issuer": "ETF Lab"
 };
 

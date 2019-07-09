@@ -43,7 +43,7 @@ function checkCookie(req){
 	var cookieList = parseCookies(req);
 	let options = {
 		"algorithm": "RS256",
-		"expiresIn": "10h",
+		"expiresIn": "2h",
 		"issuer": "ETF Lab"
 	};
 	var payload = jwt.verify(cookieList.token,publicKey,options);
@@ -113,7 +113,7 @@ router.post('/login', (req, res) => {
 					
 	let options = {
 		"algorithm": "RS256",
-		"expiresIn": "10h",
+		"expiresIn": "2h",
 		"issuer": "ETF Lab"
 	};
 	
