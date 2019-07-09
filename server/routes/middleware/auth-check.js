@@ -1,7 +1,7 @@
 import knex from '../db/knex';
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-
+const publicKey  = fs.readFileSync('./server/authentication/public.key', 'utf8');
 
 //this is a middleweare function meant to go into an express handler
 // it looks like it returns 401 if the user is not verified or else passes to next()
@@ -35,7 +35,7 @@ module.exports = (req, res, next) => {
     //TODO: add jwt authentication with cookies
     //For now all we will do is make sure that the user can acess the project
     decoded = checkCookie(req); //should be decoded.username and decoded.user_role
-
+    console.log(decoded);
     if(decoded.user_role != "Administrator"){
         knex('users_projects')
         .where('user_id', decoded.username )
