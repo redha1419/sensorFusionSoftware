@@ -198,7 +198,8 @@ router.get('/listFrames?',function(req,res){
 				reply.push(
 					{
 						'frameName': frames[i].frame_name,
-						'frameID': frames[i].frame_id
+						'frameID': frames[i].frame_id,
+						'description': frames[i].description
 					}
 				);
 			}
@@ -300,8 +301,8 @@ app.get('/frame?',function(req,res){
 ---------------------------------------PUT----------------------------------
 */			
 	
+//TODO:
 /*
-NOT USED
 app.put('/frame',function(req,res){
 	var coll = "projects";
 	console.log('Updating frame: ' + req.body.frameID);
@@ -372,6 +373,7 @@ app.put('/frame',function(req,res){
 	})
 	
 })
+
 */
 
 module.exports = router;

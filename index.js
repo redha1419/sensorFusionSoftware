@@ -10,21 +10,6 @@ const app = express();
 const logResponseTime = require("./response-time-logger");
 
 
-
-
-/* //TODO: WHY ARE WE USING REDIS STORE ?
-const session = require('express-session');
-const RedisStore = require('connect-redis')(session)
-app.use(session({
-  store: new RedisStore({
-    url: process.env.REDIS_STORE_URI
-  }),
-  secret: process.env.REDIS_STORE_SECRET,
-  resave: false,
-  saveUninitialized: false
-}))
-*/
-
 //for measuring times
 app.use(logResponseTime);
 
