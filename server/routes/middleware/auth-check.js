@@ -26,7 +26,8 @@ function checkCookie(req){
 		"algorithm": "RS256",
 		"expiresIn": "2h",
 		"issuer": "ETF Lab"
-	};
+    };
+    console.log(cookieList)
 	var payload = jwt.verify(cookieList.token,publicKey,options);
 	return payload;
 }
