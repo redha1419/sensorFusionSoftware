@@ -1,6 +1,7 @@
 const knex = require('../../db/knex');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+let fs = require('fs');
 const publicKey  = fs.readFileSync('./server/authentication/public.key', 'utf8');
 
 //this is a middleweare function meant to go into an express handler
