@@ -117,6 +117,7 @@ router.post('/login', (req, res) => {
 	.where('username', username)
 	.first()
 	.then((result)=>{
+		console.log(result)
 		if (result == null) {
 			console.log('user not found'); // we know this, but we should act dumb to the front end 
 			res.status(403).json({message: "Incorrect Username/Password"})
