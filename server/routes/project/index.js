@@ -8,6 +8,12 @@ const knex    = require('../../db/knex');
 const moment  = require('moment');
 const projectHelper = require('../libs/helperFunctions.js')(knex);
 
+let jwt = require("jsonwebtoken");
+let fs = require('fs');
+
+// PRIVATE and PUBLIC key
+var publicKey  = fs.readFileSync('./server/authentication/public.key', 'utf8');
+
 /*
 module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
 	
