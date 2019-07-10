@@ -43,7 +43,7 @@ module.exports = (req, res, next) => {
         return res.status(401).json({"error": "an error occured during authentication"});
     }
 
-    if(decoded.user_role != "Administrator"){ //if not admin, check to see if in project in question
+    if(decoded.user_role != "administrator"){ //if not admin, check to see if in project in question
         knex('users_projects')
         .where('user_id', decoded.username )
         .where('project_id', req.body.project)
