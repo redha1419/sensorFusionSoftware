@@ -51,7 +51,7 @@ CREATE TABLE sensor_fusion.frames (
 	frame_name           text   ,
 	CONSTRAINT pk_frames_id PRIMARY KEY ( id ),
 	CONSTRAINT unq_frames_frame_id UNIQUE ( frame_id ) ,
-	CONSTRAINT idx_frames UNIQUE ( frame_name, sensor_id ) ,
+	CONSTRAINT idx_frames UNIQUE ( frame_id, sensor_id ) ,
 	CONSTRAINT fk_frames_sensors FOREIGN KEY ( sensor_id ) REFERENCES sensor_fusion.sensors( sensor_id ) ON DELETE CASCADE 
  );
 

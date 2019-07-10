@@ -43,8 +43,8 @@ function createBBInstance(req, index, ID){
 	if ( (req.body.temporalAttribute != undefined) && (typeof req.body.temporalAttribute === 'string') ){
 		boundingBox.temporal_attribute = req.body.temporalAttribute;
 	}
-	if(req.body.user != undefined){
-		boundingBox.user = knex('users').where('username', req.body.user).select('user_id');
+	if(req.body.user != undefined && (typeof req.body.user === 'string')){
+		boundingBox.user_id = knex('users').where('username', req.body.user).select('user_id');
 	}
 
 	if (req.body.shape == 3) {						//polygon
