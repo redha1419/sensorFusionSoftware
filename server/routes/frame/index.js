@@ -190,7 +190,7 @@ router.get('/listFrames?',function(req,res){
 		console.log(sensor);
 		knex('frames')
 		.where('sensor_id', sensorID)
-		.select('frames.frame_id', 'frames.frame_name')
+		.select('frames.frame_id', 'frames.frame_name', 'frames.description')
 		.then(frames=>{
 			//TODO: authentication!
 			let reply= [];
