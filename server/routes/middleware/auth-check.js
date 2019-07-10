@@ -39,7 +39,6 @@ module.exports = (req, res, next) => {
     }
     //For now all we will do is make sure that the user can acess the project
     decoded = checkCookie(req); //should be decoded.username and decoded.user_role
-    console.log(decoded);
     if(decoded == null || decoded == undefined || (Object.entries(decoded).length === 0 && decoded.constructor === Object)){
         return res.status(401).json({"error": "an error occured during authentication"});
     }

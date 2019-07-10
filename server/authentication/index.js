@@ -138,7 +138,6 @@ router.post('/login', (req, res) => {
 				};	
 				var token = jwt.sign(payload,privateKey,options);
 				res.cookie("token", token);
-				console.log(token)
 				return res.status(200).send({ token: token });
 			}
 			else{
