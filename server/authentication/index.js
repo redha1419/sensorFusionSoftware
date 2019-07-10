@@ -50,17 +50,13 @@ function checkCookie(req){
 	return payload;
 }
 
-function createUser(req, ID){
-	var sensorFrame = {
+function createUser(req){
+	return {
 		'user_id': uuidv4(),
 		'username': req.body.username,
 		'password_hash': hashPassword(req.body.password),
 		'user_role': req.body.access
 	};
-	if (ID != undefined) {
-		sensorFrame.frameID = ID;
-	}
-	return sensorFrame;
 }
 
 			
@@ -72,7 +68,7 @@ router.post('/user', (req, res) => {
 	console.log('creating a new user: ' + req.body.username)
 
 	
-	if (checkCookie(req).access != "administrator") {
+	if (checkCookie(req).user_role != "administrator") {
 		res.send({"error": "access denied"});
 		return 0;
 	}
@@ -154,7 +150,7 @@ router.post('/login', (req, res) => {
 
 router.put('/user', (req, res) => {
 	
-	if (checkCookie(req).access != "administrator") {
+	if (checkCookie(req).user_role != "administrator") {
 		res.send({"error": "access denied"});
 		return 0;
 	}

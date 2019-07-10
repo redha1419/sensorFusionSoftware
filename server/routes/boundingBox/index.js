@@ -371,7 +371,7 @@ app.get('/boundingBox?', function(req,res){
 */
 			
 router.put('/boundingBox',function(req,res){
-	//TODO: authentication
+	
 	knex('bounding_boxes')
 	.where('bounding_box_id', req.body.boundingBoxID)
 	.first()
