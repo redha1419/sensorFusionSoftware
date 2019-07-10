@@ -27,7 +27,6 @@ function checkCookie(req){
 		"expiresIn": "2h",
 		"issuer": "ETF Lab"
     };
-    console.log(cookieList)
 	var payload = jwt.verify(cookieList.token,publicKey,options);
 	return payload;
 }
@@ -59,6 +58,7 @@ module.exports = (req, res, next) => {
         })
     }
     else {
+        console.log("passed along !")
         next()
     }
 };
