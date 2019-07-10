@@ -47,7 +47,7 @@ app.get('/', function(req, res)
 //additional routes
 app.use('/', middleWare);
 app.use('/', projectRoutes);
-app.use('/auth/', userRoutes);
+app.use('/', userRoutes);
 app.use('/', sensorRoutes);
 app.use('/', frameRoutes);
 app.use('/', boundingBoxRoutes);
