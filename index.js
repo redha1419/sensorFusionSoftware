@@ -34,7 +34,7 @@ const sensorRoutes = require('./server/routes/sensor');
 const frameRoutes = require('./server/routes/frame');
 const boundingBoxRoutes = require('./server/routes/boundingBox');
 const userRoutes = require('./server/authentication');
-const middleWare = require('./server/routes/middleware');
+const middleWare = require('./server/routes/middleware/auth-check.js');
 
 
 //base route
