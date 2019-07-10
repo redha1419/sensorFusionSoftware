@@ -36,12 +36,14 @@ module.exports = (req, res, next) => {
     if (req.originalUrl === '/login') {
         return next();
     }
-    //For now all we will do is make sure that the user can acess the project
+    //For now all we will do is make sure that the user can acess the project in question (EXCEPTION: /listProjects)
     decoded = checkCookie(req); //should be decoded.username and decoded.user_role
+
     if(decoded == null || decoded == undefined || (Object.entries(decoded).length === 0 && decoded.constructor === Object)){
         return res.status(401).json({"error": "an error occured during authentication"});
     }
-    if(decoded.user_role != "Administrator"){
+
+    if(decoded.user_role != "Administrator"){ //if not admin, check to see if in project in question
         knex('users_projects')
         .where('user_id', decoded.username )
         .where('project_id', req.body.project)
@@ -58,7 +60,7 @@ module.exports = (req, res, next) => {
         })
     }
     else {
-        console.log("passed along !")
+        console.log("passed along!")
         next()
     }
 };
