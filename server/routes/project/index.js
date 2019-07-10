@@ -213,7 +213,7 @@ router.get('/listProjects', function(req,res){
 	decoded = checkCookie(req);
 	knex('users_projects')
 	.where('users_projects.user_id', knex('users').where('username', decoded.username).select('user_id'))
-	join('projects', 'users_projects.project_id', '=', 'projects.project_id')
+	.join('projects', 'users_projects.project_id', '=', 'projects.project_id')
 	.select('projects.*')
 	.then(projects=>{
 		let reply = [];
