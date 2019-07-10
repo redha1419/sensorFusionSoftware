@@ -13,7 +13,7 @@ function createFrameInstance(req, ID){
 	var sensorFrame = {
 		'frame_id': uuidv4(),
 		'frame_name': req.body.frameName,
-		'description': req.body.description,
+		'description': req.body.description || "",
 		'translation_data': {
 			"x": "",
 			"y": "",
