@@ -178,12 +178,36 @@ router.get('/date?', function(req,res){
 	res.send(date_stamp.toString());
 })
 */
-		
+function parseCookies (request) {
+    var list = {},
+        rc = request.headers.cookie;
+
+    rc && rc.split(';').forEach(function( cookie ) {
+        var parts = cookie.split('=');
+        list[parts.shift().trim()] = decodeURI(parts.join('='));
+    });
+
+    return list;
+}
+
+function checkCookie(req){
+	var cookieList = parseCookies(req);
+	let options = {
+		"algorithm": "RS256",
+		"expiresIn": "2h",
+		"issuer": "ETF Lab"
+	};
+	var payload = jwt.verify(cookieList.token,publicKey,options);
+	return payload;
+}
 		
 //get list of porjects and IDs
 router.get('/listProjects', function(req,res){
 	console.log("Project list requested");
-	knex('projects')
+	decoded = checkCookie(req);
+	knex('users_projects')
+	.where('users_projects.user_id', knex('users').where('username', decoded.username).select('user_id'))
+	join('projects', 'users_projects.project_id', '=', 'projects.project_id')
 	.select('projects.*')
 	.then(projects=>{
 		let reply = [];

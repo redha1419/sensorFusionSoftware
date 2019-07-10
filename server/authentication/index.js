@@ -120,7 +120,7 @@ router.post('/login', (req, res) => {
 		console.log(result)
 		if (result == null) {
 			console.log('user not found'); // we know this, but we should act dumb to the front end 
-			res.status(403).json({message: "Incorrect Username/Password"})
+			return res.status(403).json({message: "Incorrect Username/Password"})
 		}
 
 		comparePassword(password, result.password_hash, (err, isMatch) => {
