@@ -1,4 +1,4 @@
-import knex from '../db/knex';
+const knex = require('../db/knex');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const publicKey  = fs.readFileSync('./server/authentication/public.key', 'utf8');
