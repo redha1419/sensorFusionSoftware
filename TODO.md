@@ -1,9 +1,11 @@
 ## TODO
 
-#latency -> try better aws node === #bulk insert put bounding boxes 
+#make labels array of strings
 
-#make label array of strings
+#list users in projectID
 
-#number of users in project when do /listProjects
+#new table called labels (current_node, parent_node, label_name, group, color, projectID) ->added once
 
-#bounding box properties column change
+#list labels by projectID
+
+#bulk insert/update for put /boundingBox
