@@ -181,28 +181,28 @@ router.put('/user', (req, res) => {
 -----------------------------GET-------------------------------------
 */
 		
-/*
-NOT USED
+
 router.get('/user', function(req,res){
-	var coll = "users";
-	var reply;
-	console.log("User list requested");
-	mongodb.collection(coll).find({}).toArray(function(err, result){
-		if (err) throw err;
-		var reply = [{}];
-		for (var i = 0; i < result.length; i++) {
-			reply[i] = {
-				'username': result[i].username,
-				'access': result[i].access
-			}
+	console.log("User list requested for projectID ", req.body.projectID);
+	knex('users_projects')
+	.where('users_projects.project_id')
+	.join('users', 'users.user_id', '=', 'users_projects.user_id')
+	.select('users.*')
+	.then(users => {
+		let reply = [];
+		for(let i=0; i<users.length; i++){
+			reply.push({
+				username: users[i].username,
+				access: users[i].user_role
+			});
 		}
-		console.log(reply);
 		res.send(reply);
 		console.log("User list sent");
-
-	})		
+	})
+	.catch(err=>{
+		res.status(500).json({message: "Error Occured while getting users list"})
+	})
 })
-*/
 
 router.get('/checkCookie', (req, res) => {
 		console.log('checking for cookie');

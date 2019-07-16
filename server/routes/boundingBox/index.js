@@ -14,7 +14,7 @@ function createBBInstance(req, index, ID){
 		"bounding_box_id": uuidv4(),
 		"global_index": -1,
 		"shape": 0,
-		"label": "",
+		"label": [],
 		"temporal_attribute": "",
 		"confidence": 0,
 		"description": 'No description.',
@@ -37,7 +37,7 @@ function createBBInstance(req, index, ID){
 	if ( (req.body.description != undefined) && (typeof req.body.description === 'string') ){
 		boundingBox.description = req.body.description;
 	}
-	if ( (req.body.primaryLabel != undefined) && (typeof req.body.primaryLabel === 'string') ){
+	if ( (req.body.primaryLabel != undefined) && (typeof req.body.primaryLabel === 'object') ){
 		boundingBox.label = req.body.primaryLabel;
 	}
 	if ( (req.body.temporalAttribute != undefined) && (typeof req.body.temporalAttribute === 'string') ){

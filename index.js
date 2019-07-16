@@ -33,6 +33,7 @@ const projectRoutes = require('./server/routes/project');
 const sensorRoutes = require('./server/routes/sensor');
 const frameRoutes = require('./server/routes/frame');
 const boundingBoxRoutes = require('./server/routes/boundingBox');
+const labelRoutes = require('./server/routes/label');
 const userRoutes = require('./server/authentication');
 const middleWare = require('./server/routes/middleware/auth-check.js');
 
@@ -51,6 +52,7 @@ app.use('/', userRoutes);
 app.use('/', sensorRoutes);
 app.use('/', frameRoutes);
 app.use('/', boundingBoxRoutes);
+app.use('/', labelRoutes);
 
 //hosting server
 const server = app.listen(process.env.PORT, function () {
