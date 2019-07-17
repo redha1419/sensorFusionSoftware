@@ -15,7 +15,7 @@ function createBBInstance(req, index, ID){
 		"global_index": -1,
 		"shape": 0,
 		"label": [],
-		"temporal_attribute": "",
+		"attributes": "",
 		"confidence": 0,
 		"description": 'No description.',
 		"points": {},
@@ -41,7 +41,7 @@ function createBBInstance(req, index, ID){
 		boundingBox.label = req.body.primaryLabel;
 	}
 	if ( (req.body.attributes != undefined) && (typeof req.body.attributes === 'object') ){
-		boundingBox.temporal_attribute = req.body.attributes;
+		boundingBox.attributes = req.body.attributes;
 	}
 	if(req.body.user != undefined && (typeof req.body.user === 'string')){
 		boundingBox.user_id = knex('users').where('username', req.body.user).select('user_id');
@@ -225,7 +225,7 @@ router.get('/listBoundingBoxes',function(req,res){
 					"shape": 0,
 					"primaryLabel": "",
 					"secondaryLabel": [],
-					"temporalAttribute": "",
+					"attributes": "",
 					"confidence": 0,
 					"lastUser": authenticaton.getUser(req),
 					"description": 'No description.',
