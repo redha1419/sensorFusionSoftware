@@ -109,7 +109,7 @@ router.post('/boundingBox', function(req,res){
 
 		console.log(req.body)
 		*/
-	
+	console.log(req.body)
 	knex('frames')
 	.where('frame_id', req.body.frameID)
 	.first()
