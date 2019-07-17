@@ -40,8 +40,8 @@ function createBBInstance(req, index, ID){
 	if ( (req.body.primaryLabel != undefined) && (typeof req.body.primaryLabel === 'object') ){
 		boundingBox.label = req.body.primaryLabel;
 	}
-	if ( (req.body.temporalAttribute != undefined) && (typeof req.body.temporalAttribute === 'string') ){
-		boundingBox.temporal_attribute = req.body.temporalAttribute;
+	if ( (req.body.attributes != undefined) && (typeof req.body.attributes === 'object') ){
+		boundingBox.temporal_attribute = req.body.attributes;
 	}
 	if(req.body.user != undefined && (typeof req.body.user === 'string')){
 		boundingBox.user_id = knex('users').where('username', req.body.user).select('user_id');
@@ -241,7 +241,7 @@ router.get('/listBoundingBoxes',function(req,res){
 					shape:boxes[i].shape,
 					primaryLabel: boxes[i].label,
 					secondaryLabel: [],
-					temporalAttribute: boxes[i].temporal_attribute,
+					attributes: boxes[i].attributes,
 					confidence: boxes[i].confidence,
 					description: boxes[i].description,
 					points: boxes[i].points.data || [],
@@ -274,7 +274,7 @@ router.get('/listUserBoundingBox', function(req, res){
 					shape:boxes[i].shape,
 					primaryLabel: boxes[i].label,
 					secondaryLabel: [],
-					temporalAttribute: boxes[i].temporal_attribute,
+					attributes: boxes[i].attributes,
 					confidence: boxes[i].confidence,
 					description: boxes[i].description,
 					points: boxes[i].points.data || [],
