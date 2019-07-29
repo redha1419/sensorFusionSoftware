@@ -83,6 +83,21 @@ router.post('/addProject', function (req, res) {
 	})
 });
 
+router.post('/project_config', function (req, res){
+	knex('users_projects')
+	.where({
+		user_id: knex('users').where('username', req.body.username),
+		project_id: req.body.projectID
+	})
+	.update({config_file: req.body.configFile})
+	.then(()=>{
+		res.status(200).json({message: "Succesfully updated users_projects with config file"})
+	})
+	.catch(err=>{
+		res.status(500).json({message: "Not able to update users_projects with config file"})
+	})
+});
+
 
 /*
 -----------------------------PUT-------------------------------------
@@ -232,6 +247,21 @@ router.get('/listProjects', function(req,res){
 	})
 	.catch(err=>{
 		res.status(500).json({message: err.message, stack:err.stack});
+	})
+});
+
+router.get('/project_config', function (req, res){
+	knex('users_projects')
+	.where({
+		user_id: knex('users').where('username', req.body.username),
+		project_id: req.body.projectID
+	})
+	.first()
+	.then((user_poject)=>{
+		res.send({configFile: user_project.config_file});
+	})
+	.catch(err=>{
+		res.status(500).json({message: "Not able to update users_projects with config file"});
 	})
 });
 
