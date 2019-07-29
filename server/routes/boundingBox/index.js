@@ -15,7 +15,7 @@ function createBBInstance(req, index, ID){
 		"global_index": -1,
 		"shape": 0,
 		"label": [],
-		"attributes": "",
+		"attributes": {},
 		"confidence": 0,
 		"description": 'No description.',
 		"points": {},
@@ -217,23 +217,7 @@ router.get('/listBoundingBoxes',function(req,res){
 		//console.log(boxes)
 		let reply = [];
 		for(let i=0; i<boxes.length; i++){
-			//for each box we should put into reply with proper format bruh
-			/*
-				var boundingBox = {
-					"boundingBoxID": uuidv4(),
-					"globalIndex": -1,
-					"shape": 0,
-					"primaryLabel": "",
-					"secondaryLabel": [],
-					"attributes": "",
-					"confidence": 0,
-					"lastUser": authenticaton.getUser(req),
-					"description": 'No description.',
-					"users": [authenticaton.getUser(req)],
-					"points": [],
-					"parameters": {}
-				};
-			 */
+			//for each box we should put into reply with proper format
 			reply.push(
 				{
 					boundingBoxID: boxes[i].bounding_box_id,
