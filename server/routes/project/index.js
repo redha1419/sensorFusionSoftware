@@ -86,7 +86,7 @@ router.post('/addProject', function (req, res) {
 router.post('/project_config', function (req, res){
 	knex('users_projects')
 	.where({
-		user_id: knex('users').where('username', req.body.username),
+		user_id: knex('users').where('username', req.body.username).select('user_id').first(),
 		project_id: req.body.projectID
 	})
 	.update({config_file: req.body.configFile})
@@ -253,7 +253,7 @@ router.get('/listProjects', function(req,res){
 router.get('/project_config', function (req, res){
 	knex('users_projects')
 	.where({
-		user_id: knex('users').where('username', req.body.username),
+		user_id: knex('users').where('username', req.body.username).select('user_id').first(),
 		project_id: req.body.projectID
 	})
 	.first()
