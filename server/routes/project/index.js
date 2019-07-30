@@ -258,8 +258,7 @@ router.get('/project_config', function (req, res){
 		project_id: req.query.projectID
 	})
 	.first()
-	.then((user_poject)=>{
-		console.log(user_project)
+	.then((user_project)=>{
 		res.send({configFile: user_project.config_file});
 	})
 	.catch(err=>{
