@@ -94,6 +94,7 @@ router.post('/project_config', function (req, res){
 		res.status(200).json({message: "Succesfully updated users_projects with config file"})
 	})
 	.catch(err=>{
+		console.log(err)
 		res.status(500).json({message: "Not able to update users_projects with config file"})
 	})
 });
