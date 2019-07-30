@@ -8,7 +8,7 @@ CREATE TABLE sensor_fusion.projects (
 	description          text   ,
 	project_id           text   ,
 	CONSTRAINT pk_projects_id PRIMARY KEY ( id ),
-	CONSTRAINT unq_projects_project_id UNIQUE ( project_id ) 
+	CONSTRAINT unq_projects_project_id UNIQUE ( project_id ),
 	CONSTRAINT unq_projects_name UNIQUE ( name )
  );
 
