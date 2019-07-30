@@ -259,9 +259,11 @@ router.get('/project_config', function (req, res){
 	})
 	.first()
 	.then((user_poject)=>{
+		console.log(user_project)
 		res.send({configFile: user_project.config_file});
 	})
 	.catch(err=>{
+		console.log(err)
 		res.status(500).json({message: "Not able to update users_projects with config file"});
 	})
 });
