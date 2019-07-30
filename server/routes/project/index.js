@@ -254,8 +254,8 @@ router.get('/listProjects', function(req,res){
 router.get('/project_config', function (req, res){
 	knex('users_projects')
 	.where({
-		user_id: knex('users').where('username', req.body.username).select('user_id').first(),
-		project_id: req.body.projectID
+		user_id: knex('users').where('username', req.query.username).select('user_id').first(),
+		project_id: req.query.projectID
 	})
 	.first()
 	.then((user_poject)=>{
