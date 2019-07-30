@@ -81,6 +81,9 @@ router.post('/addProject', function (req, res) {
 		};
 		res.send(reply);
 	})
+	.catch(err=>{
+		res.status(500).json({message: "Error, project was not created!"})
+	})
 });
 
 router.post('/project_config', function (req, res){
