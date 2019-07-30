@@ -259,7 +259,11 @@ router.get('/project_config', function (req, res){
 	})
 	.first()
 	.then((user_project)=>{
-		res.send({configFile: user_project.config_file});
+		if(user_project){
+			res.send({configFile: user_project.config_file});
+		}else{
+			throw new Error("project not found for user")
+		}
 	})
 	.catch(err=>{
 		console.log(err)
