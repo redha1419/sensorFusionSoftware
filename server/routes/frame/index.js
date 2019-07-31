@@ -170,7 +170,13 @@ router.post('/frame', function(req, res){
 				projectHelper.updateProjectDate(req.body.projectID);
 				res.send(reply);
 			})
+			.catch(err=>{
+				console.log(err)
+			})
 		})
+	})
+	.catch(err=>{
+		console.log(err)
 	})
 });
 
