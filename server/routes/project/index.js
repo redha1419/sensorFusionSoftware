@@ -66,7 +66,9 @@ router.post('/addProject', function (req, res) {
 					//we need this .then ? I think this needs to be here so the promise is satisfied ?
 				})
 				.catch(err=>{
+					res.status(500).json({message: "Error, project was not created!"})
 					console.log(err)
+					return
 				})
 			})
 		})
@@ -83,6 +85,8 @@ router.post('/addProject', function (req, res) {
 	})
 	.catch(err=>{
 		res.status(500).json({message: "Error, project was not created!"})
+		console.log(err)
+		return
 	})
 });
 
