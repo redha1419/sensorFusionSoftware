@@ -117,8 +117,8 @@ router.get('/listSensors?', function(req,res){
 		let reply = [];
 		for (var i = 0; i < sensors.length; i++) {
 			reply.push({
-				'sensorName': sensors[i].sensor_name,
 				'sensorID': sensors[i].sensor_id,
+				'sensorName': sensors[i].sensor_name,
 				'sensorType': sensors[i].sensor_type
 			});
 		}
