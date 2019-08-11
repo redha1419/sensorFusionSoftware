@@ -29,6 +29,7 @@ CREATE TABLE sensor_fusion.users (
 	username             varchar(100)   ,
 	password_hash        text   ,
 	user_role            text   ,
+	temp_pass            boolean   ,
 	CONSTRAINT pk_users_id PRIMARY KEY ( id ),
 	CONSTRAINT idx_users UNIQUE ( username ) ,
 	CONSTRAINT unq_users_user_id UNIQUE ( user_id ) 
