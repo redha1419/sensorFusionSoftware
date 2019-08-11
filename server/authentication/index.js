@@ -153,7 +153,7 @@ router.post('/forgot_account', (req, res) => {
 			//we will store this crazy passsword in the db (hashed ofcourse, extra crazy)
 			knex('users')
 			.update('password_hash', hashPassword(temp_password))
-			.update('temp_pass', true) //TODO: default for this val is false 
+			.update('temp_pass', true)
 			.where('user_id', user.user_id)
 			.then(()=>{
 				//TODO: send email func!
