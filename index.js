@@ -7,7 +7,7 @@ const knex = require('./server/db/knex')
 const uuidv4  = require('uuid/v4');
 //server config
 const app = express();
-const logResponseTime = require("./response-time-logger");
+const logResponseTime = require("./server/response-time-logger");
 
 
 //for measuring times
