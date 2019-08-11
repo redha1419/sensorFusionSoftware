@@ -1,9 +1,3 @@
-"use strict";
-
-//libs
-
-"use strict";
-
 //libs
 const uuidv4  = require('uuid/v4');
 const express = require('express');
@@ -143,6 +137,77 @@ router.post('/login', (req, res) => {
 		});
 	});
 	
+});
+
+router.post('/forgot_account', (req, res) => {
+	let email = req.body.email;
+	knex('users')
+	.where('email', email)
+	.first()
+	.then(user=>{
+		if(user){
+			//send an email here with 
+			let username = user.username;
+			//we will create some crazy password for them
+			let temp_password =  uuidv4();
+			//we will store this crazy passsword in the db (hashed ofcourse, extra crazy)
+			knex('users')
+			.update('password_hash', hashPassword(temp_password))
+			.update('temp_pass', true) //TODO: default for this val is false 
+			.where('user_id', user.user_id)
+			.then(()=>{
+				//TODO: send email func!
+				res.status(200).json({message: "Succesfully reset your password, please check your email for instructions"})
+			})
+			.catch(err=>{
+				res.status(500).json({message: err.message, stack:err.stack});
+			})
+		}else{
+			//we havent found the user, thus wrong email
+			res.status(403).json({message:"User not found with email: " + email})
+		}
+	})
+	.catch(err=>{
+		res.status(500).json({message: err.message, stack:err.stack});
+	})
+});
+
+router.post('/change_password', (req, res) => {
+	let username = req.body.username;
+	let temp_password = req.body.temporaryPassword;
+	let new_password = req.body.newPassword;
+
+	knex('users')
+	.where('username', username)
+	.first()
+	.then(user=>{
+		if(user && user.temp_pass){
+			//found user and we need to match its password to confirm and change!
+			comparePassword(temp_password, user.password_hash, (err, isMatch) => {
+				if(isMatch){
+					knex('users')
+					.where('username', username)
+					.update('password_hash', new_password)
+					.then(()=>{
+						res.status(200).json({message:'User password has been successfully updated!'})
+					})
+					.catch(err=>{
+						res.status(500).json({message: err.message, stack:err.stack});
+					})
+				}
+				else{
+					res.status(403).json({message:'Error: User temporary password incorrect!'})
+				}
+			});
+		}
+		else{
+			res.status(403).json({message: 'User not found or user not allowed to change their password!'})
+		}
+	})
+	.catch(err=>{
+		res.status(500).json({message: err.message, stack:err.stack});
+	});
+
 });
 			
 /*
