@@ -1,5 +1,3 @@
-"use strict";
-
 //libs
 const uuidv4  = require('uuid/v4');
 const express = require('express');
@@ -66,7 +64,7 @@ function createBBInstance(req, index, ID){
 	}
 	else if (req.body.shape == 1) {					//Rectangle/Square
 		console.log("rectangle");
-		var parameters = {
+		let parameters = {
 			"x1": req.body.parameters.x1,						//coordinate 1
 			"y1": req.body.parameters.y1,
 			"x2": req.body.parameters.x2,						//coordinate 2
@@ -78,7 +76,7 @@ function createBBInstance(req, index, ID){
 	}
 	else if (req.body.shape == 2) {							//Ellipse/circle
 		console.log("ellipse");
-		var parameters = {
+		let parameters = {
 			"x": req.body.parameters.x,						//center 
 			"y": req.body.parameters.y,
 			"a": req.body.parameters.a,						//major Radius
@@ -204,8 +202,48 @@ app.post('/addBoundingBox', function(req,res){
 --------------------------------GET----------------------------
 */
 
+router.get('/listFilteredBoundingBoxes', function(req,res){
+	let frameID = req.query.frameID ? req.query.frameID : 'No Frame ID';
+	let projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
+	let labels = req.query.labels ? req.query.labels : 'No labels';
+	labels = labels.split(',');
+	knex('bounding_boxes')
+	.where('frame_id', frameID)
+	.whereIn('labels', labels)
+	.join('users', 'users.user_id', '=', 'bounding_boxes.user_id')
+	.orderBy('global_index')
+	.select('bounding_boxes.*', 'users.username')
+	.then(data=>{
+		//TODO: authentication
+		//console.log(boxes)
+		let reply = [];
+		for(let i=0; i<boxes.length; i++){
+			//for each box we should put into reply with proper format
+			reply.push(
+				{
+					boundingBoxID: boxes[i].bounding_box_id,
+					globalIndex: boxes[i].global_index,
+					shape:boxes[i].shape,
+					primaryLabel: boxes[i].label,
+					secondaryLabel: [],
+					attributes: boxes[i].attributes,
+					confidence: boxes[i].confidence,
+					description: boxes[i].description,
+					points: boxes[i].points.data || [],
+					parameters: boxes[i].parameters,
+					originalUser: boxes[i].username
+				}
+			);
+		}
+		res.send(reply)
+	})
+	.catch(err=>{
+		res.status(500).json({message: err.message, stack:err.stack});
+	})
+})
+
 router.get('/listBoundingBoxes',function(req,res){
-	var frameID = req.query.frameID ? req.query.frameID : 'No Frame ID';
+	let frameID = req.query.frameID ? req.query.frameID : 'No Frame ID';
 	//console.log("Bounding Boxes details requested");
 	knex('bounding_boxes')
 	.where('frame_id', frameID)

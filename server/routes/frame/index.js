@@ -1,5 +1,3 @@
-"use strict";
-
 //libs
 const uuidv4  = require('uuid/v4');
 const express = require('express');
@@ -179,6 +177,46 @@ router.post('/frame', function(req, res){
 		console.log(err)
 	})
 });
+
+router.post('/matchFrame', function(req, res){
+	const origFrameID = req.body.origFrameID;
+	const newFrameID = req.body.newFrameID;
+	knex('bounding_boxes')
+	.where('frame_id', origFrameID)
+	.then(data=>{
+		if (data.length > 0){
+			//go through the data and correct their frame affiliation
+			for(let i=0; i<data.length; i++){
+				data[i].frame_id = newFrameID;
+			}
+			//give "data" to our new bnounding boxes
+			knex('bounding_boxes')
+			.where('frame_id', newFrameID)
+			.delete()
+			.then(()=>{
+				console.log('deleted all bounding boxes associated with frame: ' + newFrameID)
+				knex('bounding_boxes')
+				.insert(data)
+				.then(()=>{
+					console.log('updated the frame ' + newFrameID + ' with new boxes')
+				})
+				.catch(err=>{
+					res.status(500).json({message: err.message, stack:err.stack});
+				})
+			})
+			.catch(err=>{
+				res.status(500).json({message: err.message, stack:err.stack});
+			})
+		}
+		else{
+			console.log('updated the frame ' + newFrameID + ' with new boxes')
+		}
+	})
+	.catch(err=>{
+		res.status(500).json({message: err.message, stack:err.stack});
+	})
+
+})
 
 /*
 -------------------------------GET--------------------------
