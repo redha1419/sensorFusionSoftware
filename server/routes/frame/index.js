@@ -189,6 +189,7 @@ router.post('/matchFrame', function(req, res){
 			//go through the data and correct their frame affiliation
 			for(let i=0; i<data.length; i++){
 				data[i].frame_id = newFrameID;
+				data[i].bounding_box_id = uuidv4(); //some new if for each box lol
 			}
 			//give "data" to our new bnounding boxes
 			knex('bounding_boxes')
