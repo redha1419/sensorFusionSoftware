@@ -240,6 +240,7 @@ router.get('/listFrames?',function(req,res){
 		knex('frames')
 		.where('sensor_id', sensorID)
 		.select('frames.frame_id', 'frames.frame_name', 'frames.description')
+		.orderBy('frameName')
 		.then(frames=>{
 			//TODO: authentication!
 			let reply= [];
