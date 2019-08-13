@@ -204,9 +204,7 @@ app.post('/addBoundingBox', function(req,res){
 
 router.get('/listFilteredBoundingBoxes', function(req,res){
 	let frameID = req.query.frameID ? req.query.frameID : 'No Frame ID';
-	let projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
 	let labels = req.query.labels ? req.query.labels : 'No labels';
-	labels = labels.split(',');
 	knex('bounding_boxes')
 	.where('frame_id', frameID)
 	.whereIn('labels', labels)
