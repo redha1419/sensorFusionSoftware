@@ -181,6 +181,7 @@ router.post('/frame', function(req, res){
 router.post('/matchFrame', function(req, res){
 	const origFrameID = req.body.origFrameID;
 	const newFrameID = req.body.newFrameID;
+	console.log(req.body)
 	knex('bounding_boxes')
 	.where('frame_id', origFrameID)
 	.then(data=>{
