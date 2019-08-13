@@ -199,6 +199,7 @@ router.post('/matchFrame', function(req, res){
 				.insert(data)
 				.then(()=>{
 					console.log('updated the frame ' + newFrameID + ' with new boxes')
+					res.status(200).json({message: 'succesfully updated frames'})
 				})
 				.catch(err=>{
 					res.status(500).json({message: err.message, stack:err.stack});
@@ -210,6 +211,7 @@ router.post('/matchFrame', function(req, res){
 		}
 		else{
 			console.log('updated the frame ' + newFrameID + ' with new boxes')
+			res.status(200).json({message: 'succesfully updated frames'})
 		}
 	})
 	.catch(err=>{
