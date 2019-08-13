@@ -190,6 +190,7 @@ router.post('/matchFrame', function(req, res){
 			for(let i=0; i<data.length; i++){
 				data[i].frame_id = newFrameID;
 				data[i].bounding_box_id = uuidv4(); //some new if for each box lol
+				delete data[i].id //remove postgres id, will be automatically re-gened
 			}
 			//give "data" to our new bnounding boxes
 			knex('bounding_boxes')
