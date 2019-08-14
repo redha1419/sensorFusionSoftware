@@ -37,7 +37,7 @@ router.post('/label', function(req,res){
     try{
         //let group_name = given_labels.find(obj => {return obj.parent_node === -1}).label_name;
         for(let i=0; i<given_labels.length; i++){
-            if(given_labels[i].parent_node===-1){
+            if(given_labels[i].parent_node === "-1"){
                 group_name = given_labels[i].label_name;
             }
         }
