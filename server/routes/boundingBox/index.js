@@ -170,7 +170,8 @@ router.get('/listFilteredBoundingBoxes', function(req,res){
 		for(let i=0; i<boxes.length; i++){
 			//for each box we should put into reply with proper format
 			for(let j=0; j<labels.length; j++){
-				if( _.isEqual(_.sortBy(boxes[i].label), _.sortBy(labels[j])) ){
+				let xor = _.xor(boxes[i].label, labels[j])
+				if(xor.length === 0){
 					reply.push(
 						{
 							boundingBoxID: boxes[i].bounding_box_id,
