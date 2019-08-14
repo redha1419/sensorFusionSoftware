@@ -171,6 +171,7 @@ router.get('/listFilteredBoundingBoxes', function(req,res){
 			//for each box we should put into reply with proper format
 			for(let j=0; j<labels.length; j++){
 				let xor = _.xor(boxes[i].label, labels[j])
+				console.log(xor)
 				if(xor.length === 0){
 					reply.push(
 						{
