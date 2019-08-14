@@ -38,7 +38,6 @@ router.post('/label', function(req,res){
     try{
         //let group_name = given_labels.find(obj => {return obj.parent_node === -1}).label_name;
         console.log(given_labels);
-        given_labels = JSON.parse(given_labels)
         for(let i=0; i<given_labels.length; i++){
             console.log(i)
             console.log(given_labels[i])
