@@ -164,11 +164,13 @@ router.get('/listFilteredBoundingBoxes', function(req,res){
 	.then(boxes=>{
 		//TODO: authentication
 		//console.log(boxes)
+		console.log(boxes)
+		console.log(labels)
 		let reply = [];
 		for(let i=0; i<boxes.length; i++){
 			//for each box we should put into reply with proper format
 			for(let j=0; j<labels.length; i++){
-				if( _.intersection(boxes[i].labels, labels[j]).length > 0){
+				if(JSON.stringify(boxes[i].labels)==JSON.stringify(labels[j])){
 					reply.push(
 						{
 							boundingBoxID: boxes[i].bounding_box_id,
