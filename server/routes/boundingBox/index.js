@@ -212,7 +212,7 @@ router.get('/listFilteredBoundingBoxes', function(req,res){
 	.join('users', 'users.user_id', '=', 'bounding_boxes.user_id')
 	.orderBy('global_index')
 	.select('bounding_boxes.*', 'users.username')
-	.then(data=>{
+	.then(boxes=>{
 		//TODO: authentication
 		//console.log(boxes)
 		let reply = [];
