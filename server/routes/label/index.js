@@ -37,6 +37,7 @@ router.post('/label', function(req,res){
     try{
         let group_name = given_labels.find(obj => {return obj.parent_node === -1})//.label_name;
         console.log(group_name)
+        group_name = group_name.label_name
     }
     catch(err){
         res.status(500).json({message: "Did not provide a parent node"});
