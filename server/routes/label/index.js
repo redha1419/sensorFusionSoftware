@@ -35,9 +35,13 @@ router.post('/label', function(req,res){
     let given_labels = req.body.labels;
     let labels_to_insert = [];
     try{
-        let group_name = given_labels.find(obj => {return obj.parent_node === -1})//.label_name;
+        //let group_name = given_labels.find(obj => {return obj.parent_node === -1}).label_name;
+        for(let i=0; i<given_labels.length; i++){
+            if(given_labels[i].parent_node===-1){
+                group_name = given_labels[i].label_name;
+            }
+        }
         console.log(group_name)
-        group_name = group_name.label_name
     }
     catch(err){
         res.status(500).json({message: "Did not provide a parent node"});
