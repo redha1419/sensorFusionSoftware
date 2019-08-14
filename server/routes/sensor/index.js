@@ -37,37 +37,6 @@ function createSensorInstance(req, ID){
 /*
 ---------------------------POST------------------------------------------------
 */		
-/*
-NOT USED
-router.post('/sensor', function(req, res){
-	var coll = "projects";
-	var reply;
-	var project;
-	console.log("adding sensor to"+req.body.projectID);
-	mongodb.collection(coll).findOne({'projectID': req.body.projectID }, function( err, result) {
-		if (err) throw err;
-		project = result;
-		var myquery = {'projectID' : project.projectID};
-		var sensor = createSensorInstance(req);
-		var newvalues = {$push: {'sensors': sensor}};
-		mongodb.collection(coll).updateOne(myquery, newvalues, function(err, result) {
-		if (err) throw err;
-		console.log("Sensor Saved\tID: " + sensor.sensorID + "\t\tName: " + sensor.sensorName );
-		reply = {
-			"insertedCount": result.nModified,
-			"collection": coll,
-			"projectName": project.projectName,
-			"projectID": project.projectID,
-			"sensorName": sensor.sensorName,
-			"sensorID": sensor.sensorID
-			};
-		projectHelper.updateProjectDate(req.body.projectID);
-		res.send(reply);
-		})
-	});
-})
-*/
-
 
 router.post('/addSensor', function(req, res){
 	console.log("adding sensor to: "+req.body.projectID);
@@ -149,87 +118,11 @@ router.get('/listSensors?', function(req,res){
 })
 
 /*
-NOT USED
-router.get('/numberOfSensors?', function(req,res){
-	var coll = "projects";
-	var projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
-	console.log("Sensor details requested in project " + projectID);
-	console.log(projectID);
-	mongodb.collection(coll).findOne({'projectID': projectID}, function(err, result){
-		if (err) throw err;
-		var reply = [{}];
-		for (var i = 0; i < result.sensors.length; i++) {
-			reply[i] = {
-				'sensorName': result.sensors[i].sensorName,
-				'sensorID': result.sensors[i].sensorID,
-				'sensorType': result.sensors[i].sensorReference
-			}
-		}
-		console.log("--------------");
-		console.log(authenticaton.getUser(req));
-		console.log(result);
-		console.log(projectHelper.itemInArray(
-					authenticaton.getUser(req), 
-					result.users));
-										console.log("--------------");
-
-		if (projectHelper.itemInArray(
-					authenticaton.getUser(req), 
-					result.users) >= 0){
-			console.log(reply.length);
-			res.send(reply.length);
-		}else{
-			res.send({'error' : "unauthorized"});
-		}
-		
-		console.log("Project details sent");
-	})
-})
-*/
-
-/*
-NOT USED
-router.get('/sensor?', function(req,res){
-	var coll = "projects";
-	var projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
-	var sensorID = req.query.sensorID ? req.query.sensorID : 'No Sensor ID';
-	console.log("Sensor details requested");
-	console.log(projectID);
-	if (authenticaton.getPermission(req).read == 'true'){
-		mongodb.collection(coll).findOne({'projectID': projectID}, function(err, result){
-			if (err) throw err;
-			var response = 0;
-			var sensorIndex = result.sensors.findIndex(
-				function(sense) {
-					return sense.sensorID === sensorID
-				}
-			)
-			response = result.sensors[sensorIndex]
-			
-			if (projectHelper.itemInArray(
-							authenticaton.getUser(req), 
-							result.sensors[sensorIndex].users) >= 0){
-				
-				console.log(response);
-				res.send(response);
-			}else{
-				res.send({'error' : "unauthorized"});
-			}
-			
-			
-			console.log("Project details sent");
-		})
-	}else {
-		res.send({'error' : "unauthorized"});
-	}
-})
-*/
-/*
 -------------------------------PUT--------------------------------
 */			
 
 /*
-NOT USED
+NOT USED, TODO: ?
 router.put('/sensor',function(req,res){
 	var coll = "projects";
 	console.log('Updating Sensor: ' + req.body.sensorID);
@@ -289,7 +182,7 @@ router.put('/sensor',function(req,res){
 */
 
 /*
-NOT USED
+NOT USED, TODO: ?
 router.delete('/sensor',function(req, res){
 	var coll = "projects";
 	var projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
