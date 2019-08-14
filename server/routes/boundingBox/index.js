@@ -154,8 +154,8 @@ router.post('/boundingBox', function(req,res){
 
 router.get('/listFilteredBoundingBoxes', function(req,res){
 	//TODO: flatten labels ?, will lower complexity by n?
-	let frameID = req.query.frameID ? req.query.frameID : 'No Frame ID';
-	let labels = req.query.labels ? req.query.labels : 'No labels';
+	let frameID = req.query.frameID ? req.body.frameID : 'No Frame ID';
+	let labels = req.query.labels ? req.body.labels : 'No labels';
 	//labels = JSON.parse(labels);
 	knex('bounding_boxes')
 	.where('frame_id', frameID)
