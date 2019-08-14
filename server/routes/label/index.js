@@ -36,7 +36,11 @@ router.post('/label', function(req,res){
     let labels_to_insert = [];
     try{
         //let group_name = given_labels.find(obj => {return obj.parent_node === -1}).label_name;
+        console.log(given_labels);
+        group_name = "";
         for(let i=0; i<given_labels.length; i++){
+            console.log(i)
+            console.log(given_labels[i])
             if(given_labels[i].parent_node === "-1"){
                 group_name = given_labels[i].label_name;
             }
