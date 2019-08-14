@@ -34,10 +34,11 @@ router.post('/label', function(req,res){
     let projectID = req.body.projectID;
     let given_labels = req.body.labels;
     let labels_to_insert = [];
+    var group_name = "";
     try{
         //let group_name = given_labels.find(obj => {return obj.parent_node === -1}).label_name;
         console.log(given_labels);
-        group_name = "";
+        given_labels = JSON.parse(given_labels)
         for(let i=0; i<given_labels.length; i++){
             console.log(i)
             console.log(given_labels[i])
