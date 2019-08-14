@@ -6,6 +6,7 @@ const knex    = require('../../db/knex');
 const moment  = require('moment');
 const projectHelper = require('../libs/helperFunctions.js')(knex);
 const authenticaton = require('../libs/users.js')(knex);
+const _ = require('lodash')
 	
 function createBBInstance(req, index, ID){
 	var boundingBox = {
@@ -207,7 +208,6 @@ router.get('/listFilteredBoundingBoxes', function(req,res){
 	let labels = req.query.labels ? req.query.labels : 'No labels';
 	knex('bounding_boxes')
 	.where('frame_id', frameID)
-	.whereIn('labels', labels)
 	.join('users', 'users.user_id', '=', 'bounding_boxes.user_id')
 	.orderBy('global_index')
 	.select('bounding_boxes.*', 'users.username')
@@ -217,21 +217,25 @@ router.get('/listFilteredBoundingBoxes', function(req,res){
 		let reply = [];
 		for(let i=0; i<boxes.length; i++){
 			//for each box we should put into reply with proper format
-			reply.push(
-				{
-					boundingBoxID: boxes[i].bounding_box_id,
-					globalIndex: boxes[i].global_index,
-					shape:boxes[i].shape,
-					primaryLabel: boxes[i].label,
-					secondaryLabel: [],
-					attributes: boxes[i].attributes,
-					confidence: boxes[i].confidence,
-					description: boxes[i].description,
-					points: boxes[i].points.data || [],
-					parameters: boxes[i].parameters,
-					originalUser: boxes[i].username
+			for(let j=0; j<labels.length; i++){
+				if( _.intersection(boxes[i].labels, labels[j]).length > 0){
+					reply.push(
+						{
+							boundingBoxID: boxes[i].bounding_box_id,
+							globalIndex: boxes[i].global_index,
+							shape:boxes[i].shape,
+							primaryLabel: boxes[i].label,
+							secondaryLabel: [],
+							attributes: boxes[i].attributes,
+							confidence: boxes[i].confidence,
+							description: boxes[i].description,
+							points: boxes[i].points.data || [],
+							parameters: boxes[i].parameters,
+							originalUser: boxes[i].username
+						}
+					);
 				}
-			);
+			}
 		}
 		res.send(reply)
 	})
