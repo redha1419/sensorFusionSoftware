@@ -48,6 +48,7 @@ router.post('/label', function(req,res){
         console.log(group_name)
     }
     catch(err){
+        console.log(err)
         res.status(500).json({message: "Did not provide a parent node"});
         return
     }
