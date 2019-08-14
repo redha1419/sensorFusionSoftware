@@ -204,6 +204,7 @@ app.post('/addBoundingBox', function(req,res){
 */
 
 router.get('/listFilteredBoundingBoxes', function(req,res){
+	//TODO: flatten labels ?, will lower complexity by n?
 	let frameID = req.query.frameID ? req.query.frameID : 'No Frame ID';
 	let labels = req.query.labels ? req.query.labels : 'No labels';
 	knex('bounding_boxes')
