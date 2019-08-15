@@ -13,7 +13,8 @@ function createSensorInstance(req, ID){
 	var sensor = {
 		'sensor_id': uuidv4(),
 		'sensor_type': req.body.sensorReference,
-		'sensor_name': req.body.sensorName
+		'sensor_name': req.body.sensorName,
+		'sensor_mode': req.body.sensorMode
 	};
 
 	if (ID != undefined) {
@@ -59,7 +60,8 @@ router.post('/addSensor', function(req, res){
 				"projectName": project.project_name,
 				"projectID": project.project_id,
 				"sensorName": sensor.sensor_name,
-				"sensorID": sensor.sensor_id
+				"sensorID": sensor.sensor_id,
+				"sensorMode": sensor.sensor_mode
 			};
 			projectHelper.updateProjectDate(req.body.projectID);
 			res.send(reply);
