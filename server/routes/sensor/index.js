@@ -10,6 +10,8 @@ const projectHelper = require('../libs/helperFunctions.js')(knex);
 const authenticaton = require('../libs/users.js')(knex);
 	
 function createSensorInstance(req, ID){
+	console.log('craeteing a sensor object')
+	console.log(req.body)
 	var sensor = {
 		'sensor_id': uuidv4(),
 		'sensor_type': req.body.sensorReference,
