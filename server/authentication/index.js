@@ -248,9 +248,9 @@ router.put('/user', (req, res) => {
 		
 
 router.get('/user', function(req,res){
-	console.log("User list requested for projectID ", req.body.projectID);
+	console.log("User list requested for projectID ", req.query.projectID);
 	knex('users_projects')
-	.where('users_projects.project_id')
+	.where('users_projects.project_id', req.query.projectID)
 	.join('users', 'users.user_id', '=', 'users_projects.user_id')
 	.select('users.*')
 	.then(users => {
