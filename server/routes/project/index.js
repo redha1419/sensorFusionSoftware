@@ -133,12 +133,14 @@ router.put('/project', function (req, res) {
 });
 
 router.put('/userConfig', function(req, res){
+	let user_config_obj =  {};
+	user_config_obj.data = req.body.userConfig;
 	knex('users_projects')
 	.where({
 		user_id: knex('users').where('username', req.body.username).select('user_id').first(),
 		project_id: req.body.projectID
 	})
-	.update({user_config: req.body.userConfig})
+	.update({user_config: user_config_obj})
 	.then(()=>{
 		res.status(200).json({message: "Succesfully updated users_projects with user_config file"})
 	})
