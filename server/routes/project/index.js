@@ -94,6 +94,7 @@ router.post('/project_config', function (req, res){
 
 
 router.post('/userConfig', function(req, res){
+	console.log(req.body.userConfig)
 	knex('users_projects')
 	.where({
 		user_id: knex('users').where('username', req.body.username).select('user_id').first(),
