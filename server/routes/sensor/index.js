@@ -14,7 +14,8 @@ function createSensorInstance(req, ID){
 		'sensor_id': uuidv4(),
 		'sensor_type': req.body.sensorType,
 		'sensor_name': req.body.sensorName,
-		'sensor_mode': req.body.sensorMode
+		'sensor_mode': req.body.sensorMode,
+		'data_path': req.body.dataPath
 	};
 
 	if (ID != undefined) {
@@ -46,8 +47,6 @@ router.post('/addSensor', function(req, res){
 	.first()
 	.then(project=>{
 		let sensor = createSensorInstance(req);
-		console.log(sensor)
-		console.log(project)
 		sensor.project_id = project.project_id;
 		knex('sensors')
 		.insert(sensor)
