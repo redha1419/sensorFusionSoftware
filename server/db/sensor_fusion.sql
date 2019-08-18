@@ -43,6 +43,7 @@ CREATE TABLE sensor_fusion.users_projects (
 	user_id              text  NOT NULL ,
 	config_file          text,
 	user_config          json,
+	label_colors         json,
 	CONSTRAINT pk_users_projects_id PRIMARY KEY ( id ),
 	CONSTRAINT fk_users_projects_projects FOREIGN KEY ( project_id ) REFERENCES sensor_fusion.projects( project_id ) ON DELETE CASCADE,
 	CONSTRAINT fk_users_projects_users FOREIGN KEY ( user_id ) REFERENCES sensor_fusion.users( user_id )  

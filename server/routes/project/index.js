@@ -150,6 +150,22 @@ router.put('/userConfig', function(req, res){
 	})
 });
 
+router.put('/labelColor', function(req,res){
+	knex('users_projects')
+	.where({
+		user_id: knex('users').where('username', req.body.username).select('user_id').first(),
+		project_id: req.body.projectID
+	})
+	.update({label_colors: req.body.class_names})
+	.then(()=>{
+		res.status(200).json({message: "Succesfully updated users_projects with label colors"})
+	})
+	.catch(err=>{
+		console.log(err)
+		res.status(500).json({message: "Not able to update users_projects with label colors"})
+	})
+});
+
 /*
 -----------------------------GET-------------------------------------
 */
@@ -318,6 +334,27 @@ router.get('/userConfig', function(req, res){
 	.catch(err=>{
 		console.log(err)
 		res.status(500).json({message: "Not able to update users_projects with user_config file"})
+	})
+});
+
+router.get('/labelColor', function(req, res){
+	knex('users_projects')
+	.where({
+		user_id: knex('users').where('username', req.query.username).select('user_id').first(),
+		project_id: req.query.projectID
+	})
+	.first()
+	.then((user_project)=>{
+		let reply = {
+			username: req.body.username,
+			projectID: req.body.projectID,
+			class_names: user_project.label_colors
+		}
+		res.status(200).json(reply)
+	})
+	.catch(err=>{
+		console.log(err)
+		res.status(500).json({message: "Not able to update users_projects with label colors"})
 	})
 });
 
