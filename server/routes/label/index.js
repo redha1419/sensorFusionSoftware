@@ -55,7 +55,8 @@ router.post('/label', function(req,res){
                 label_name:  given_labels[i].label_name,
                 parent_node: given_labels[i].parent_node,
                 group_name: group_name,
-                project_id: projectID
+                project_id: projectID,
+                label_type: given_labels[i].label_type,
             }
         )
     }
