@@ -90,7 +90,8 @@ router.get('/listSensors?', function(req,res){
 				'sensorID': sensors[i].sensor_id,
 				'sensorName': sensors[i].sensor_name,
 				'sensorType': sensors[i].sensor_type,
-				'sensorMode': sensors[i].sensor_mode
+				'sensorMode': sensors[i].sensor_mode,
+				'dataPath': sensors[i].data_path
 			});
 		}
 		/*
