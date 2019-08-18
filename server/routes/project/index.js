@@ -300,7 +300,7 @@ router.get('/project_config', function (req, res){
 	})
 });
 
-router.put('/userConfig', function(req, res){
+router.get('/userConfig', function(req, res){
 	knex('users_projects')
 	.where({
 		user_id: knex('users').where('username', req.query.username).select('user_id').first(),
