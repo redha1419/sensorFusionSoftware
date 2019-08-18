@@ -13,20 +13,6 @@ let fs = require('fs');
 
 // PRIVATE and PUBLIC key
 var publicKey  = fs.readFileSync('./server/authentication/public.key', 'utf8');
-
-/*
-module.exports = (app, MongoClient, mongoDBurl, mongodb) => {
-	
-	const authenticaton = require('../libs/users.js.js')(mongodb);
-	
-	function createProjectInstance(req, ID){
-		
-	}
-	return {
-		"configureRoutes": () => {
-*/
-
-		
 		
 /*
 -----------------------------POST-------------------------------------
@@ -107,6 +93,22 @@ router.post('/project_config', function (req, res){
 });
 
 
+router.post('/userConfig', function(req, res){
+	knex('users_projects')
+	.where({
+		user_id: knex('users').where('username', req.body.username).select('user_id').first(),
+		project_id: req.body.projectID
+	})
+	.update({user_config: req.body.userConfig})
+	.then(()=>{
+		res.status(200).json({message: "Succesfully updated users_projects with user_config file"})
+	})
+	.catch(err=>{
+		console.log(err)
+		res.status(500).json({message: "Not able to update users_projects with user_config file"})
+	})
+});
+
 /*
 -----------------------------PUT-------------------------------------
 */
@@ -125,6 +127,22 @@ router.put('/project', function (req, res) {
 	})
 	.catch(err=>{
 		res.status(500).json({message: err.message, stack:err.stack});
+	})
+});
+
+router.put('/userConfig', function(req, res){
+	knex('users_projects')
+	.where({
+		user_id: knex('users').where('username', req.body.username).select('user_id').first(),
+		project_id: req.body.projectID
+	})
+	.update({user_config: req.body.userConfig})
+	.then(()=>{
+		res.status(200).json({message: "Succesfully updated users_projects with user_config file"})
+	})
+	.catch(err=>{
+		console.log(err)
+		res.status(500).json({message: "Not able to update users_projects with user_config file"})
 	})
 });
 
@@ -275,6 +293,27 @@ router.get('/project_config', function (req, res){
 	.catch(err=>{
 		console.log(err)
 		res.status(500).json({message: "Not able to update users_projects with config file"});
+	})
+});
+
+router.put('/userConfig', function(req, res){
+	knex('users_projects')
+	.where({
+		user_id: knex('users').where('username', req.body.username).select('user_id').first(),
+		project_id: req.body.projectID
+	})
+	.first()
+	.then((user_project)=>{
+		let reply = {
+			username: req.body.username,
+			projectID: req.body.projectID,
+			userConfig: user_project.user_config
+		}
+		res.status(200).json(reply)
+	})
+	.catch(err=>{
+		console.log(err)
+		res.status(500).json({message: "Not able to update users_projects with user_config file"})
 	})
 });
 
