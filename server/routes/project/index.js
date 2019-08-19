@@ -338,7 +338,6 @@ router.get('/userConfig', function(req, res){
 });
 
 router.get('/labelColor', function(req, res){
-	console.log(req.query)
 	knex('users_projects')
 	.where({
 		user_id: knex('users').where('username', req.query.username).select('user_id').first(),
@@ -359,6 +358,7 @@ router.get('/labelColor', function(req, res){
 						//lets take the current_node value of the label and make sure our list has it
 						let node_obj = user_project.label_colors.objects[i].nodes.filter(obj => {return obj.node_ID === labels[j].current_node})
 						if(node_obj != null){
+							console.log("HERE")
 							group_obj.nodes.push({
 								current_node: labels[j].current_node,
 								parent_node: labels[j].parent_node,
