@@ -346,35 +346,34 @@ router.get('/labelColor', function(req, res){
 	.first()
 	.then((user_project)=>{
 		let to_send = [];
-		user_project.label_colors.objects.forEach( async function(object){
-			return new Promise(() => {
-				knex('labels')
-				.where('project_id', req.query.projectID)
-				.where('group_name', object.group_name)
-				.orderBy('current_node')
-				.then((labels)=>{
-					let reply = {group_name: object.group_name, nodes: []};
-					for(let i=0; i<labels.length; i++){
-						let current_node = labels[i].current_node;
-						let our_group = user_project.label_colors.objects.filter(obj => {return obj.group_name === object.group_name})
-						let node_obj = our_group.nodes.filter(obj => {return obj.node_ID === current_node})
-						if( node_obj === null ){
-							throw new Error("label from db and json mismatch")
-						}
-						reply.nodes.push({
-							current_node: current_node,
-							parent_node: labels[i].parent_node,
-							label_name: labels[i].label_name,
-							label_type: labels[i].label_type,
-							label_color: node_obj.node_color
-						})
+		user_project.label_colors.objects.forEach( function(object){
+			knex('labels')
+			.where('project_id', req.query.projectID)
+			.where('group_name', object.group_name)
+			.orderBy('current_node')
+			.then((labels)=>{
+				console.log("obj,", object)
+				let reply = {group_name: object.group_name, nodes: []};
+				for(let i=0; i<labels.length; i++){
+					let current_node = labels[i].current_node;
+					let our_group = user_project.label_colors.objects.filter(obj => {return obj.group_name === object.group_name})
+					let node_obj = our_group.nodes.filter(obj => {return obj.node_ID === current_node})
+					if( node_obj === null ){
+						throw new Error("label from db and json mismatch")
 					}
-					to_send.push(reply)
-				})
-				.catch(err=>{
-					console.log(err)
-					res.status(500).json({message: "Not able to get users_projects with label colors"})
-				})
+					reply.nodes.push({
+						current_node: current_node,
+						parent_node: labels[i].parent_node,
+						label_name: labels[i].label_name,
+						label_type: labels[i].label_type,
+						label_color: node_obj.node_color
+					})
+				}
+				to_send.push(reply)
+			})
+			.catch(err=>{
+				console.log(err)
+				res.status(500).json({message: "Not able to get users_projects with label colors"})
 			})
 		})
 		res.send(to_send)
