@@ -45,7 +45,7 @@ module.exports = (req, res, next) => {
 
     if(decoded.user_role != "administrator"){ //if not admin, check to see if in project in question
         knex('users_projects')
-        .where('user_id', decoded.username )
+        .where('user_id', knex('users').where('username', decoded.username ).select('user_id'))
         .where('project_id', req.body.project)
         .then(project => {
             if(project){
