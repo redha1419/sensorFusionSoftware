@@ -359,7 +359,6 @@ router.get('/labelColor', function(req, res){
 						let node_obj = user_project.label_colors.objects[i].nodes.filter(obj => {return obj.node_ID == labels[j].current_node}) //only evver 1 element
 						if(node_obj.length > 0){
 							node_obj = node_obj[0] // only ever 1 element
-							console.log(node_obj.node_colour)
 							group_obj.nodes.push({
 								current_node: labels[j].current_node,
 								parent_node: labels[j].parent_node,
