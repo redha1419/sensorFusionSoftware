@@ -356,7 +356,7 @@ router.get('/labelColor', function(req, res){
 					let reply = {group_name: object.group_name, nodes: []};
 					for(let i=0; i<labels.length; i++){
 						let current_node = labels[i].current_node;
-						let our_group = user_project.label_colors.objects.filter(obj => {return obj.group_name === req.query.groupName})
+						let our_group = user_project.label_colors.objects.filter(obj => {return obj.group_name === object.group_name})
 						let node_obj = our_group.nodes.filter(obj => {return obj.node_ID === current_node})
 						if( node_obj === null ){
 							throw new Error("label from db and json mismatch")
