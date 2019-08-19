@@ -358,7 +358,7 @@ router.get('/labelColor', function(req, res){
 						//lets take the current_node value of the label and make sure our list has it
 						console.log(user_project.label_colors.objects[i].nodes)
 						console.log(labels[j])
-						let node_obj = user_project.label_colors.objects[i].nodes.filter(obj => {return obj.node_ID === labels[j].current_node})
+						let node_obj = user_project.label_colors.objects[i].nodes.filter(obj => {return obj.node_ID == labels[j].current_node})
 						if(node_obj != null){
 							console.log(node_obj)
 							group_obj.nodes.push({
