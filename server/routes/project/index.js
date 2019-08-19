@@ -345,16 +345,34 @@ router.get('/labelColor', function(req, res){
 	})
 	.first()
 	.then((user_project)=>{
-		let reply = {
-			username: req.body.username,
-			projectID: req.body.projectID,
-			class_names: user_project.label_colors
-		}
-		res.status(200).json(reply)
+		knex('labels')
+		.where('project_id', req.query.projectID)
+		.where('group_name', req.query.groupName)
+		.orderBy('current_node')
+		.then(labels=>{
+			let reply = [];
+			for(let i=0; i<labels.length; i++){
+				let current_node = labels[i].current_node;
+				let our_group = user_project.label_colors.objects.filter(obj => {return obj.group_name === req.query.groupName})
+				let node_obj = our_group.nodes.filter(obj => {return obj.node_ID === current_node})
+				reply.push({
+					current_node: current_node,
+					parent_node: labels[i].parent_node,
+					label_name: labels[i].label_name,
+					label_type: labels[i].label_type,
+					label_color: node_obj.node_colour
+				})
+			}
+			res.status(200).json(reply)
+		})
+		.catch(err=>{
+			console.log(err)
+			res.status(500).json({message: "Not able to get users_projects with label colors"})
+		})
 	})
 	.catch(err=>{
 		console.log(err)
-		res.status(500).json({message: "Not able to update users_projects with label colors"})
+		res.status(500).json({message: "Not able to get users_projects with label colors"})
 	})
 });
 
