@@ -269,6 +269,18 @@ router.get('/user', function(req,res){
 	})
 })
 
+router.get('/getAllUsers', function(req, res){
+	knex('users')
+	.select('users.*', 'users.user_role as access')
+	.then(users => {
+		res.send(users);
+		console.log("User list sent");
+	})
+	.catch(err=>{
+		res.status(500).json({message: "Error Occured while getting users list"})
+	})
+});
+
 router.get('/checkCookie', (req, res) => {
 		console.log('checking for cookie');
 		console.log(parseCookies(req));
