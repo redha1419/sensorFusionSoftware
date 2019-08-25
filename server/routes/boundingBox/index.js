@@ -167,6 +167,7 @@ router.get('/listFilteredBoundingBoxes', function(req,res){
 		//console.log(boxes)
 		console.log(boxes)
 		console.log(labels)
+		labels = JSON.parse(labels)
 		let reply = [];
 		for(let i=0; i<boxes.length; i++){
 			//for each box we should put into reply with proper format
