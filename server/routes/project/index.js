@@ -79,7 +79,7 @@ router.post('/addProject', function (req, res) {
 router.post('/project_config', function (req, res){
 	knex('users_projects')
 	.where({
-		user_id: knex('users').where('username', req.body.username).select('user_id').first(),
+		user_id: knex('users').where('username', req.body.username.toLowerCase()).select('user_id').first(),
 		project_id: req.body.projectID
 	})
 	.update({config_file: req.body.configFile})
@@ -98,7 +98,7 @@ router.post('/userConfig', function(req, res){
 	user_config_obj.data = req.body.userConfig;
 	knex('users_projects')
 	.where({
-		user_id: knex('users').where('username', req.body.username).select('user_id').first(),
+		user_id: knex('users').where('username', req.body.username.toLowerCase()).select('user_id').first(),
 		project_id: req.body.projectID
 	})
 	.update({user_config: user_config_obj})
@@ -137,7 +137,7 @@ router.put('/userConfig', function(req, res){
 	user_config_obj.data = req.body.userConfig;
 	knex('users_projects')
 	.where({
-		user_id: knex('users').where('username', req.body.username).select('user_id').first(),
+		user_id: knex('users').where('username', req.body.username.toLowerCase()).select('user_id').first(),
 		project_id: req.body.projectID
 	})
 	.update({user_config: user_config_obj})
@@ -153,7 +153,7 @@ router.put('/userConfig', function(req, res){
 router.put('/labelColor', function(req,res){
 	knex('users_projects')
 	.where({
-		user_id: knex('users').where('username', req.body.username).select('user_id').first(),
+		user_id: knex('users').where('username', req.body.username.toLowerCase()).select('user_id').first(),
 		project_id: req.body.projectID
 	})
 	.update({label_colors: req.body.class_names})
@@ -325,7 +325,7 @@ router.get('/userConfig', function(req, res){
 	.first()
 	.then((user_project)=>{
 		let reply = {
-			username: req.body.username,
+			username: req.body.username.toLowerCase(),
 			projectID: req.body.projectID,
 			userConfig: user_project.user_config.data
 		}
