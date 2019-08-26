@@ -47,7 +47,7 @@ function checkCookie(req){
 function createUser(req){
 	return {
 		'user_id': uuidv4(),
-		'username': req.body.username,
+		'username': req.body.username.toLowerCase(),
 		'password_hash': hashPassword(req.body.password),
 		'user_role': req.body.access
 	};
@@ -59,7 +59,7 @@ function createUser(req){
 */	
 router.post('/user', (req, res) => {
 
-	console.log('creating a new user: ' + req.body.username)
+	console.log('creating a new user: ' + req.body.username.toLowerCase())
 
 	
 	if (checkCookie(req).user_role != "administrator") {
@@ -98,7 +98,7 @@ router.post('/user', (req, res) => {
 			
 router.post('/login', (req, res) => {
 	
-	let username = req.body.username;
+	let username = req.body.username.toLowerCase();
 	let password = req.body.password;
 					
 	let options = {
@@ -173,7 +173,7 @@ router.post('/forgot_account', (req, res) => {
 });
 
 router.post('/change_password', (req, res) => {
-	let username = req.body.username;
+	let username = req.body.username.toLowerCase();
 	let temp_password = req.body.temporaryPassword;
 	let new_password = req.body.newPassword;
 
@@ -222,7 +222,7 @@ router.put('/user', (req, res) => {
 	}
 	
 	var newValue = createUser(req);
-	var myQuery = {"username": req.body.username};
+	var myQuery = {"username": req.body.username.toLowerCase()};
 
 	knex('users')
 	.where(myQuery)
