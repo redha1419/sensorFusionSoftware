@@ -43,7 +43,7 @@ function createBBInstance(req, index, ID){
 		boundingBox.attributes = req.body.attributes;
 	}
 	if(req.body.user != undefined && (typeof req.body.user === 'string')){
-		boundingBox.user_id = knex('users').where('username', req.body.user).select('user_id');
+		boundingBox.user_id = knex('users').where('username', req.body.user.toLowerCase()).select('user_id');
 	}
 
 	if (req.body.shape == 3) {						//polygon
@@ -242,7 +242,7 @@ router.get('/listBoundingBoxes',function(req,res){
 router.get('/listUserBoundingBox', function(req, res){
 	knex('bounding_boxes')
 	.where('frame_id', req.body.frameID)
-	.where('user_id', knex('users').where('username', req.body.user).select('user_id'))
+	.where('user_id', knex('users').where('username', req.body.user.toLowerCase()).select('user_id'))
 	.orderBy('global_index')
 	.then(boxes => {
 		//TODO: authentication
@@ -261,7 +261,7 @@ router.get('/listUserBoundingBox', function(req, res){
 					description: boxes[i].description,
 					points: boxes[i].points.data || [],
 					parameters: boxes[i].parameters,
-					originalUser: req.body.user
+					originalUser: req.body.user.toLowerCase()
 				}
 			);
 		}
