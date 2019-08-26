@@ -46,7 +46,7 @@ router.post('/addProject', function (req, res) {
 			return new Promise(() => {
 				knex('users_projects')
 				.insert({
-					user_id: knex('users').where('username',user).select('user_id'),
+					user_id: knex('users').where('username',user.toLowerCase()).select('user_id'),
 					project_id: result[0].project_id
 				}).then(()=>{
 					//we need this .then ? I think this needs to be here so the promise is satisfied ?
