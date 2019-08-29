@@ -165,7 +165,7 @@ router.get('/listFilteredBoundingBoxes', function(req,res){
 	.select('bounding_boxes.*', 'users.username')
 	.then(boxes=>{
 		//TODO: authentication
-		labels = JSON.parse(labels)
+		//labels = JSON.parse(labels)
 		let reply = [];
 		for(let i=0; i<boxes.length; i++){
 			//for each box we should put into reply with proper format
