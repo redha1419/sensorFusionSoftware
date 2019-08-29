@@ -317,6 +317,7 @@ router.get('/project_config', function (req, res){
 });
 
 router.get('/userConfig', function(req, res){
+	console.log(req.query)
 	knex('users_projects')
 	.where({
 		user_id: knex('users').where('username', req.query.username.toLowerCase()).select('user_id').first(),
@@ -325,8 +326,8 @@ router.get('/userConfig', function(req, res){
 	.first()
 	.then((user_project)=>{
 		let reply = {
-			username: req.body.username.toLowerCase(),
-			projectID: req.body.projectID,
+			username: req.query.username.toLowerCase(),
+			projectID: req.query.projectID,
 			userConfig: user_project.user_config.data
 		}
 		res.status(200).json(reply)
