@@ -152,7 +152,7 @@ router.post('/boundingBox', function(req,res){
 --------------------------------GET----------------------------
 */
 
-router.get('/listFilteredBoundingBoxes', function(req,res){
+router.post('/listFilteredBoundingBoxes', function(req,res){
 	console.log(req.body)
 	//TODO: flatten labels ?, will lower complexity by n?
 	let frameID = req.body.frameID;
