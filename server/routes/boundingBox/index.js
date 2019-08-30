@@ -237,7 +237,7 @@ router.get('/listBoundingBoxes',function(req,res){
 
 router.get('/listUserBoundingBox', function(req, res){
 	knex('bounding_boxes')
-	.where('frame_id', req.body.frameID)
+	.where('frame_id', req.query.frameID)
 	.where('user_id', knex('users').where('username', req.body.user.toLowerCase()).select('user_id'))
 	.orderBy('global_index')
 	.then(boxes => {
@@ -270,7 +270,7 @@ router.get('/listUserBoundingBox', function(req, res){
 
 router.get('/getLatestBoundingBox', function(req,res){
 	knex('bounding_boxes')
-	.where('frame_id', req.body.frameID)
+	.where('frame_id', req.query.frameID)
 	.where('global_index', knex('bounding_boxes').max('globa_index'))
 	.first()
 	.then(boundingBox=>{
