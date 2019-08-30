@@ -55,7 +55,7 @@ CREATE TABLE sensor_fusion.frames (
 	frame_id             text   ,
 	description          text   ,
 	translation_data     json   ,
-	frame_name           text   ,
+	frame_name           int   ,
 	CONSTRAINT pk_frames_id PRIMARY KEY ( id ),
 	CONSTRAINT unq_frames_frame_id UNIQUE ( frame_id ) ,
 	CONSTRAINT idx_frames UNIQUE ( frame_id, sensor_id ) ,
