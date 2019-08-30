@@ -36,7 +36,7 @@ function createFrameInstance(req, ID){
 	if ( (req.body.description != undefined) && (typeof req.body.description === 'string') ){
 		sensorFrame.description = req.body.description;
 	}
-	if ( (req.body.frameName != undefined) && (typeof req.body.frameName === 'string') ){
+	if ( (req.body.frameName != undefined) && (typeof req.body.frameName === 'number') ){
 		sensorFrame.frame_name = req.body.frameName;
 	}
 	
