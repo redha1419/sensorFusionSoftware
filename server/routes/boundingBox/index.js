@@ -218,7 +218,6 @@ router.get('/listBoundingBoxes',function(req,res){
 					globalIndex: boxes[i].global_index,
 					shape:boxes[i].shape,
 					primaryLabel: boxes[i].label,
-					secondaryLabel: [],
 					attributes: boxes[i].attributes,
 					confidence: boxes[i].confidence,
 					description: boxes[i].description,
@@ -238,7 +237,7 @@ router.get('/listBoundingBoxes',function(req,res){
 router.get('/listUserBoundingBox', function(req, res){
 	knex('bounding_boxes')
 	.where('frame_id', req.query.frameID)
-	.where('user_id', knex('users').where('username', req.body.user.toLowerCase()).select('user_id'))
+	.where('user_id', knex('users').where('username', req.query.user.toLowerCase()).select('user_id'))
 	.orderBy('global_index')
 	.then(boxes => {
 		//TODO: authentication
@@ -251,13 +250,12 @@ router.get('/listUserBoundingBox', function(req, res){
 					globalIndex: boxes[i].global_index,
 					shape:boxes[i].shape,
 					primaryLabel: boxes[i].label,
-					secondaryLabel: [],
 					attributes: boxes[i].attributes,
 					confidence: boxes[i].confidence,
 					description: boxes[i].description,
 					points: boxes[i].points.data || [],
 					parameters: boxes[i].parameters,
-					originalUser: req.body.user.toLowerCase()
+					originalUser: req.query.user.toLowerCase()
 				}
 			);
 		}
@@ -279,13 +277,11 @@ router.get('/getLatestBoundingBox', function(req,res){
 			globalIndex: boundingBox.global_index,
 			shape:boundingBox.shape,
 			primaryLabel: boundingBox.label,
-			secondaryLabel: [],
 			attributes: boundingBox.attributes,
 			confidence: boundingBox.confidence,
 			description: boundingBox.description,
 			points: boundingBox.points.data || [],
 			parameters: boundingBox.parameters,
-			originalUser: req.body.user.toLowerCase()
 		})
 	})
 });
