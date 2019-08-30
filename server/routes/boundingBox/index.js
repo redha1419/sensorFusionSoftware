@@ -268,6 +268,28 @@ router.get('/listUserBoundingBox', function(req, res){
 	})
 });
 
+router.get('/getLatestBoundingBox', function(req,res){
+	knex('bounding_boxes')
+	.where('frame_id', req.body.frameID)
+	.where('global_index', knex('bounding_boxes').max('globa_index'))
+	.first()
+	.then(boundingBox=>{
+		res.send({
+			boundingBoxID: boundingBox.bounding_box_id,
+			globalIndex: boundingBox.global_index,
+			shape:boundingBox.shape,
+			primaryLabel: boundingBox.label,
+			secondaryLabel: [],
+			attributes: boundingBox.attributes,
+			confidence: boundingBox.confidence,
+			description: boundingBox.description,
+			points: boundingBox.points.data || [],
+			parameters: boundingBox.parameters,
+			originalUser: req.body.user.toLowerCase()
+		})
+	})
+});
+
 /*
 ------------------------------PUT-----------------------------
 */
