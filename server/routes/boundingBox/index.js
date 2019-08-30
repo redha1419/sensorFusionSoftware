@@ -271,7 +271,7 @@ router.get('/listUserBoundingBox', function(req, res){
 router.get('/getLatestBoundingBox', function(req,res){
 	knex('bounding_boxes')
 	.where('frame_id', req.query.frameID)
-	.where('global_index', knex('bounding_boxes').max('globa_index'))
+	.where('global_index', knex('bounding_boxes').max('global_index'))
 	.first()
 	.then(boundingBox=>{
 		res.send({
