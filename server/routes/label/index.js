@@ -57,6 +57,7 @@ router.post('/label', function(req,res){
                 group_name: group_name,
                 project_id: projectID,
                 label_type: given_labels[i].label_type,
+                has_children: given_labels[i].has_children
             }
         )
     }
@@ -85,7 +86,6 @@ router.get('/label', function(req, res){
     .then(labels => {
         //group them by group name and send back
         let grouped = _.mapValues(_.groupBy(labels, 'group_name'), llist => llist.map(label => _.omit(label, 'group_name')));
-        console.log(grouped)
         res.status(200).json(grouped);
     })
     .catch(err=>{
