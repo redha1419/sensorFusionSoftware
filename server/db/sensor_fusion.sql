@@ -88,7 +88,7 @@ CREATE TABLE sensor_fusion.labels (
 	group_name           text NOT NULL,
 	project_id           text NOT NULL,
 	label_type           int NOT NULL,
-	has_children         boolean NOT NULL,
+	has_children         int NOT NULL,
 	CONSTRAINT pk_labels_id PRIMARY KEY ( id ),
 	CONSTRAINT fk_labels_projects FOREIGN KEY ( project_id ) REFERENCES sensor_fusion.projects( project_id ) ON DELETE CASCADE
 );
