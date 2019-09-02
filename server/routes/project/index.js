@@ -365,7 +365,7 @@ router.get('/labelColor', function(req, res){
 								label_name: labels[j].label_name,
 								label_type: labels[j].label_type,
 								label_color: node_obj.node_colour || [],
-								has_children: labels[i].has_children
+								has_children: labels[j].has_children
 							})	
 						}
 					}
