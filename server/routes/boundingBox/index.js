@@ -284,6 +284,10 @@ router.get('/getLatestBoundingBox', function(req,res){
 			parameters: boundingBox.parameters,
 		})
 	})
+	.catch(err=>{
+		console.log(err)
+		res.status(403).json({message: "no bounding box found"})
+	})
 });
 
 /*
