@@ -1,7 +1,7 @@
 ## TODO
 
+#label_filters
 
-#HOLD
 #add notes to frames and projects (PUT, POST, DELETE) : params(frame_id, title, status, note, user) : params(project_id, title, status, note, user)
 
 #{
