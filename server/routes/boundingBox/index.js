@@ -119,7 +119,7 @@ router.post('/boundingBox', function(req,res){
 			knex('bounding_boxes')
 			.where('frame_id', req.body.frameID)
 			.then(boxes=>{
-				let new_box = createBBInstance(req, boxes.length, null);
+				let new_box = createBBInstance(req, boxes.length, req.body.bounding_box_id);
 				//console.log(new_box)
 				knex('bounding_boxes')
 				.insert(new_box)
