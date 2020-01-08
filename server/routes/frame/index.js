@@ -200,7 +200,7 @@ router.get('/getFrame', function(req,res){
 			.where('frame_name', frameName) // assuming unique
 			.first()
 			.then(frame=>{
-				let reply = {frameName: frame.frame_name, frameID: frame.frame_id};
+				let reply = {frameName: frame.frame_name, frameID: frame.frame_id, description: frame.description};
 				res.status(200).json(reply);
 			})
 			.catch(err=>{
