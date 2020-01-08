@@ -184,6 +184,36 @@ router.post('/matchFrame', function(req, res){
 -------------------------------GET--------------------------
 */
 
+router.get('/getFrame', function(req,res){
+	const projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
+	const sensorID = req.query.sensorID ? req.query.sensorID : 'No Sensor ID';
+	const frameName = req.query.frameName ? req.query.frameName : 'No Frame Name';
+	knex('sensors')
+	.where('project_id', projectID)
+	.where('sensor_id', sensorID)
+	.first()
+	.then(sensor =>{
+		//just to validate if project and sensor is correct
+		if(sensor){
+			knex('frames')
+			.where('sensor_id', sensorID)
+			.where('frame_name', frameName) // assuming unique
+			.first()
+			.then(frame=>{
+				let reply = {frameName: frame.frame_name, frameID: frame.frame_id};
+				res.status(200).json(reply);
+			})
+			.catch(err=>{
+				res.status(500).json({message: err.message, stack:err.stack});
+			})
+		}
+	})
+	.catch(err=>{
+		res.status(500).json({message: err.message, stack:err.stack});
+	})
+
+});
+
 router.get('/listFrames?',function(req,res){
 	const projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
 	const sensorID = req.query.sensorID ? req.query.sensorID : 'No Sensor ID';
