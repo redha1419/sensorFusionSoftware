@@ -180,6 +180,24 @@ router.post('/matchFrame', function(req, res){
 
 })
 
+router.post('/removeFrame', function(req,res){
+	const projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
+	let subquery = knex('bounding_boxes').select('bounding_boxes.frame_id');
+	knex('frames')
+	.join('sensors', 'sensors.sensor_id', '=', 'frames.sensor_id')
+	.select('sensors.project_id')
+	.where('sensors.project_id', projectID)
+	.where('frames.frame_id', 'not in', subquery)
+	.del()
+	.then(()=>{
+		console.log('deleted all frames with out boxes on project ' + projectID + ' ... hopefully');
+		res.status(200).json({message: 'succesfully updated frames'})
+	})
+	.catch(err=>{
+		res.status(500).json({message: err.message, stack:err.stack});
+	})
+});
+
 /*
 -------------------------------GET--------------------------
 */
