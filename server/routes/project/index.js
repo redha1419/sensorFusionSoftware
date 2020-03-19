@@ -275,9 +275,14 @@ router.get('/listProjects', function(req,res){
 	knex('users_projects')
 	.where('users_projects.user_id', knex('users').where('username', decoded.username).select('user_id'))
 	.join('projects', 'users_projects.project_id', '=', 'projects.project_id')
-	.count('user_id', {as: 'numOfUsers'})
-	.groupBy('users_projects.project_id', 'projects.id')
+	.join('sensors', 'sensors.project_id', '=', 'projects.project_id')
+	.count({num_of_users: 'user_id'})
+	.groupBy('users_projects.project_id', 'projects.id','users_projects.id','sensors.project_id','sensors.sensor_id','sensors.sensor_type', 'sensors.sensor_name', 'sensors.sensor_name', 'sensors.sensor_mode', 'sensors.data_path','sensors.id')
+	.count({num_of_sensors: 'sensors.sensor_id'})
+	.groupBy('sensors.project_id')
+	.select('*')
 	.then(projects=>{
+		console.log(projects);
 		let reply = [];
 		for (var i = 0; i < projects.length; i++) {
 			reply.push({
@@ -286,11 +291,11 @@ router.get('/listProjects', function(req,res){
 				'description': projects[i].description,
 				'dateCreated': projects[i].date_created,
 				'dateModified': projects[i].date_modified,
-				//'numOfSensors': projects[i].numOfSensors,
-				'numOfUsers': projects[i].numOfUsers
+				'numOfSensors': projects[i].num_of_sensors,
+				'numOfUsers': projects[i].num_of_users
 			});
 		}
-		console.log(reply);
+	//	console.log(reply);
 		res.send(reply);
 		console.log("Project list sent");
 	})
