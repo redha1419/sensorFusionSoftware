@@ -284,6 +284,7 @@ router.get('/listProjects', function(req,res){
 				knex('sensors')
 				.where('project_id', project.project_id)
 				.count('active', {as: 'numOfSensors'})
+				.groupBy('project_id')
 				.select('numOfSensors')
 				.then((returned_project)=>{
 					//we need this .then ? I think this needs to be here so the promise is satisfied ?
