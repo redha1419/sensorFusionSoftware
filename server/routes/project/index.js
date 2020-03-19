@@ -279,6 +279,7 @@ router.get('/listProjects', function(req,res){
 	.count('user_id', {as: 'numOfUsers'})
 	.groupBy('users_projects.project_id', 'projects.id')
 	.then(projects=>{
+		/*
 		projects.forEach( async function(project){
 			return new Promise(() => {
 				knex('sensors')
@@ -297,6 +298,7 @@ router.get('/listProjects', function(req,res){
 				})
 			})
 		})
+		*/
 		let reply = [];
 		for (var i = 0; i < projects.length; i++) {
 			reply.push({
