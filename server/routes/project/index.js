@@ -277,7 +277,7 @@ router.get('/listProjects', function(req,res){
 	.join('projects', 'users_projects.project_id', '=', 'projects.project_id')
 	.select('projects.*')
 	.count('user_id', {as: 'numOfUsers'})
-	.groupBy('users_projects.project_id')
+	.groupBy('users_projects.project_id', 'projects.id')
 	.then(projects=>{
 		projects.forEach( async function(project){
 			return new Promise(() => {
