@@ -276,7 +276,26 @@ router.get('/listProjects', function(req,res){
 	.where('users_projects.user_id', knex('users').where('username', decoded.username).select('user_id'))
 	.join('projects', 'users_projects.project_id', '=', 'projects.project_id')
 	.select('projects.*')
+	.count('user_id', {as: 'numOfUsers'})
+	.groupBy('project_id')
 	.then(projects=>{
+		projects.forEach( async function(project){
+			return new Promise(() => {
+				knex('sensors')
+				.where('project_id', project.project_id)
+				.count('active', {as: 'numOfSensors'})
+				.select('numOfSensors')
+				.then((returned_project)=>{
+					//we need this .then ? I think this needs to be here so the promise is satisfied ?
+					project.numOfSensors = returned_project.numOfSensors;
+				})
+				.catch(err=>{
+					res.status(403).json({message: "Error, project was not created!"})
+					console.log(err)
+					return
+				})
+			})
+		})
 		let reply = [];
 		for (var i = 0; i < projects.length; i++) {
 			reply.push({
@@ -284,7 +303,9 @@ router.get('/listProjects', function(req,res){
 				'projectID': projects[i].project_id,
 				'description': projects[i].description,
 				'dateCreated': projects[i].date_created,
-				'dateModified': projects[i].date_modified
+				'dateModified': projects[i].date_modified,
+				'numOfSensors': projects[i].numOfSensors,
+				'numOfUsers': projects[i].numOfUsers
 			});
 		}
 		console.log(reply);
@@ -327,7 +348,7 @@ router.get('/userConfig', function(req, res){
 		let reply = {
 			username: req.query.username.toLowerCase(),
 			projectID: req.query.projectID,
-			userConfig: user_project.user_config.data
+			userConfig: user_project.user_config.data || null
 		}
 		res.status(200).json(reply)
 	})
