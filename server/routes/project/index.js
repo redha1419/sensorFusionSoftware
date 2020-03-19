@@ -308,7 +308,7 @@ router.get('/listProjects', function(req,res){
 				'dateCreated': projects[i].date_created,
 				'dateModified': projects[i].date_modified,
 				'numOfSensors': projects[i].numOfSensors,
-				'numOfUsers': projects[i].numOfUsers
+				'numOfUsers': "hi"//projects[i].numOfUsers
 			});
 		}
 		console.log(reply);
