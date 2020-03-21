@@ -271,7 +271,7 @@ router.get('/user', function(req,res){
 
 router.get('/verifyUser', function(req,res){
 	knex('users')
-	.where('username', req.query.user)
+	.where('username', req.query.user.toLowerCase())
 	.first()
 	.then(user => {
 		if(user){
