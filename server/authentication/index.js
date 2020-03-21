@@ -269,6 +269,23 @@ router.get('/user', function(req,res){
 	})
 })
 
+router.get('/verifyUser', function(req,res){
+	knex('users')
+	.where('username', req.query.user)
+	.first()
+	.then(user => {
+		if(user){
+			res.status(200).json({message: "true"});
+		}
+		else{
+			res.status(200).json({message: "false"});
+		}
+	})
+	.catch(err=>{
+		res.status(500).json({message: "Error Occured while getting users list"})
+	})
+})
+
 router.get('/getAllUsers', function(req, res){
 	knex('users')
 	.select('users.*', 'users.user_role as access')
