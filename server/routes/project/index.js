@@ -277,11 +277,11 @@ router.get('/listProjects', function(req,res){
 	.where('users_projects.user_id', knex('users').where('username', decoded.username).select('user_id'))
 	.join('projects', 'users_projects.project_id', '=', 'projects.project_id')
 	.join('sensors', 'sensors.project_id', '=', 'projects.project_id')
+	.select('*')
 	.count({num_of_users: 'users_projects.user_id'})
 	.groupBy('users_projects.project_id', 'users_projects.id') //'projects.id','users_projects.id','sensors.project_id','sensors.sensor_id','sensors.sensor_type', 'sensors.sensor_name', 'sensors.sensor_name', 'sensors.sensor_mode', 'sensors.data_path','sensors.id')
 	.count({num_of_sensors: 'sensors.sensor_id'})
 	.groupBy('sensors.project_id')
-	.select('*')
 	.then(projects=>{
 		let reply = [];
 		for (var i = 0; i < projects.length; i++) {
