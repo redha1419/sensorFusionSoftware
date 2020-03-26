@@ -282,7 +282,6 @@ router.get('/listProjects', function(req,res){
 	.groupBy('sensors.project_id')
 	.select('*')
 	.then(projects=>{
-		console.log(projects);
 		let reply = [];
 		for (var i = 0; i < projects.length; i++) {
 			reply.push({
@@ -295,7 +294,7 @@ router.get('/listProjects', function(req,res){
 				'numOfUsers': projects[i].num_of_users
 			});
 		}
-	//	console.log(reply);
+		console.log(reply);
 		res.send(reply);
 		console.log("Project list sent");
 	})
