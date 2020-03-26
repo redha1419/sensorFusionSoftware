@@ -272,6 +272,7 @@ function checkCookie(req){
 router.get('/listProjects', function(req,res){
 	console.log("Project list requested");
 	decoded = checkCookie(req);
+	console.log(req);
 	knex('users_projects')
 	.where('users_projects.user_id', knex('users').where('username', decoded.username).select('user_id'))
 	.join('projects', 'users_projects.project_id', '=', 'projects.project_id')
