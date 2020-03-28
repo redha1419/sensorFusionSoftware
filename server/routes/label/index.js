@@ -15,6 +15,7 @@ const _ = require('lodash')
 /*
 body = {
     projectID: "",
+    class_names: "",
     labels = [
         {
             current_node: "",
@@ -65,8 +66,16 @@ router.post('/label', function(req,res){
     .insert(labels_to_insert)
     .returning(['*'])
     .then(labels => {
-        console.log(labels)
-        res.status(200).json({message: "Succesfully Inserted labels"})
+        // inserted labels
+        knex('users_projects')
+        .where({
+            project_id: projectID
+        })
+        .update({label_colors: req.body.class_names})
+        .then(()=>{
+            console.log(labels)
+            res.status(200).json({message: "Succesfully Inserted labels"})
+        })
     })
     .catch(err=>{
         res.status(500).json({message: err.message, stack:err.stack});
