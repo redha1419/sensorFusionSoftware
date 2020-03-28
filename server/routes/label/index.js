@@ -15,67 +15,74 @@ const _ = require('lodash')
 /*
 body = {
     projectID: "",
-    class_names: "",
+    class_names: "what ever this is can be anything",
     labels = [
         {
             current_node: "",
             parent_node: "",
-            label_name: ""
+            label_name: "",
+            label_type: "",
+            has_children: ""
         },
         {
             current_node: "",
             parent_node: "",
-            label_name: ""
+            label_name: "",
+            label_type: "",
+            has_children: ""
         }
     ]
 }
 */
 
-router.post('/label', function(req,res){
-    let projectID = req.body.projectID;
-    let given_labels = req.body.labels;
+function getLabels(projectID, obj){
+    let group_name = obj.group_name;
+    let nodes = obj.nodes;
     let labels_to_insert = [];
-    var group_name = "";
-    
-    //let group_name = given_labels.find(obj => {return obj.parent_node === -1}).label_name;
-    for(let i=0; i<given_labels.length; i++){
-        if(given_labels[i].parent_node === "-1"){
-            group_name = given_labels[i].label_name;
-        }
-    }
-
-    
-    if(group_name == undefined || group_name == ""){
-        res.status(500).json({message: "Did not provide a parent node"});
-        return
-    }
-    for(let i=0; i<given_labels.length; i++){
+    for(let i=0; i<nodes.length; i++){
         labels_to_insert.push(
             {
-                current_node: given_labels[i].current_node,
-                label_name:  given_labels[i].label_name,
-                parent_node: given_labels[i].parent_node,
+                current_node: nodes[i].current_node,
+                label_name:  nodes[i].label_name,
+                parent_node: nodes[i].parent_node,
                 group_name: group_name,
                 project_id: projectID,
-                label_type: given_labels[i].label_type,
-                has_children: given_labels[i].has_children
+                label_type: nodes[i].label_type,
+                has_children: nodes[i].has_children
             }
         )
     }
+    return labels_to_insert;
+}
+
+router.post('/label', function(req,res){
+    let projectID = req.body.projectID;
+    let given_labels = req.body.class_names;
+    let labels_to_insert = [];
+    
+
+    for(let i=0; i<given_labels.objects.length; i++){
+        labels_to_insert.concat(getLabels(projectID, given_labels[i]));
+    }
+    
+    console.log(labels_to_insert);
+
     knex('labels')
     .insert(labels_to_insert)
     .returning(['*'])
     .then(labels => {
         // inserted labels
+        /*
         knex('users_projects')
         .where({
             project_id: projectID
         })
         .update({label_colors: req.body.class_names})
         .then(()=>{
-            console.log(labels)
+        */
+            //console.log(labels)
             res.status(200).json({message: "Succesfully Inserted labels"})
-        })
+       // })
     })
     .catch(err=>{
         res.status(500).json({message: err.message, stack:err.stack});
