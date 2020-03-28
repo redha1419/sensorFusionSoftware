@@ -62,7 +62,7 @@ router.post('/label', function(req,res){
     
 
     for(let i=0; i<given_labels.objects.length; i++){
-        labels_to_insert.concat(getLabels(projectID, given_labels[i]));
+        labels_to_insert.concat(getLabels(projectID, given_labels.objects.[i]));
     }
     
     console.log(labels_to_insert);
