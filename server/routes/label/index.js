@@ -80,7 +80,7 @@ router.post('/label', function(req,res){
     colors_to_insert.objects = [];    
 
     for(let i=0; i<given_labels.objects.length; i++){
-        labels_to_insert.concat(getLabels(projectID, given_labels.objects[i]));
+        labels_to_insert = labels_to_insert.concat( getLabels(projectID, given_labels.objects[i]) );
     }
 
     for(let i=0; i<given_labels.objects.length; i++){
