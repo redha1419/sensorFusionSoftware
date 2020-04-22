@@ -363,14 +363,11 @@ router.get('/labelColor', function(req, res){
 				group_obj.group_name = user_project.label_colors.objects[i].group_name;
 				group_obj.nodes = []
 				for(let j=0; j<labels.length; j++){
-					console.log(j)
 					if(group_obj.group_name === labels[j].group_name){
 						//lets take the current_node value of the label and make sure our list has it
 						let node_obj = user_project.label_colors.objects[i].nodes.filter(obj => {return obj.current_node == labels[j].current_node}) //only evver 1 element
-						console.log("HRERERER + ", node_obj)
 						if(node_obj.length > 0){
 							node_obj = node_obj[0] // only ever 1 element
-							console.log(node_obj)
 							group_obj.nodes.push({
 								current_node: labels[j].current_node,
 								parent_node: labels[j].parent_node,
