@@ -283,7 +283,8 @@ router.get('/listBoundingBoxes',function(req,res){
 
 router.get('/listBoundingBoxesAll',function(req,res){
 	//get all bounding boxes in frames given sensor id and project id
-	let projectID = req.query.projectID ? req.query.projectID : 'No Frame ID';
+	let projectID = req.query.projectID ? req.query.projectID : 'No Project ID';
+	let sensorID = req.query.sensorID ? req.query.sensorID : 'No Sensor ID';
 	//console.log("Bounding Boxes details requested");
 	knex('sensors')
 	.where('project_id', projectID)
