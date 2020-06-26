@@ -98,6 +98,54 @@ function createBBInstance(req, index, ID){
 -------------------------------POST---------------------------------
 */			
 
+router.post('/boundingBoxes', function(req, res){
+
+	console.log(req.body)
+	knex('frames')
+	.where('frame_id', req.body.frameID)
+	.first()
+	.then(frame=>{
+		//console.log(frame);
+		if(frame){
+			//console.log('found frame, will add new Boundary Boxes')
+			knex('bounding_boxes')
+			.where('frame_id', req.body.frameID)
+			.then(boxes=>{
+				let box_index = boxes.length;
+				let list_of_new_boxes = [];
+				for(let i=0; i<req.body.boxes.length; i++)
+				{
+					let new_box = createBBInstance(req.boxes[i], box_index, req.body.boxes[i].bounding_box_id);
+					list_of_new_boxes.push(new_box);
+					box_index++;
+				}
+				//console.log(new_box)
+				knex('bounding_boxes')
+				.insert(list_of_new_boxes)
+				.returning(['*'])
+				.then(box=>{
+					//console.log("Bounding Box Saved");
+					projectHelper.updateProjectDate(req.body.projectID);
+					let reply = {
+						boundingBoxID: box[0].bounding_box_id,
+						frameID: box[0].frame_id
+					};
+					res.send(reply)
+				})
+				.catch(err=>{
+					res.status(500).json({message: err.message, stack:err.stack});
+				})
+			})
+		}
+		else{
+			throw new Error('frame not found!');
+		}
+	})
+	.catch(err=>{
+		res.status(500).json({message: err.message, stack:err.stack});
+	})
+});
+
 router.post('/boundingBox', function(req,res){
 /*
 	console.log("adding frame to" + 
@@ -228,6 +276,36 @@ router.get('/listBoundingBoxes',function(req,res){
 			);
 		}
 		res.send(reply)
+	})
+	.catch(err=>{
+		res.status(500).json({message: err.message, stack:err.stack});
+	})
+});
+
+router.get('/listBoundingBoxesAll',function(req,res){
+	//get all bounding boxes in frames given sensor id and project id
+	let projectID = req.query.projectID ? req.query.projectID : 'No Frame ID';
+	//console.log("Bounding Boxes details requested");
+	knex('sensors')
+	.where('project_id', projectID)
+	.where('sensor_id', sensorID)
+	.then(sensor =>{
+		//just to validate if project and sensor is correct
+		if(sensor){
+			knex('frames')
+			.where('sensor_id', sensorID)
+			.leftJoin('bounding_boxes', 'frames.frame_id', '=', 'bounding_boxes.frame_id')
+			.join('users', 'users.user_id', '=', 'bounding_boxes.user_id')
+			.orderBy('global_index')
+			.select('frames.*','bounding_boxes.*', 'users.username')
+			.then(frames=>{
+				console.log("\n\n\n GOT ALL BBs for SENSOR \n\n\n");
+				res.status(200).json(frames);
+			})
+			.catch(err=>{
+				res.status(500).json({message: err.message, stack:err.stack});
+			})
+		}
 	})
 	.catch(err=>{
 		res.status(500).json({message: err.message, stack:err.stack});
