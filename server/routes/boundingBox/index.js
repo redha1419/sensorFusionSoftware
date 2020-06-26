@@ -123,12 +123,11 @@ router.post('/boundingBoxes', function(req, res){
 				knex('bounding_boxes')
 				.insert(list_of_new_boxes)
 				.returning(['*'])
-				.then(box=>{
-					//console.log("Bounding Box Saved");
+				.then(boxes => {
+					console.log("Bounding Boxes Saved");
 					projectHelper.updateProjectDate(req.body.projectID);
 					let reply = {
-						boundingBoxID: box[0].bounding_box_id,
-						frameID: box[0].frame_id
+						message:"success"
 					};
 					res.send(reply)
 				})
