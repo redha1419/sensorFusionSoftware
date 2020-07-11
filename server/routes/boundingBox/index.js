@@ -278,6 +278,7 @@ router.get('/listBoundingBoxes',function(req,res){
 					confidence: boxes[i].confidence,
 					description: boxes[i].description,
 					points: boxes[i].points.data || [],
+					crowded: boxes[i].points.crowded || [],
 					parameters: boxes[i].parameters,
 					originalUser: boxes[i].username
 				}
