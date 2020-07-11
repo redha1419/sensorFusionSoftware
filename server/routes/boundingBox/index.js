@@ -63,6 +63,15 @@ function createBBInstance(req, index, ID){
 		*/
 		boundingBox.points.data = req.body.points;				
 	}
+	else if(req.body.shape == 4) {
+		console.log("union");
+		boundingBox.points = {
+			data: [],
+			crowded: []
+		};
+		boundingBox.points.data = req.body.points;		
+		boundingBox.points.crowded = req.body.crowded;		
+	}
 	else if (req.body.shape == 1) {					//Rectangle/Square
 		console.log("rectangle");
 		let parameters = {
@@ -297,7 +306,7 @@ router.get('/listBoundingBoxesAll',function(req,res){
 			.leftJoin('bounding_boxes', 'frames.frame_id', '=', 'bounding_boxes.frame_id')
 			.join('users', 'users.user_id', '=', 'bounding_boxes.user_id')
 			.orderBy('global_index')
-			.select('frames.frame_id','frames.frame_name','bounding_boxes.bounding_box_id', 'bounding_boxes.shape', 'bounding_boxes.label','bounding_boxes.points' ,'users.username')
+			.select('frames.frame_id','frames.frame_name','bounding_boxes.bounding_box_id', 'bounding_boxes.shape', 'bounding_boxes.description' ,'bounding_boxes.label','bounding_boxes.points' ,'users.username')
 			.then(frames=>{
 				console.log("\n\n\n GOT ALL BBs for SENSOR \n\n\n");
 				res.status(200).json(frames);
